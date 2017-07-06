@@ -19,6 +19,12 @@ namespace fastOrderEntry.Controllers
 
             return View(model);
         }
-       
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
+        }
+
     }
 }
