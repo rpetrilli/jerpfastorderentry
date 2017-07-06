@@ -2,11 +2,153 @@
 @{
     ViewBag.Title = "OrdiniVendita";
 }
+
+@section header{
+<script>
+    app.controller('venditaCtrl', ['$scope', '$resource', function ($scope, $resource) {
+
+	    	$scope.displayMode = "list";
+
+			$scope.current = null;
+
+            $scope.myResource = $resource('../api/divisa'+":id", {id: "@@id_divisa"});
+
+	    	$scope.refresh = function () {
+		    	 $scope.list = $scope.myResource.query();
+		    	 $scope.list.$promise.then(function(data) {}, function(response) {
+					//addErrorMessage('.divisa_error', response.data);
+				 });
+			};
+
+			$scope.deleteItem = function(item){
+				bootbox.confirm("Intendi procedere?", function(result) {
+				  	if (result){
+				  		item.$delete().then(function(){
+				  			$scope.list.splice($scope.list.indexOf(item), 1);
+				  		},
+						 function(response) {
+							//addErrorMessage('.divisa_error', response.data);
+						});
+				  		$scope.displayMode = "list";
+				  	}
+				});
+			};
+
+		    $scope.editOrCreate = function (item) {
+			     $scope.current = item ? item : {};
+			     $scope.displayMode = "edit";
+		    };
+
+			$scope.saveEdit = function (item) {
+			    if (angular.isDefined(item.id_divisa_old)) {
+			        $scope.update(item);
+			    } else {
+			        $scope.create(item);
+			    }
+			};
+
+			$scope.create = function (item) {
+			    new $scope.myResource(item).$save().then(function(newItem) {
+			        $scope.list.push(newItem);
+			        $scope.displayMode = "list";
+			    },
+				 function(response) {
+					//addErrorMessage('.divisa_error', response.data);
+				});
+			};
+
+			$scope.update = function (item) {
+			    item.$save().then(
+					 function(data) {
+						 $scope.displayMode = "list";
+					 },
+					 function(response) {
+						//addErrorMessage('.divisa_error', response.data);
+					 });
+
+			};
+
+
+			$scope.cancelEdit = function () {
+			    if ($scope.current && $scope.current.$get) {
+			        $scope.current.$get();
+			    }
+			    $scope.current = {};
+			    $scope.displayMode = "list";
+			};
+
+
+			 $scope.refresh();
+
+
+
+    }]);
+</script>
+}
+
 <div class="container" ng-controller="venditaCtrl">
     <div class="row">
         <div class="col-md-12">
-            <h3>{{benvenuto}}</h3>
-            <input type="text" ng-model="benvenuto" />
+
+            <div class="panel-body" ng-show="displayMode == 'list'">
+                <div class="page-toolbar">
+                    <button class="btn btn-grey" ng-click="refresh()"><i class="fa fa-refresh">&nbsp;</i>Refresh</button>
+                    <button class="btn btn-grey" ng-click="editOrCreate()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
+                </div> <!-- page-toolbar -->
+
+                <table class="table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Cod. Divisa</th>
+                            <th>Descrizione</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="item in list | itemsPerPage: 10">
+                            <td>{{item.id_divisa}}</td>
+                            <td>{{item.descrizione}}</td>
+                            <td>
+                                <button class="btn btn-grey btn-xs" ng-click="deleteItem(item)"><i class="glyphicon glyphicon-trash"></i></button>
+                                <button class="btn btn-grey btn-xs" ng-click="editOrCreate(item)"><i class="fa fa-pencil-square-o"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+
+                <div class="divisa_error">
+                </div>
+            </div> <!--  panel body -->
+
+
+            <div class="panel-body" ng-show="displayMode == 'edit'">
+                <div class="page-toolbar">
+                    <button class="btn btn-grey" ng-click="saveEdit(current)"><i class="fa fa-floppy-o">&nbsp;</i>Salva</button>
+                    <button class="btn btn-grey" ng-click="cancelEdit()"><i class="fa fa-times">&nbsp;</i>Annulla</button>
+                </div> <!-- page-toolbar -->
+
+                <form role="form" novalidate>
+                    <div class="form-group">
+                        <label>Codice:</label>
+                        <input type="text" class="form-control" ng-model="current.id_divisa">
+                    </div>
+                    <div class="form-group">
+                        <label>Descrizione:</label>
+                        <input type="text" class="form-control" ng-model="current.descrizione">
+                    </div>
+
+                </form>
+
+                <div class="divisa_error">
+
+                </div>
+
+            </div> <!--  panel body -->
+
+
+
         </div>
     </div>
 </div>
