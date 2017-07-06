@@ -11,6 +11,7 @@ namespace fastOrderEntry.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
+            ViewBag.mondo = "Ciao Mondo sono io";
 
             return View();
         }
