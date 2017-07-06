@@ -26,7 +26,9 @@ namespace fastOrderEntry
             bundles.Add(new ScriptBundle("~/bundles/angularjs").Include(
                         "~/Scripts/angular.js",
                         "~/Scripts/angular-locale_it-it.js",
-                        "~/Scripts/angular-resource.js"));
+                        "~/Scripts/angular-resource.js",
+                        "~/Scripts/app/app.js",
+                        "~/Scripts/controllers/vendita.js"));
 
 
 
