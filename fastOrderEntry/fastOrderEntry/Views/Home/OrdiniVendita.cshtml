@@ -14,7 +14,7 @@
             $scope.myResource = $resource('../api/divisa'+":id", {id: "@@id_divisa"});
 
 	    	$scope.refresh = function () {
-		    	 $scope.list = $scope.myResource.query();
+                $scope.list = $scope.myResource.query({ filtro_id : 'EUR' });
 		    	 $scope.list.$promise.then(function(data) {}, function(response) {
 					//addErrorMessage('.divisa_error', response.data);
 				 });

@@ -11,7 +11,7 @@ namespace fastOrderEntry.Controllers
     public class DivisaController : ApiController
     {
         // GET: api/Divisa
-        public IEnumerable<ca_divisa> Get()
+        public IEnumerable<ca_divisa> Get(string filtro_id)
         {
             return new ca_divisa[] { new ca_divisa { id_divisa="EUR", descrizione="Euro" } };
         }
@@ -21,6 +21,7 @@ namespace fastOrderEntry.Controllers
         {
             return new ca_divisa { id_divisa="EUR", descrizione="Euro" };
         }
+
 
         // POST: api/Divisa
         public void Post([FromBody]string value)
