@@ -1,1 +1,9 @@
-﻿@ViewBag.mondo
+﻿@model IEnumerable<fastOrderEntry.Models.ca_divisa>
+<h3>@ViewBag.mondo</h3>
+<ul>
+@foreach (var x in Model)
+{
+    <li>@x.id_divisa - @x.descrizione</li>
+}
+</ul>
+

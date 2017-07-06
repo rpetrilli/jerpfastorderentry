@@ -1,4 +1,5 @@
-﻿using System;
+﻿using fastOrderEntry.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,12 +9,16 @@ namespace fastOrderEntry.Controllers
 {
     public class HomeController : Controller
     {
+        private PetLineContext db = new PetLineContext();
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
             ViewBag.mondo = "Ciao Mondo sono io";
 
-            return View();
+            var model = db.ca_divisa.ToList();
+
+            return View(model);
         }
+       
     }
 }
