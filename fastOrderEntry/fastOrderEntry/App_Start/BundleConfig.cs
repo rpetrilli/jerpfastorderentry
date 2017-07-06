@@ -19,7 +19,14 @@ namespace fastOrderEntry
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
-                      "~/Scripts/shortcut.js"));
+                      "~/Scripts/shortcut.js",
+                      "~/Scripts/config-template.js"));
+
+
+            bundles.Add(new ScriptBundle("~/bundles/angularjs").Include(
+                        "~/Scripts/angular.js",
+                        "~/Scripts/angular-locale_it-it.js",
+                        "~/Scripts/angular-resource.js"));
 
 
 

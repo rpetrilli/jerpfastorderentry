@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html ng-app="start">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
@@ -7,6 +7,7 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/angularjs")
 </head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <body>
@@ -38,7 +39,7 @@
                             Vendita <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Ordini", "Index", "Home", new { area = "" }, null)</li>
+                            <li >@Html.ActionLink("Ordini", "OrdiniVendita", "Home", new { area = "" }, new { id="mnu_ordini_vend" })</li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -63,6 +64,7 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

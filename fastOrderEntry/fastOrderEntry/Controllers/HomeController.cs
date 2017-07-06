@@ -20,6 +20,13 @@ namespace fastOrderEntry.Controllers
             return View(model);
         }
 
+        public ActionResult OrdiniVendita()
+        {
+            ViewBag.Title = "Ordini di vendita";
+            
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
