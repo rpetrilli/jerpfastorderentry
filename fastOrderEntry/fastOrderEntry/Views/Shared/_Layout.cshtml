@@ -30,7 +30,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @*<li>@Html.ActionLink("Ordini di vendita", "Index", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>*@
+                        <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>*@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             Anagrafiche <span class="caret"></span>
@@ -45,7 +45,7 @@
                             Vendita <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li >@Html.ActionLink("Ordini", "OrdiniVendita", "Home", new { area = "" }, new { id="mnu_ordini_vend" })</li>
+                            <li>@Html.ActionLink("Ordini", "OrdiniVendita", "Home", new { area = "" }, new { id = "mnu_ordini_vend" })</li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -56,21 +56,17 @@
                             <li>@Html.ActionLink("Ordini", "Index", "Home", new { area = "" }, null)</li>
                         </ul>
                     </li>
-
                 </ul>
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Applicazione ASP.NET</p>
-        </footer>
-    </div>
-
+    @RenderBody()
+    <footer>
+        <div class="container body-content">
+            <p>&copy; @DateTime.Now.Year - Fast Order versione 1.0.0 </p>
+        </div>
+    </footer>
     @Scripts.Render("~/bundles/jquery")
-
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

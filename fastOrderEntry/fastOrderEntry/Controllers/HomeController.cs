@@ -11,19 +11,27 @@ namespace fastOrderEntry.Controllers
     {
         private PetLineContext db = new PetLineContext();
         public ActionResult Index()
+        { 
+            return View();
+        }
+
+        public ActionResult Articoli()
         {
-            ViewBag.Title = "Home Page";
-            ViewBag.mondo = "Ciao Mondo sono io";
+            return View();
+        }
 
-            var model = db.ca_divisa.ToList();
+        public ActionResult Listini()
+        {
+            return View();
+        }
 
-            return View(model);
+        public ActionResult OrdiniAcquisto()
+        {
+            return View();
         }
 
         public ActionResult OrdiniVendita()
-        {
-            ViewBag.Title = "Ordini di vendita";
-            
+        {          
             return View();
         }
 
