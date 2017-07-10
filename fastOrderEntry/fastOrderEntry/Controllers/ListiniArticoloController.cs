@@ -28,22 +28,17 @@ namespace fastOrderEntry.Controllers
         [HttpGet]
         public JsonResult GetElenco(string cerca)
         {
-            string minuscolo = cerca != null ? cerca.ToLower() : cerca;
-            string maiuscolo = cerca != null ? cerca.ToUpper() : cerca;
+            con.Open();
 
-            var query = db.ma_articoli_soc.Where(x => x.id_codice_art.Contains(cerca) | x.descrizione.Contains(minuscolo) | x.descrizione.Contains(maiuscolo));
-            List<RecordListino> lista = new List<RecordListino>();
+            Listino listino = new Listino();
+            listino.leggiPrezzi(con, cerca != null ? cerca.ToUpper() : "");
 
-            foreach(var x in query)
-            {
-                RecordListino item = new RecordListino{ id_codice_art = x.id_codice_art , descrizione = x.descrizione};
-                item.leggiPrezzi(con);
-                lista.Add(item);
-            }
+  
 
-            var jsonResult = Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(new { data = listino }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
+            con.Close();
             return jsonResult;
         }
 

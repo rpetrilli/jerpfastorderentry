@@ -14,7 +14,7 @@ namespace fastOrderEntry.Models
 
         internal void leggiPrezzi(NpgsqlConnection conn)
         {
-            conn.Open();
+  
 
             using (var cmd = new NpgsqlCommand())
             {
@@ -24,11 +24,14 @@ namespace fastOrderEntry.Models
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())
+                {
                     while (reader.Read())
+                    {
                         prezzo_vendita = reader.GetDecimal(reader.GetOrdinal("val_condizione"));
+                    }
+                }
             }
             
-            conn.Close();
         }
     }
 }

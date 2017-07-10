@@ -255,6 +255,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\db_ca_divisa.cs" />
     <Compile Include="Models\db_ma_articoli_soc.cs" />
+    <Compile Include="Models\Listino.cs" />
     <Compile Include="Models\PetLineContext.cs" />
     <Compile Include="Models\RecordListino.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -339,10 +340,10 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\OrdiniVendita.cshtml" />
+    <Content Include="Views\ListiniArticolo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\ListiniArticolo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

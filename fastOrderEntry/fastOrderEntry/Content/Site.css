@@ -15,6 +15,82 @@ textarea {
     max-width: 280px;
 }
 
+.font-700 {
+    font-weight: 700 !important;
+}
+
+.font-400 {
+    font-weight: 400 !important;
+}
+
+.font-300 {
+    font-weight: 300 !important;
+}
+
+.font-900 {
+    font-weight: 900 !important;
+}
+
+.margin-b-10 {
+    margin-bottom: 10px !important;
+}
+
+.margin-b-20 {
+    margin-bottom: 20px !important;
+}
+
+.margin-b-30 {
+    margin-bottom: 30px !important;
+}
+
+.margin-b-40 {
+    margin-bottom: 40px !important;
+}
+
+.margin-b-50 {
+    margin-bottom: 50px !important;
+}
+
+.margin-b-60 {
+    margin-bottom: 60px !important;
+}
+
+.margin-b-70 {
+    margin-bottom: 70px !important;
+}
+
+.space-10 {
+    height: 10px;
+}
+
+.space-20 {
+    height: 20px;
+}
+
+.space-30 {
+    height: 30px;
+}
+
+.space-40 {
+    height: 40px;
+}
+
+.space-50 {
+    height: 50px;
+}
+
+.space-60 {
+    height: 60px;
+}
+
+.space-70 {
+    height: 70px;
+}
+
+.space-80 {
+    height: 80px;
+}
+
 /* Home Page*/
 .fo-docs-masthead,
 .fo-docs-header {
