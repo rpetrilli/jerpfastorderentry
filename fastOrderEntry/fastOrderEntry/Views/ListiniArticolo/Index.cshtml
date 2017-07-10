@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "Listini Articolo";
+}
+@section header {
+    <script>
+        app.controller('listinoArticolo', ['$scope', '$http', function ($scope, $http) {
+            $scope.articoli = [];
+
+            $scope.cerca = function (item) {
+                $http({
+                    method: 'GET',
+                    url: '@(Url.Content("GetElenco"))',
+                    params : { cerca: item.articolo }
+                }).then(function successCallback(response) {                    
+                    $scope.articoli = response.data.data.recordlistino;                    
+                    }, function errorCallback(response) {
+                        console.log(response);
+                });
+            }
+        }]);
+    </script>
+
+}
+
+<div class="container" ng-controller="listinoArticolo">
+    <h1 class="page-header">@ViewBag.Title</h1>
+    <form class="form form-inline" ng-submit="cerca(item)">
+        <input type="text" class="form-control" ng-model="item.articolo" placeholder="articolo..." />
+        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="space-40"></div>
+    <h3><i class="fa fa-list"></i>&nbsp;Lista</h3>
+    <div class="panel panel-default">
+        <div class="panel-body">           
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Art</th>
+                        <th>Descrizione</th>
+                        <th>Pr Acq</th>
+                        <th>Pr Ven</th>
+                        <th>Sc 1</th>
+                        <th>Sc 2</th>
+                        <th>Sc 3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in articoli">
+                        <td>{{item.id_codice_art}}</td>
+                        <td>{{item.descrizione}}</td>
+                        <td>{{item.prezzo_acquisto}}</td>
+                        <td>{{item.prezzo_vendita}}</td>
+                        <td>{{item.sconto_1}}</td>
+                        <td>{{item.sconto_2}}</td>
+                        <td>{{item.sconto_3}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+

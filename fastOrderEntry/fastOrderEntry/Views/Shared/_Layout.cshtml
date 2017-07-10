@@ -8,14 +8,11 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/angularjs")
-
     <script>
         var app = angular.module('start', ['ngResource', 'angularUtils.directives.dirPagination']);
     </script>
-
     @RenderSection("header", required: false)
 </head>
-
 <body>
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -28,9 +25,7 @@
                 @Html.ActionLink("Fast Order", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Ordini di vendita", "Index", "Home", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>*@
+                <ul class="nav navbar-nav">                   
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             Anagrafiche <span class="caret"></span>

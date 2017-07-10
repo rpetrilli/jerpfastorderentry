@@ -26,21 +26,19 @@ namespace fastOrderEntry.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetElenco(string cerca)
-        {            
-            var query = db.ma_articoli_soc.Where(x => x.id_codice_art.Contains(cerca) | x.descrizione.Contains(cerca));
-            List<RecordListino> lista = new List<RecordListino>();
+        public JsonResult GetElenco(string cerca)
+        {
+            con.Open();
 
-            foreach(var x in query)
-            {
-                RecordListino item = new RecordListino{ id_codice_art = x.id_codice_art , descrizione = x.descrizione};
-                item.leggiPrezzi(con);
-                lista.Add(item);
-            }
+            Listino listino = new Listino();
+            listino.leggiPrezzi(con, cerca != null ? cerca.ToUpper() : "");
 
-            var jsonResult = Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+  
+
+            var jsonResult = Json(new { data = listino }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
+            con.Close();
             return jsonResult;
         }
 
