@@ -26,12 +26,9 @@ namespace fastOrderEntry.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetElenco(string cerca)
-        {
-            string minuscolo = cerca != null ? cerca.ToLower() : cerca;
-            string maiuscolo = cerca != null ? cerca.ToUpper() : cerca;
-
-            var query = db.ma_articoli_soc.Where(x => x.id_codice_art.Contains(cerca) | x.descrizione.Contains(minuscolo) | x.descrizione.Contains(maiuscolo));
+        public ActionResult GetElenco(string cerca)
+        {            
+            var query = db.ma_articoli_soc.Where(x => x.id_codice_art.Contains(cerca) | x.descrizione.Contains(cerca));
             List<RecordListino> lista = new List<RecordListino>();
 
             foreach(var x in query)
