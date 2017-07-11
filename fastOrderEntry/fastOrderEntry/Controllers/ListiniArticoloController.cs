@@ -11,6 +11,8 @@ namespace fastOrderEntry.Controllers
 {
     public class ListiniArticoloController : Controller
     {
+        private const int REC_X_PAGINA = 30;
+
         private PetLineContext db = new PetLineContext();
         private NpgsqlConnection con = null;
 
@@ -31,9 +33,9 @@ namespace fastOrderEntry.Controllers
             con.Open();
 
             Listino listino = new Listino();
-            listino.leggiPrezzi(con, cerca != null ? cerca.ToUpper() : "");
+            listino.select(con, cerca != null ? cerca.ToUpper() : "");
 
-  
+
 
             var jsonResult = Json(new { data = listino }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
@@ -41,6 +43,85 @@ namespace fastOrderEntry.Controllers
             con.Close();
             return jsonResult;
         }
+
+
+        [HttpGet]
+        public JsonResult GetCategorie()
+        {
+            con.Open();
+
+            CategorieStruttura categorie = new CategorieStruttura();
+            categorie.select(con);
+
+            var jsonResult = Json( categorie.categorie , JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+            con.Close();
+            return jsonResult;
+        }
+
+
+        [HttpGet]
+        public JsonResult GetPaginatore(string query, string cod_cat_merc)
+        {
+            con.Open();
+
+            int cnt = 0;
+
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT count(*) as cnt from ma_articoli_soc \r\n" +
+                    "where id_societa = '1' \r\n" +
+                    "and (upper(id_codice_art) LIKE( @query) or upper(descrizione) like( @query ) ) \r\n";
+                if (!string.IsNullOrEmpty(cod_cat_merc))
+                {
+                    cmd.CommandText += " and id_categoria_merc like ('" + cod_cat_merc + "')";
+                }
+                cmd.Parameters.AddWithValue("query", "%" + query + "%");
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        cnt = Convert.ToInt32(reader["cnt"]);
+                    }
+                }
+            }
+
+            var jsonResult = Json(new { rec_number = cnt, rec_x_pagina = REC_X_PAGINA, pag_number = Math.Ceiling(1.0 * cnt / REC_X_PAGINA) }, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+            con.Close();
+            return jsonResult;
+        }
+
+
+        [HttpGet]
+        public JsonResult GetConenutoPagina(string query, string cod_cat_merc, int page_number)
+        {
+            con.Open();
+
+            Listino listino = new Listino();
+            listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA);
+
+
+
+            var jsonResult = Json(listino.recordlistino, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+            con.Close();
+            return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult saveListino(RecordListino item)
+        {
+            return Json(new { ack="OK"}, JsonRequestBehavior.AllowGet);
+        }
+
+
 
         protected override void Dispose(bool disposing)
         {           

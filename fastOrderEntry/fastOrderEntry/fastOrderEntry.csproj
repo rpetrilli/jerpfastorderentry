@@ -252,6 +252,7 @@
     <Compile Include="Helpers\DbUtils.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CategorieStruttura.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\db_ca_divisa.cs" />
     <Compile Include="Models\db_ma_articoli_soc.cs" />
@@ -279,6 +280,7 @@
     <Content Include="Scripts\angular-resource.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\appModules.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
