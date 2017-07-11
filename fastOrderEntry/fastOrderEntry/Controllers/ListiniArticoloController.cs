@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace fastOrderEntry.Controllers
 {
+    [Authorize]
     public class ListiniArticoloController : Controller
     {
         private const int REC_X_PAGINA = 30;
