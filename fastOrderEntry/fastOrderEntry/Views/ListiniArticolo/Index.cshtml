@@ -187,7 +187,7 @@
             });
         });
 
-        shortcut.add("Right", function () {
+        shortcut.add("pd", function () {
             var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
             scope.$apply(function () {
                 if (scope.pag_corrente < scope.pag_number - 1) { 
@@ -196,7 +196,7 @@
             });
         });
 
-        shortcut.add("Left", function () {
+        shortcut.add("pu", function () {
             var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
             scope.$apply(function () {
                 if (scope.pag_corrente > 0) {
