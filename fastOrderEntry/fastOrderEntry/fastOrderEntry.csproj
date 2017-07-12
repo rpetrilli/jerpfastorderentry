@@ -212,6 +212,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\StartUp.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\DivisaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListiniArticoloController.cs" />
@@ -257,6 +259,7 @@
     <Compile Include="Models\db_ca_divisa.cs" />
     <Compile Include="Models\db_ma_articoli_soc.cs" />
     <Compile Include="Models\Listino.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\PetLineContext.cs" />
     <Compile Include="Models\RecordListino.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -343,6 +346,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\OrdiniVendita.cshtml" />
     <Content Include="Views\ListiniArticolo\Index.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

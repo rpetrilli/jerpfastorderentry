@@ -22,7 +22,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Fast Order", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @{
+                    var brand = "Fast Order";
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        brand = @User.Identity.Name;
+                    }
+                }
+                @Html.ActionLink(brand, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">                   
@@ -51,7 +58,10 @@
                             <li>@Html.ActionLink("Ordini", "Index", "Home", new { area = "" }, null)</li>
                         </ul>
                     </li>
-                </ul>
+                    <li>
+                        <a href="@Url.Action("Logout", "Auth")">Logout</a>
+                    </li>
+                  </ul>
             </div>
         </div>
     </div>
