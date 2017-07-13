@@ -32,13 +32,17 @@ namespace fastOrderEntry.Controllers
                 return View(model); //Returns the view with the input values so that the user doesn't have to retype again
             }
 
+            NpgsqlConnection con = null;
+            con = Helpers.DbUtils.GetDefaultConnection();
+            con.Open();
 
+            UtenteModel utente = new UtenteModel();
 
-            if (model.nomeUtente == "admin" && model.password == "admin")
+            if (utente.login(con,  model.nomeUtente,  model.password))
             {
                 var identity = new ClaimsIdentity( new[] {
-                    new Claim(ClaimTypes.Name, "Amministratore"),
-                    new Claim(ClaimTypes.NameIdentifier, "admin"),
+                    new Claim(ClaimTypes.Name, utente.first_name + " " + utente.last_name ),
+                    new Claim(ClaimTypes.NameIdentifier, utente.user_name),
                 }, "ApplicationCookie");
 
                 var ctx = Request.GetOwinContext();
@@ -47,6 +51,8 @@ namespace fastOrderEntry.Controllers
 
                 return Redirect(GetRedirectUrl(model.ReturnUrl));
             }
+
+            con.Close();
 
             ModelState.AddModelError("LoginMessage", "Nome utente o password non validi");
 
