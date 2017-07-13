@@ -66,7 +66,7 @@ namespace fastOrderEntry.Controllers
         {
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
             {
-                return Url.Action("index", "listiniArticolo");
+                return Url.Action("Index", "Home");
             }
             return returnUrl;
         }

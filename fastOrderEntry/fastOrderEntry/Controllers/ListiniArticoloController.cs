@@ -10,9 +10,10 @@ using System.Web.Mvc;
 namespace fastOrderEntry.Controllers
 {
 
+   
     public class ListiniArticoloController : Controller
     {
-        private const int REC_X_PAGINA = 30;
+        private const int REC_X_PAGINA = 15;
 
         private PetLineContext db = new PetLineContext();
         private NpgsqlConnection con = null;

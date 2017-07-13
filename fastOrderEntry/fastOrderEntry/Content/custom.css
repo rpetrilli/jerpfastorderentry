@@ -1,4 +1,4 @@
-﻿body {
+﻿/*body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -7,7 +7,7 @@
     padding-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
-}
+}*/
 
 
 
@@ -97,11 +97,13 @@
     text-shadow: 0 1px 0 rgba(0,0,0,.1);
     background-color: #428bca;
     background-image: -webkit-gradient(linear, left top, left bottom, from( #2a6496), to(#428bca));
-    background-image: -webkit-linear-gradient(top,  #2a6496 0%, #428bca 100%);
-    background-image: -o-linear-gradient(top,  #2a6496 0%, #428bca 100%);
-    background-image: linear-gradient(to bottom,  #2a6496 0%, #428bca 100%);
+    background-image: -webkit-linear-gradient(top, #2a6496 0%, #428bca 100%);
+    background-image: -o-linear-gradient(top, #2a6496 0%, #428bca 100%);
+    background-image: linear-gradient(to bottom, #2a6496 0%, #428bca 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=' #2a6496', endColorstr='#428bca', GradientType=0);
     background-repeat: repeat-x;
+    height: 90vh;
+    min-height: 90vh;   
 }
 
     /* Masthead (headings and download button) */

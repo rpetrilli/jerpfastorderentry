@@ -7,12 +7,10 @@
         function show_message(errore, messaggio) {
             alert(messaggio);
         };
-
         app.controller('listinoArticolo', ['$scope', '$http', function ($scope, $http) {
             $scope.cod_cat_merc_sel = '';
             $scope.records = [];
             $scope.categorie = [];
-
             $http({
                 method: 'GET',
                 url: '@(Url.Action("GetCategorie"))',
@@ -22,8 +20,6 @@
                 }, function errorCallback(response) {
                     console.log(response);
                 });
-
-
             $scope.refresh = function () {
                 $http({
                 method: 'GET',
@@ -33,17 +29,12 @@
                     $scope.rec_x_pagina = response.data.rec_x_pagina;
                     $scope.rec_number = response.data.rec_number;
                     $scope.pag_number = response.data.pag_number;
-
                     $scope.refresh_page(0);
                     }, function errorCallback(response) {
                         show_message('Errore', error.data);
              });
             };
-
-
-
             $scope.refresh_page = function (page_number) {
-
                 $http({
                     method: 'GET',
                     url: '@(Url.Action("getConenutoPagina"))',
@@ -53,38 +44,29 @@
                 }).then(function (response) {
                         $scope.records = response.data;
                         $scope.pag_corrente = page_number;
-
                         $scope.rec_pagina = -1;
                     }).catch(function (error, status) {
                         show_message('Errore', error.data);
                     });
             };
-
-
             $scope.refresh();
-
             $scope.next_record = function () {
                 $scope.rec_pagina++;
                 if ($scope.rec_pagina >= $scope.records.length ) {
                     $scope.rec_pagina = 0;
                 }
-
                 $('#table tr:nth-child(' + ($scope.rec_pagina + 1) +') input.request-focus').focus();
             };
-
             $scope.previous_record = function () {
                 $scope.rec_pagina--;
                 if ($scope.rec_pagina < 0 ) {
                     $scope.rec_pagina = $scope.records.length - 1;
                 }
-
                 $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
             };
-
             $scope.linefocused = function (line) {
                 $scope.rec_pagina = line;
             };
-
             $scope.selezionaCategoria = function (item_sel) {
                 if ("undefined" === typeof item_sel) {
                     $scope.cod_cat_merc_sel = '';
@@ -96,7 +78,6 @@
                     }
                 } else {
                     $scope.cod_cat_merc_sel = item_sel.id_cat_merc;
-
                     if (item_sel.livello == 1) {
                         for (var j = 0; j < $scope.categorie.length; j++) {
                             item = $scope.categorie[j];
@@ -110,16 +91,10 @@
                         }
                     }
                 };
-
                 $scope.refresh();
-
             };
-
-
-
             /* Gestione paginatore*/
             $scope.nr_pagine_display = 4;
-
             $scope.nr_pagina_paginatore = function (indice) {
                 if (indice + 1 > $scope.pag_number) {
                     return -1;
@@ -129,7 +104,6 @@
                     return $scope.pag_corrente + indice - $scope.nr_pagine_display;
                 }
             };
-
             $scope.save = function (item) {
                 $http({
                     method: 'POST',
@@ -140,9 +114,7 @@
                     }).catch(function (error, status) {
                         show_message('Errore', error.data);
                     });
-
             };
-
             $scope.save_current_record = function () {
                 if ($scope.rec_pagina >= 0 && $scope.rec_pagina < $scope.records.length) {
                     $scope.save($scope.records[$scope.rec_pagina]);
@@ -150,52 +122,40 @@
                     show_message('Errore', "Nessun record selezionato");
                 }
             };
-
-
-
         }]);
     </script>
-
 }
-
-
 @section scripts{
     <script>
-        shortcut.add("Home", function () {	
+        shortcut.add("Home", function () {
             $('#query').focus();
         });
-
         shortcut.add("Up", function () {
             var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
             scope.$apply(function () {
                 scope.previous_record();
-            });           
-            
+            });
         });
-
         shortcut.add("Down", function () {
             var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
             scope.$apply(function () {
                 scope.next_record();
             });
         });
-
         shortcut.add("Ctrl+S", function () {
             var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
             scope.$apply(function () {
                 scope.save_current_record();
             });
         });
-
         shortcut.add("pd", function () {
             var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
             scope.$apply(function () {
-                if (scope.pag_corrente < scope.pag_number - 1) { 
+                if (scope.pag_corrente < scope.pag_number - 1) {
                     scope.refresh_page(scope.pag_corrente + 1);
                 }
             });
         });
-
         shortcut.add("pu", function () {
             var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
             scope.$apply(function () {
@@ -203,16 +163,18 @@
                     scope.refresh_page(scope.pag_corrente - 1);
                 }
             });
-
         });
     </script>
 }
-
-<div class="container-fluid" ng-controller="listinoArticolo">
-    <h1 class="page-header"><i class="fa fa-list"></i>&nbsp; @ViewBag.Title</h1>
-
+<div class="header">
+    <div class="col-md-12">
+        <h3 class="header-title">@ViewBag.Title</h3>
+        <p class="header-info">gestione listini per articolo e cliente</p>
+    </div>
+</div>
+<div class="main-content" ng-controller="listinoArticolo">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2 col-lg-2">
             <ul>
                 <li class="list-group-item">
                     <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
@@ -221,134 +183,105 @@
                     <a class="livello{{item.livello}}"
                        ng-click="selezionaCategoria(item)"
                        ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">{{item.descrizione}}</a>
-
                 </li>
             </ul>
-
         </div>
-
-        <div class="col-md-9">
-
-
-
+        <div class="col-md-10 col-lg-10">
+            <h3><i class="fa fa-filter"></i> Filtro</h3>
             <div class="input-group">
                 <input id="query"
                        type="text" class="form-control"
-                       ng-model="query" placeholder="cod. articolo o descrizione ..."
+                       ng-model="query" placeholder="filtre per codice articolo o descrizione..."
                        ng-on-enter="refresh()" />
                 <span class="input-group-btn">
                     <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
                 </span>
             </div>
-
-            
-            <div class="space-10"></div>
-
-
-
-            <div class="panel panel-default">
-                <div class="panel-body">
-
-                    <div style="width: 100%; text-align: center; margin-top: 20px;"
-                         ng-show="pag_number > 1">
-                        <ul class="pagination" style="text-align: center;">
-                            <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
-                            <li>
-                                <a ng-click="refresh_page(0)"
-                                   ng-class="{disabled: pag_corrente == 0}"
-                                   href="#nav">&lt;&lt;</a>
-                            </li>
-                            <li>
-                                <a ng-click="refresh_page(pag_corrente-1)"
-                                   ng-class="{disabled: pag_corrente == 0}"
-                                   href="#nav">&lt;</a>
-                            </li>
-                            <li ng-repeat="p_nr in [0,1,2,3]">
-                                <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
-                                   ng-bind="nr_pagina_paginatore(p_nr) + 1"
-                                   ng-hide="nr_pagina_paginatore(p_nr)==-1"
-                                   ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
-                                   href="#nav">
-                                </a>
-                            </li>
-                            <li>
-                                <a ng-click="refresh_page(pag_corrente+1)"
-                                   ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                                   href="#nav">&gt;</a>
-                            </li>
-                            <li>
-                                <a ng-click="refresh_page(pag_number-1)"
-                                   ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                                   href="#nav">&gt;&gt;</a>
-                            </li>
-                        </ul>
-                    </div> <!--Fine paginatore -->
-
-
-
-
-                    <table class="table table-hover" id="table">
-                        <thead>
-                            <tr>
-                                <th>Art</th>
-                                <th>Descrizione</th>
-                                <th>Pr Acq</th>
-                                <th>Pr Ven</th>
-                                <th>Sc 1</th>
-                                <th>Sc 2</th>
-                                <th>Sc 3</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="item in records">
-                                <td>{{item.id_codice_art}}</td>
-                                <td>{{item.descrizione}}</td>
-                                <td>
-                                    <input type="number" class="form-control text-right" 
-                                           ng-model="item.prezzo_acquisto" style="width:80px;"
-                                           ng-focus="linefocused($index);" />
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control text-right request-focus" 
-                                           ng-model="item.prezzo_vendita" style="width:80px;"
-                                           ng-focus="linefocused($index);"/>
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control text-right" 
-                                           ng-model="item.sconto_1" style="width:80px;"
-                                           ng-focus="linefocused($index);"/>
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control text-right" 
-                                           ng-model="item.sconto_2" style="width:80px;"
-                                           ng-focus="linefocused($index);"/>
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control text-right" 
-                                           ng-model="item.sconto_3" style="width:80px;"
-                                           ng-focus="linefocused($index);" />
-                                </td>
-                                <td>
-                                    <button class="btn btn-default"
-                                                ng-click="save(item);">
-                                            <span class="fa fa-save" />
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+            <h3><i class="fa fa-list-alt"></i> Elenco</h3>
+            <table class="table table-hover table-striped" id="table">
+                <thead>
+                    <tr>
+                        <th>Art</th>
+                        <th>Descrizione</th>
+                        <th>Pr Acq</th>
+                        <th>Pr Ven</th>
+                        <th>Sc 1</th>
+                        <th>Sc 2</th>
+                        <th>Sc 3</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in records">
+                        <td>{{item.id_codice_art}}</td>
+                        <td>{{item.descrizione}}</td>
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.prezzo_acquisto" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control text-right request-focus"
+                                   ng-model="item.prezzo_vendita" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.sconto_1" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.sconto_2" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.sconto_3" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <button class="btn btn-default"
+                                    ng-click="save(item);">
+                                <span class="fa fa-save" />
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div ng-show="pag_number > 1">
+                <ul class="pagination" style="text-align: center;">
+                    <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
+                    <li>
+                        <a ng-click="refresh_page(0)"
+                           ng-class="{disabled: pag_corrente == 0}"
+                           href="#nav">&lt;&lt;</a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_corrente-1)"
+                           ng-class="{disabled: pag_corrente == 0}"
+                           href="#nav">&lt;</a>
+                    </li>
+                    <li ng-repeat="p_nr in [0,1,2,3]">
+                        <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
+                           ng-bind="nr_pagina_paginatore(p_nr) + 1"
+                           ng-hide="nr_pagina_paginatore(p_nr)==-1"
+                           ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
+                           href="#nav">
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_corrente+1)"
+                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                           href="#nav">&gt;</a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_number-1)"
+                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                           href="#nav">&gt;&gt;</a>
+                    </li>
+                </ul>
+            </div> <!--Fine paginatore -->
         </div> <!--Dettaglio-->
-
     </div>
-
-
 </div>
-
-
-
-
-
