@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "Listini Cliente";
+}
+@section header {
+}
+
+@section scripts {
+    <script>
+
+        var $input = $(".typeahead");
+
+        $.get('@(Url.Action("GetClienti"))', function (data) {
+            $input.typeahead({
+                source: data
+            });
+        });
+        
+        $input.change(function () {
+            var current = $input.typeahead("getActive");
+            console.log(current);
+            var scope = angular.element($("[ng-controller='listinoCliente']")).scope();
+            scope.$apply(function () {
+                scope.cliente = current;
+            });
+        });
+
+        function show_message(errore, messaggio) {
+            alert(messaggio);
+        };
+
+        app.controller('listinoCliente', ['$scope', '$http', 'listiniService', function ($scope, $http, listiniService) {
+            $scope.categorie = [];
+            $scope.filtro = "Tutti gli articoli";
+
+
+            listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
+                $scope.categorie = result.data;
+            }, function (error) {
+                show_message(error);
+            });
+
+            $scope.selezionaCategoria = function (item_sel) {
+                if ("undefined" === typeof item_sel) {
+                    $scope.filtro = "Tutti gli articoli";
+                    $scope.cod_cat_merc_sel = '';
+                    for (var j = 0; j < $scope.categorie.length; j++) {
+                        item = $scope.categorie[j];
+                        if (item.livello == 2) {
+                            item.visibile = false;
+                        }
+                    }
+                } else {
+                    $scope.filtro = item_sel.descrizione;
+                    $scope.cod_cat_merc_sel = item_sel.id_cat_merc;
+                    if (item_sel.livello == 1) {
+                        for (var j = 0; j < $scope.categorie.length; j++) {
+                            item = $scope.categorie[j];
+                            if (item.livello == 2) {
+                                if (item.id_cat_merc.substring(0, item_sel.id_cat_merc.length) == item_sel.id_cat_merc) {
+                                    item.visibile = !item.visibile;
+                                } else {
+                                    item.visibile = false;
+                                }
+                            }
+                        }
+                    }
+                };
+            };
+        }]);
+
+
+
+    </script>
+}
+
+<div class="header">
+    <div class="col-md-12">
+        <h3 class="header-title">@ViewBag.Title</h3>
+        <p class="header-info">gestione listini per cliente</p>
+    </div>
+</div>
+<div class="main-content" ng-controller="listinoCliente">
+    <div class="row">
+        <div class="col-md-2 col-lg-2">
+            <h4><i class="fa fa-bars"></i> Menu</h4>
+            <ul class="nav nav-stacked nav-pills">
+                <li>
+                    <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
+                </li>
+                <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_merc == cod_cat_merc_sel}">
+                    <a class="livello{{item.livello}}"
+                       ng-click="selezionaCategoria(item)"
+                       ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">
+                        <span class="fa fa-caret-right"></span>&nbsp;
+                        {{item.descrizione}}
+                    </a>
+
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 col-lg-10">
+            <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
+            <div class="form-inline">
+                <div class="form-group col-md-4 col-lg-4">
+                    <input type="text" class="typeahead form-control" placeholder="filtro per cliente..." />
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="filtro per codice articolo o descrizione..."  />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+            <h4><i class="fa fa-list-ul"></i> Elenco</h4>
+            {{cliente}}
+        </div>
+    </div>
+</div>

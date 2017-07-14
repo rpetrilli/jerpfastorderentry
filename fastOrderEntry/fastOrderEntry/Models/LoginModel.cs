@@ -43,7 +43,7 @@ namespace fastOrderEntry.Models
                     while (reader.Read())
                     {
                         first_name = Convert.ToString(reader["first_name"]);
-                        last_name = Convert.ToString(reader["last_name"]);
+                        last_name = Convert.ToString(reader["last_name"]);                        
                         logged = true;
                     }
                 }
@@ -54,3 +54,4 @@ namespace fastOrderEntry.Models
 
         }
     }
+}

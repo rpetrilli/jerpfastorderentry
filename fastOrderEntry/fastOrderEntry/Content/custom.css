@@ -27,6 +27,35 @@
     font-weight: 900 !important;
 }
 
+.margin-l-10 {
+    margin-left: 10px !important;
+}
+
+.margin-l-20 {
+    margin-left: 20px !important;
+}
+
+.margin-l-30 {
+    margin-left: 30px !important;
+}
+
+.margin-l-40 {
+    margin-left: 40px !important;
+}
+
+.margin-l-50 {
+    margin-left: 50px !important;
+}
+
+.margin-l-60 {
+    margin-left: 60px !important;
+}
+
+.margin-l-70 {
+    margin-left: 70px !important;
+}
+
+
 .margin-b-10 {
     margin-bottom: 10px !important;
 }
@@ -305,19 +334,20 @@
     }
 }
 
-
-.list-group-item a.livello1 {
-
+.nav-livello > a {    
+    padding: 5px 10px !important;
 }
 
-.list-group-item a.livello2 {
+.nav-livello a.livello1 {
+}
+
+.nav-livello a.livello2 {
     display: none;
 }
-
-
-.list-group-item a.livello2.visibile {
-    display: inline;
-}
+    .nav-livello a.livello2.visibile {
+        display: block;
+        margin-left:10px;
+    }
 
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
@@ -327,4 +357,8 @@ input[type=number]::-webkit-inner-spin-button {
 
 input[type=number] {
     -moz-appearance: textfield;
+}
+
+.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+    padding:2px !important;
 }

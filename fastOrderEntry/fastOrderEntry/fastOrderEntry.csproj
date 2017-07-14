@@ -243,12 +243,14 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListiniArticoloController.cs" />
+    <Compile Include="Controllers\ListiniClienteController.cs" />
     <Compile Include="Controllers\OrdiniVenditaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DbUtils.cs" />
     <Compile Include="Models\CategorieStruttura.cs" />
+    <Compile Include="Models\ClientiStruttura.cs" />
     <Compile Include="Models\Listino.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\PetLineContext.cs" />
@@ -258,6 +260,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\bootstrap-submenu.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.css" />
@@ -274,6 +277,7 @@
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\appModules.js" />
+    <Content Include="Scripts\bootstrap-submenu.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -306,6 +310,7 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\bootstrap3-typeahead.js" />
     <Content Include="Scripts\config-template.js" />
     <Content Include="Scripts\dirPagination.js" />
     <Content Include="Scripts\dirPagination.tpl.html" />
@@ -319,6 +324,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\appServices.js" />
     <Content Include="Scripts\shortcut.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -338,6 +344,7 @@
     <Content Include="Views\ListiniArticolo\Index.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Shared\_Nav.cshtml" />
+    <Content Include="Views\ListiniCliente\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -42,7 +42,7 @@ namespace fastOrderEntry.Controllers
             {
                 var identity = new ClaimsIdentity( new[] {
                     new Claim(ClaimTypes.Name, utente.first_name + " " + utente.last_name ),
-                    new Claim(ClaimTypes.NameIdentifier, utente.user_name),
+                    new Claim(ClaimTypes.NameIdentifier, model.nomeUtente),
                 }, "ApplicationCookie");
 
                 var ctx = Request.GetOwinContext();

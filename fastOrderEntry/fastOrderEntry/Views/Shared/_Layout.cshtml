@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    string id = string.IsNullOrEmpty(ViewBag.page) ? string.Empty : "#" + ViewBag.page;
+}
+<!DOCTYPE html>
 <html ng-app="start">
 <head>
     <meta charset="utf-8">
@@ -13,7 +16,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/angularjs")
     <script>
-        var app = angular.module('start', ['ngResource', 'angularUtils.directives.dirPagination', 'appModules']);
+        var app = angular.module('start', ['ngResource', 'angularUtils.directives.dirPagination', 'appModules', 'appServices']);
     </script>
     @RenderSection("header", required: false)
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -35,6 +38,9 @@
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    @RenderSection("scripts", required: false)  
+    <script>
+        $('#nav @(id)').addClass('active');
+    </script>
 </body>
 </html>

@@ -11,7 +11,8 @@ namespace fastOrderEntry.Controllers
     {
         private PetLineContext db = new PetLineContext();
         public ActionResult Index()
-        { 
+        {
+            ViewBag.page = "home";
             return View();
         }
 

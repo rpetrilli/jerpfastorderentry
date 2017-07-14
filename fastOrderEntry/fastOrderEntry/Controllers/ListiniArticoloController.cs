@@ -26,6 +26,7 @@ namespace fastOrderEntry.Controllers
         // GET: ListiniArticolo
         public ActionResult Index()
         {
+            ViewBag.page = "anagrafiche";
             return View();
         }
 
@@ -66,6 +67,8 @@ namespace fastOrderEntry.Controllers
         [HttpGet]
         public JsonResult GetPaginatore(string query, string cod_cat_merc)
         {
+            query = string.IsNullOrEmpty(query) ? string.Empty : query.ToUpper();
+
             con.Open();
 
             int cnt = 0;

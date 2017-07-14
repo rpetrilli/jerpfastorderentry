@@ -25,14 +25,21 @@
     </ul>
 
 </div><!--Head Nav-->
-<div class="navbar navbar-default navbar-static-top navbar-top" role="navigation">
+<div id="nav" class="navbar navbar-default navbar-static-top navbar-top" role="navigation">
     <ul class="nav navbar-nav">
-        <li><a href="@Url.Action("Index", "Home")"><i class="fa fa-home fa-fw"></i>Home</a></li>        
-        <li class="dropdown ">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-archive fa-fw"></i>Anagrafiche<i class="caret"></i></a>
+        <li id="home"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home fa-fw"></i>Home</a></li>        
+        <li id="anagrafiche" class="dropdown ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu><i class="fa fa-archive fa-fw"></i>Anagrafiche<i class="caret"></i></a>
             <ul class="dropdown-menu">
                 <li><a href="#"><i class="fa fa-leaf"></i> Articoli</a></li>
-                <li><a href="@Url.Action("Index", "ListiniArticolo")#"><i class="fa fa-file"></i> Listini Articolo</a></li>                
+                <li class="dropdown-submenu">
+                    <a><i class="fa fa-th-list fa-fw"></i>Listini</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="@Url.Action("Index", "ListiniArticolo")#"><i class="fa fa-file"></i> Listini Articolo</a></li>
+                        <li><a href="@Url.Action("Index", "ListiniCliente")#"><i class="fa fa-copy"></i> Listini Cliente</a></li>
+                    </ul>
+                </li>
+               
             </ul>
         </li>        
         <li class="dropdown ">
