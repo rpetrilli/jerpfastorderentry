@@ -251,6 +251,7 @@
     <Compile Include="Helpers\DbUtils.cs" />
     <Compile Include="Models\CategorieStruttura.cs" />
     <Compile Include="Models\ClientiStruttura.cs" />
+    <Compile Include="Models\ListinoCliente.cs" />
     <Compile Include="Models\Listino.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\PetLineContext.cs" />
