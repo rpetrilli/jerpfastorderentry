@@ -100,8 +100,9 @@
             };
 
             $scope.editOrCreate = function (item) {
-                $scope.nuovo = 'undefined' === item;
+                $scope.nuovo = 'undefined' === typeof(item);
                 $scope.current = item ? item : {};
+                //Se siamo in modifica
                 if (!$scope.nuovo) {
                     $http({
                         method: 'GET',
@@ -115,7 +116,7 @@
                         });
                 } else {
                     $scope.displayMode = "edit";
-                    $scope.current = {}:
+                    $scope.current = {};
                 }
                 
             };

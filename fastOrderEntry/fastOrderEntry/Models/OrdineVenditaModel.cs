@@ -9,6 +9,7 @@ namespace fastOrderEntry.Models
 {
     public class OrdineVenditaModel : DBObject
     {
+        public int esercizio { get; set; }
         public string id_ordine { get; set; }
         public DateTime data_ordine { get; set; }
 
@@ -70,6 +71,7 @@ namespace fastOrderEntry.Models
                         item.id_cliente = Convert.ToString(reader["id_cliente"]);
                         item.id_ordine = Convert.ToString(reader["id_ordine"]);
                         item.data_ordine = Convert.ToDateTime(reader["data_ordine"]);
+                        item.esercizio = Convert.ToInt32(reader["esercizio"]);
                         list.Add(item);
                     }
                 }
@@ -82,7 +84,28 @@ namespace fastOrderEntry.Models
 
         public override void select(NpgsqlConnection con)
         {
-            throw new NotImplementedException();
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT \r\n" +
+                    "      * \r\n" +
+                    "from vo_ordini \r\n" +
+                    "where id_societa = '1' and esercizio = &esercizio and id_ordine = &id_ordine";
+
+                cmd.Parameters.AddWithValue("esercizio", esercizio);
+                cmd.Parameters.AddWithValue("id_ordine", id_ordine);
+
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        id_cliente = Convert.ToString(reader["id_cliente"]);
+                        data_ordine = Convert.ToDateTime(reader["data_ordine"]);
+                    }
+                }
+            }
         }
 
         public override void update(NpgsqlConnection con)

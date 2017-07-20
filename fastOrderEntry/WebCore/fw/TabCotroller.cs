@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -72,7 +73,19 @@ namespace WebCore.fw
         [HttpPut]
         public JsonResult update(O obj)
         {
-            obj.update(con);
+            con.Open();
+            NpgsqlTransaction transaction = con.BeginTransaction();
+            try
+            {
+                obj.update(con);
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+            con.Close();
+
             var jsonResult 
                 = Json(obj, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
@@ -83,7 +96,20 @@ namespace WebCore.fw
         [HttpPost]
         public JsonResult insert(O obj)
         {
-            obj.update(con);
+
+            con.Open();
+            NpgsqlTransaction transaction = con.BeginTransaction();
+            try
+            {
+                obj.insert(con);
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+            con.Close();
+            
             var jsonResult
                 = Json(obj, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
@@ -102,6 +128,22 @@ namespace WebCore.fw
 
             return jsonResult;
         }
+
+        [HttpGet]
+        public JsonResult select(O obj)
+        {
+            con.Open();
+            obj.select(con);
+            con.Close();
+
+            var jsonResult
+                = Json(obj, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+            return jsonResult;
+
+        }
+
 
         public new ViewResult View()
         {
