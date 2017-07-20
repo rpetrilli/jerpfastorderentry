@@ -319,7 +319,7 @@ namespace fastOrderEntry.Models
                 {
 
                     cmd.Connection = conn;
-                    cmd.CommandText = "DELETE FROM da_listini_articolo \r\n" +
+                    cmd.CommandText = "DELETE FROM da_listini_cliente \r\n" +
                         "   where id_societa = '1' and  id_cond_prezzo = @id_cond_prezzo \r\n" +
                         "     and id_codice_art =  @id_codice_art " +
                         "     and id_cliente =  @id_cliente ";

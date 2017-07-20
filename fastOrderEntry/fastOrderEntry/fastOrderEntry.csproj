@@ -254,6 +254,7 @@
     <Compile Include="Models\ListinoCliente.cs" />
     <Compile Include="Models\Listino.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\OrdineVenditaModel.cs" />
     <Compile Include="Models\PetLineContext.cs" />
     <Compile Include="Models\RecordListino.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -346,6 +347,7 @@
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Shared\_Nav.cshtml" />
     <Content Include="Views\ListiniCliente\Index.cshtml" />
+    <Content Include="Views\OrdiniVendita\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -365,6 +367,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebCore\WebCore.csproj">
+      <Project>{a8a1ea46-3fad-49c0-8962-346d5e96887d}</Project>
+      <Name>WebCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

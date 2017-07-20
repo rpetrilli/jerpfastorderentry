@@ -1,39 +1,45 @@
-﻿using System;
+﻿using fastOrderEntry.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+using System.Web;
+using System.Web.Mvc;
+using WebCore.fw;
+using Npgsql;
+using fastOrderEntry.Helpers;
 
 namespace fastOrderEntry.Controllers
 {
-    public class OrdiniVenditaController : ApiController
+    public class OrdiniVenditaController : TabCotroller<OrdiniFilters, OrdineVenditaModel>
     {
-        // GET: api/OrdiniVendita
-        public IEnumerable<string> Get()
+        // GET: OrdiniVendita
+        public ActionResult Index()
         {
-            return new string[] { "value1", "value2" };
+            
+            return View();
         }
 
-        // GET: api/OrdiniVendita/5
-        public string Get(int id)
+        protected override NpgsqlConnection getConnection()
         {
-            return "value";
+            return DbUtils.GetDefaultConnection();   
         }
+    }
 
-        // POST: api/OrdiniVendita
-        public void Post([FromBody]string value)
-        {
-        }
 
-        // PUT: api/OrdiniVendita/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+    public class OrdiniFilters : Filters
+    {
+        public string id_cliente { get; set; }
+        public string id_agente { get; set; }
 
-        // DELETE: api/OrdiniVendita/5
-        public void Delete(int id)
+        public DateTime? da_data { get; set; }
+        public DateTime? al_data { get; set; }
+
+        public string id_ordine_da { get; set; }
+        public string id_ordine_al { get; set; }
+
+        public override string toWhereConditions()
         {
+            return "";
         }
     }
 }
