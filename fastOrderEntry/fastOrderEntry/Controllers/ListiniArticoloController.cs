@@ -35,7 +35,7 @@ namespace fastOrderEntry.Controllers
         {
             con.Open();
 
-            Listino listino = new Listino();
+            ListinoModel listino = new ListinoModel();
             listino.select(con, cerca != null ? cerca.ToUpper() : "");
 
 
@@ -53,7 +53,7 @@ namespace fastOrderEntry.Controllers
         {
             con.Open();
 
-            CategorieStruttura categorie = new CategorieStruttura();
+            CategorieStrutturaModel categorie = new CategorieStrutturaModel();
             categorie.select(con);
 
             var jsonResult = Json( categorie.categorie , JsonRequestBehavior.AllowGet);
@@ -108,7 +108,7 @@ namespace fastOrderEntry.Controllers
         {
             con.Open();
 
-            Listino listino = new Listino();
+            ListinoModel listino = new ListinoModel();
             listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA);
 
 
@@ -121,7 +121,7 @@ namespace fastOrderEntry.Controllers
         }
 
         [HttpPost]
-        public JsonResult saveListino(RecordListino item)
+        public JsonResult saveListino(RecordListinoModel item)
         {
             con.Open();
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace fastOrderEntry.Models
 {
-    public class ClientiStruttura
+    public class ClientiStrutturaModel
     {
-        public ClientiStruttura()
+        public ClientiStrutturaModel()
         {
             this.clienti = new List<Cliente>();
         }

@@ -28,7 +28,7 @@ namespace fastOrderEntry.Controllers
         public JsonResult GetClienti()
         {
             con.Open();
-            ClientiStruttura clienti = new ClientiStruttura();
+            ClientiStrutturaModel clienti = new ClientiStrutturaModel();
             clienti.select(con);
 
             var jsonResult = Json(clienti.clienti, JsonRequestBehavior.AllowGet);
@@ -45,7 +45,7 @@ namespace fastOrderEntry.Controllers
         {
             con.Open();
 
-            CategorieStruttura categorie = new CategorieStruttura();
+            CategorieStrutturaModel categorie = new CategorieStrutturaModel();
             categorie.select(con);
 
             var jsonResult = Json(categorie.categorie, JsonRequestBehavior.AllowGet);
@@ -113,7 +113,7 @@ namespace fastOrderEntry.Controllers
         }
 
         [HttpPost]
-        public JsonResult saveListino(RecordListino item)
+        public JsonResult saveListino(RecordListinoModel item)
         {
             con.Open();
 

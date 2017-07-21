@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Listini Articolo";
+    ViewBag.Title = "Ordini di Vendita";
 }
 @section header {
     <script>
@@ -118,7 +118,7 @@
                     $scope.displayMode = "edit";
                     $scope.current = {};
                 }
-                
+
             };
 
             $scope.saveEdit = function (item) {
@@ -210,37 +210,38 @@
 <div class="header">
     <div class="col-md-12">
         <h3 class="header-title">@ViewBag.Title</h3>
-        <p class="header-info">gestione listini per articolo</p>
+        <p class="header-info">gestione ordini di vendita</p>
     </div>
 </div>
 <div class="main-content" ng-controller="ctrl">
 
-    <div ng-show="displayMode == 'list'"> <!--Elenco inizio -->
+    <div ng-show="displayMode == 'list'">
+        <!--Elenco inizio -->
         <div class="page-toolbar">
             <button class="btn btn-grey" ng-click="refresh()"><i class="fa fa-refresh">&nbsp;</i>Refresh</button>
             <button class="btn btn-grey" ng-click="editOrCreate()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
         </div> <!-- page-toolbar -->
-        
+        <div class="margin-b-20"></div>
 
         <div class="panel panel-default">
             <div class="panel-heading">Filtri</div>
             <div class="panel-body">
-            
+
                 <div class="input-group">
                     <input id="query" capitalize
                            type="text" class="form-control"
-                           ng-model="filtri.id_cliente" placeholder="filtro per codice articolo o descrizione..."
+                           ng-model="filtri.id_cliente" placeholder="cerca..."
                            ng-on-enter="refresh()" />
                     <span class="input-group-btn">
                         <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
                     </span>
                 </div> <!--Fine -->
-            
+
             </div>
-        </div>   
+        </div>
 
         <div class="row">
-        
+
             <div class="col-md-12 col-lg-12">
 
                 <h4><i class="fa fa-list-ul"></i> Elenco</h4>
@@ -303,10 +304,12 @@
     </div> <!--Fine Elenco-->
 
 
-    <div ng-show="displayMode == 'edit'"> <!-- Dettaglio inizio -->
+    <div ng-show="displayMode == 'edit'">
+        <!-- Dettaglio inizio -->
         <div class="page-toolbar">
             <button class="btn btn-grey" ng-click="saveEdit(current)"><i class="fa fa-floppy-o">&nbsp;</i>Salva</button>
             <button class="btn btn-grey" ng-click="cancelEdit()"><i class="fa fa-times">&nbsp;</i>Annulla</button>
         </div> <!-- page-toolbar -->
+        <div class="margin-b-20"></div>
     </div> <!-- Dettaglio fine -->
 </div>

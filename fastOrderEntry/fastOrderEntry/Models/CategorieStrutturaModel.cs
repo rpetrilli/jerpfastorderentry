@@ -6,9 +6,9 @@ using System.Web;
 
 namespace fastOrderEntry.Models
 {
-    public class CategorieStruttura
+    public class CategorieStrutturaModel
     {
-        public CategorieStruttura()
+        public CategorieStrutturaModel()
         {
             categorie = new List<Categoria>();
         }

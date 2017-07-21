@@ -3,7 +3,7 @@ using Npgsql;
 
 namespace fastOrderEntry.Models
 {
-    public class RecordListino
+    public class RecordListinoModel
     {
         public string id_codice_art { get; set; }
         public string id_cliente { get; set; }

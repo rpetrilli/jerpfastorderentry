@@ -7,7 +7,7 @@
         function show_message(errore, messaggio) {
             alert(messaggio);
         };
-        app.controller('listinoArticolo', ['$scope', '$http', 'listiniService', function ($scope, $http, listiniService) {
+        app.controller('ctrl', ['$scope', '$http', 'listiniService', function ($scope, $http, listiniService) {
             $scope.cod_cat_merc_sel = '';
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
@@ -137,25 +137,25 @@
             $('#query').focus();
         });
         shortcut.add("Up", function () {
-            var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.previous_record();
             });
         });
         shortcut.add("Down", function () {
-            var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.next_record();
             });
         });
         shortcut.add("Ctrl+S", function () {
-            var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.save_current_record();
             });
         });
         shortcut.add("pd", function () {
-            var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.pag_corrente < scope.pag_number - 1) {
                     scope.refresh_page(scope.pag_corrente + 1);
@@ -163,7 +163,7 @@
             });
         });
         shortcut.add("pu", function () {
-            var scope = angular.element($("[ng-controller='listinoArticolo']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.pag_corrente > 0) {
                     scope.refresh_page(scope.pag_corrente - 1);
@@ -178,7 +178,7 @@
         <p class="header-info">gestione listini per articolo</p>
     </div>
 </div>
-<div class="main-content" ng-controller="listinoArticolo">
+<div class="main-content" ng-controller="ctrl">
     <div class="row">
         <div class="col-md-2 col-lg-2">
             <h4><i class="fa fa-bars"></i> Menu</h4>
@@ -202,7 +202,7 @@
             <div class="input-group">
                 <input id="query" capitalize
                        type="text" class="form-control"
-                       ng-model="query" placeholder="filtro per codice articolo o descrizione..."
+                       ng-model="query" placeholder="cerca per codice articolo o descrizione..."
                        ng-on-enter="refresh()" />
                 <span class="input-group-btn">
                     <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>

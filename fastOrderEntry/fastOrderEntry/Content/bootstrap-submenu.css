@@ -45,14 +45,14 @@
         border-radius: 4px 4px 0;
     }
 
-    .dropdown-submenu > a:after {
+    /*.dropdown-submenu > a:after {
         float: right;
         margin-top: 6px;
-        /*margin-right: -10px;*/
+        margin-right: -10px;
         border-left: 4px dashed;
         border-top: 4px solid transparent;
         border-bottom: 4px solid transparent;
-    }
+    }*/
 
     .dropdown-menu-right .dropdown-submenu > a:after,
     .navbar-right .dropdown-submenu > a:after {

@@ -20,7 +20,7 @@
         $input.change(function () {
             var current = $input.typeahead("getActive");
             console.log(current);
-            var scope = angular.element($("[ng-controller='listinoCliente']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.cliente = current;
                 scope.id_cliente = current.id;
@@ -32,7 +32,7 @@
             alert(messaggio);
         };
 
-        app.controller('listinoCliente', ['$scope', '$http', 'listiniService', function ($scope, $http, listiniService) {
+        app.controller('ctrl', ['$scope', '$http', 'listiniService', 'paginatoreService', function ($scope, $http, listiniService, paginatoreService) {
             $scope.categorie = [];
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
@@ -70,8 +70,9 @@
                         }
                     }
                 };
+                $scope.refresh();
             };
-
+            
 
             $scope.refresh = function () {
                 $http({
@@ -87,6 +88,7 @@
                         show_message('Errore', error.data);
              });
             };
+
             $scope.refresh_page = function (page_number) {
                 $http({
                     method: 'GET',
@@ -103,20 +105,26 @@
                     });
             };
             $scope.refresh();
-            $scope.next_record = function () {
-                $scope.rec_pagina++;
-                if ($scope.rec_pagina >= $scope.records.length ) {
-                    $scope.rec_pagina = 0;
-                }
-                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) +') input.request-focus').focus();
-            };
-            $scope.previous_record = function () {
-                $scope.rec_pagina--;
-                if ($scope.rec_pagina < 0 ) {
-                    $scope.rec_pagina = $scope.records.length - 1;
-                }
-                $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
-            };
+
+            $scope.next_record = paginatoreService.next_record;
+            $scope.previous_record = paginatoreService.previous_record;
+
+            //$scope.next_record = function () {
+            //    $scope.rec_pagina++;
+            //    if ($scope.rec_pagina >= $scope.records.length ) {
+            //        $scope.rec_pagina = 0;
+            //    }
+            //    $('#table tr:nth-child(' + ($scope.rec_pagina + 1) +') input.request-focus').focus();
+            //};
+
+            //$scope.previous_record = function () {
+            //    $scope.rec_pagina--;
+            //    if ($scope.rec_pagina < 0 ) {
+            //        $scope.rec_pagina = $scope.records.length - 1;
+            //    }
+            //    $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
+            //};
+
             $scope.linefocused = function (line) {
                 $scope.rec_pagina = line;
             };
@@ -132,6 +140,7 @@
                     return $scope.pag_corrente + indice - $scope.nr_pagine_display;
                 }
             };
+
             $scope.save = function (item) {
                 item.id_cliente = $scope.id_cliente;
                 $http({
@@ -144,6 +153,7 @@
                         show_message('Errore', error.data);
                     });
             };
+
             $scope.save_current_record = function () {
                 if ($scope.rec_pagina >= 0 && $scope.rec_pagina < $scope.records.length) {
                     $scope.save($scope.records[$scope.rec_pagina]);
@@ -151,6 +161,7 @@
                     show_message('Errore', "Nessun record selezionato");
                 }
             };
+
             $scope.aggiornaMassimoPrezziAcquisto = function () {
                 for (var j = 0; j < $scope.records.length; j++) {
                     $scope.records[j].prezzo_acquisto = $scope.prezzo_acquisto;
@@ -164,25 +175,25 @@
         });
 
         shortcut.add("Up", function () {
-            var scope = angular.element($("[ng-controller='listinoCliente']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.previous_record();
             });
         });
         shortcut.add("Down", function () {
-            var scope = angular.element($("[ng-controller='listinoCliente']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.next_record();
             });
         });
         shortcut.add("Ctrl+S", function () {
-            var scope = angular.element($("[ng-controller='listinoCliente']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.save_current_record();
             });
         });
         shortcut.add("pd", function () {
-            var scope = angular.element($("[ng-controller='listinoCliente']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.pag_corrente < scope.pag_number - 1) {
                     scope.refresh_page(scope.pag_corrente + 1);
@@ -190,7 +201,7 @@
             });
         });
         shortcut.add("pu", function () {
-            var scope = angular.element($("[ng-controller='listinoCliente']")).scope();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.pag_corrente > 0) {
                     scope.refresh_page(scope.pag_corrente - 1);
@@ -208,7 +219,7 @@
         <p class="header-info">gestione listini per cliente</p>
     </div>
 </div>
-<div class="main-content" ng-controller="listinoCliente">
+<div class="main-content" ng-controller="ctrl">
     <div class="row">
         <div class="col-md-2 col-lg-2">
             <h4><i class="fa fa-bars"></i> Menu</h4>
@@ -231,12 +242,17 @@
             <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
             <div class="form-inline">
                 <div class="form-group col-md-4 col-lg-4">
-                    <input type="text" class="typeahead form-control" placeholder="filtro per cliente..." />
+                    <input type="text" class="typeahead form-control" placeholder="seleziona il cliente..." />
                 </div>
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="filtro per codice articolo o descrizione..."  />
+                    <input id="query" capitalize
+                           type="text" 
+                           class="form-control" 
+                           placeholder="cerca per codice articolo o descrizione..." 
+                           ng-model="query" 
+                           ng-on-enter="refresh()" />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="refresh()"><i class="fa fa-search"></i></button>
                     </span>
                 </div>
             </div>

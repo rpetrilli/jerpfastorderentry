@@ -6,13 +6,13 @@ using System.Web;
 
 namespace fastOrderEntry.Models
 {
-    public class Listino
+    public class ListinoModel
     {
-        public Listino()
+        public ListinoModel()
         {
-            this.recordlistino = new List<RecordListino>();
+            this.recordlistino = new List<RecordListinoModel>();
         }
-        public virtual IList<RecordListino> recordlistino { get; set; }
+        public virtual IList<RecordListinoModel> recordlistino { get; set; }
 
   
         internal void select(NpgsqlConnection conn, string query, string cod_cat_merc = "",int pagina = 0, int REC_X_PAGINA = 0)
@@ -44,14 +44,14 @@ namespace fastOrderEntry.Models
                 {
                     while (reader.Read())
                     {
-                        RecordListino r = new RecordListino();
+                        RecordListinoModel r = new RecordListinoModel();
                         r.id_codice_art = reader.GetString(reader.GetOrdinal("id_codice_art"));
                         r.descrizione = reader.GetString(reader.GetOrdinal("descrizione"));
                         recordlistino.Add(r);
                     }
                 }
                 
-                foreach (RecordListino r in recordlistino)
+                foreach (RecordListinoModel r in recordlistino)
                 {
                     r.leggiPrezzi(conn);
                 }

@@ -3443,8 +3443,7 @@ a.fc-event:hover {
 /*
  * Login
  */
-body.cover {
-    background: transparent url('../../img/login/background.jpg') 0 0;
+body.cover {    
     background-size: cover;
     background-attachment: fixed;
 }
