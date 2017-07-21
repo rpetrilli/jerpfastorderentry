@@ -37,9 +37,13 @@ namespace fastOrderEntry.Controllers
         public string id_ordine_da { get; set; }
         public string id_ordine_al { get; set; }
 
-        public override string toWhereConditions()
+        protected override void buildWhere()
         {
-            return "";
+            addStringExactValue("vo_ordine.id_cliente", id_cliente);
+            //addStringExactValue("va_clienti.id_cliente", id_agente);
+            addDateRange("vo_ordine.data_ordine", da_data, al_data);
+            addStringRange("vo_ordine.id_ordine", id_ordine_da, id_ordine_al);
+            
         }
     }
 }
