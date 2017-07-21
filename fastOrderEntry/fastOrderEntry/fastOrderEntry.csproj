@@ -329,6 +329,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\appServices.js" />
     <Content Include="Scripts\shortcut.js" />
+    <Content Include="Scripts\webCore.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

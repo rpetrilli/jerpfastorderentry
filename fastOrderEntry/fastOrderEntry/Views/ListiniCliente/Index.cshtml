@@ -32,7 +32,7 @@
             alert(messaggio);
         };
 
-        app.controller('ctrl', ['$scope', '$http', 'listiniService', 'paginatoreService', function ($scope, $http, listiniService, paginatoreService) {
+        app.controller('ctrl', ['$scope', '$http', 'listiniService', 'tabController', function ($scope, $http, listiniService, tabController) {
             $scope.categorie = [];
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
@@ -106,24 +106,24 @@
             };
             $scope.refresh();
 
-            $scope.next_record = paginatoreService.next_record;
-            $scope.previous_record = paginatoreService.previous_record;
+            //$scope.next_record = tabController.next_record;
+            //$scope.previous_record = tabController.previous_record;
 
-            //$scope.next_record = function () {
-            //    $scope.rec_pagina++;
-            //    if ($scope.rec_pagina >= $scope.records.length ) {
-            //        $scope.rec_pagina = 0;
-            //    }
-            //    $('#table tr:nth-child(' + ($scope.rec_pagina + 1) +') input.request-focus').focus();
-            //};
+            $scope.next_record = function () {
+                $scope.rec_pagina++;
+                if ($scope.rec_pagina >= $scope.records.length ) {
+                    $scope.rec_pagina = 0;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) +') input.request-focus').focus();
+            };
 
-            //$scope.previous_record = function () {
-            //    $scope.rec_pagina--;
-            //    if ($scope.rec_pagina < 0 ) {
-            //        $scope.rec_pagina = $scope.records.length - 1;
-            //    }
-            //    $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
-            //};
+            $scope.previous_record = function () {
+                $scope.rec_pagina--;
+                if ($scope.rec_pagina < 0 ) {
+                    $scope.rec_pagina = $scope.records.length - 1;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
+            };
 
             $scope.linefocused = function (line) {
                 $scope.rec_pagina = line;

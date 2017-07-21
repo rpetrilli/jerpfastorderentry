@@ -8,7 +8,13 @@ using System.Web.Mvc;
 
 namespace WebCore.fw
 {
-    public abstract class TabCotroller<F, O> : Controller
+    /// <summary>
+    /// Controller per la paginazione
+    /// </summary>
+    /// <typeparam name="F">Oggetto Filtri per i filtri della maschera di selezione</typeparam>
+    /// <typeparam name="O">DBObject vero e proprio</typeparam>
+    /// <typeparam name="R">Record id riga della pagina di visualizzazione</typeparam>
+    public abstract class TabCotroller<F, O, R> : Controller
         where F: Filters, new()
         where O: DBObject, new()
     {
@@ -38,7 +44,7 @@ namespace WebCore.fw
             O dbObject = new O();
             int cnt = 0;
             con.Open();
-            cnt = dbObject.getCount(con, filters);
+            cnt = getCount(con, filters);
             con.Close();
 
             var jsonResult = Json(new { rec_number = cnt, rec_x_pagina = REC_X_PAGINA, pag_number = Math.Ceiling(1.0 * cnt / REC_X_PAGINA) }, JsonRequestBehavior.AllowGet);
@@ -55,13 +61,8 @@ namespace WebCore.fw
         [HttpGet]
         public JsonResult GetConenutoPagina(F filters)
         {
-            O dbObject = new O();
-            List<O> page = new List<O>();
             con.Open();
-            foreach (O obj in dbObject.loadPage(con, filters.page_number, REC_X_PAGINA, filters))
-            {
-                page.Add(obj);
-            }
+            List<R> page = loadPage(con, filters.page_number, REC_X_PAGINA, filters);
             con.Close();
             
             var jsonResult = Json(page, JsonRequestBehavior.AllowGet);
@@ -141,7 +142,17 @@ namespace WebCore.fw
             jsonResult.MaxJsonLength = int.MaxValue;
 
             return jsonResult;
+        }
 
+
+        abstract public int getCount(NpgsqlConnection con, F filters);
+
+        abstract public List<R> loadPage(NpgsqlConnection con, int first, int pageSize, F filters);
+
+
+        protected string getLimStr(int pag_corrente, int nr_reg_x_pagina)
+        {
+            return " LIMIT " + nr_reg_x_pagina + " OFFSET " + pag_corrente * nr_reg_x_pagina;
         }
 
 

@@ -30,6 +30,7 @@ namespace fastOrderEntry
                         "~/Scripts/angular-locale_it-it.js",
                         "~/Scripts/angular-resource.js",
                         "~/Scripts/dirPagination.js",
+                        "~/Scripts/webCore.js",
                         "~/Scripts/appModules.js",
                         "~/Scripts/appServices.js"));
 

@@ -1,13 +1,14 @@
 ﻿
 @{
     ViewBag.Title = "Ordini di Vendita";
+    string currentUrl = HttpContext.Current.Request.Url.AbsoluteUri;
 }
 @section header {
     <script>
         function show_message(errore, messaggio) {
             alert(messaggio);
         };
-        app.controller('ctrl', ['$scope', '$http', '$resource', function ($scope, $http, $resource) {
+        app.controller('ctrl', ['$scope', '$http', '$resource', 'tabController', function ($scope, $http, $resource, tabController) {
 
             @*@(ViewBag.scope_var)*@
             $scope.filtri = {};
@@ -15,10 +16,13 @@
             $scope.displayMode = "list";
             $scope.current = null;
 
-            $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
 
+            tabController.setBaseUrl('@currentUrl', show_message);
+            tabController.refresh();
+            $scope.tc = tabController;
 
+            console.log(tabController);
 
 
             $scope.refresh = function () {
@@ -53,6 +57,8 @@
             };
             $scope.refresh();
 
+            
+
             $scope.next_record = function () {
                 $scope.rec_pagina++;
                 if ($scope.rec_pagina >= $scope.records.length ) {
@@ -67,9 +73,7 @@
                 }
                 $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
             };
-            $scope.linefocused = function (line) {
-                $scope.rec_pagina = line;
-            };
+
             /* Gestione paginatore*/
             $scope.nr_pagine_display = 4;
             $scope.nr_pagina_paginatore = function (indice) {
@@ -207,19 +211,22 @@
         });
     </script>
 }
+
+
 <div class="header">
     <div class="col-md-12">
         <h3 class="header-title">@ViewBag.Title</h3>
-        <p class="header-info">gestione ordini di vendita</p>
+        <p class="header-info">gestione ordini di vendita </p>
+        
     </div>
 </div>
 <div class="main-content" ng-controller="ctrl">
-
-    <div ng-show="displayMode == 'list'">
+    {{tc.displayMode}}
+    <div ng-show="tc.displayMode == 'list'">
         <!--Elenco inizio -->
         <div class="page-toolbar">
-            <button class="btn btn-grey" ng-click="refresh()"><i class="fa fa-refresh">&nbsp;</i>Refresh</button>
-            <button class="btn btn-grey" ng-click="editOrCreate()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
+            <button class="btn btn-grey" ng-click="tc.refresh()"><i class="fa fa-refresh">&nbsp;</i>Refresh</button>
+            <button class="btn btn-grey" ng-click="tc.editOrCreate()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
         </div> <!-- page-toolbar -->
         <div class="margin-b-20"></div>
 
@@ -231,9 +238,9 @@
                     <input id="query" capitalize
                            type="text" class="form-control"
                            ng-model="filtri.id_cliente" placeholder="cerca..."
-                           ng-on-enter="refresh()" />
+                           ng-on-enter="tc.refresh()" />
                     <span class="input-group-btn">
-                        <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        <button ng-click="tc.refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
                     </span>
                 </div> <!--Fine -->
 
@@ -255,7 +262,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in records">
+                        <tr ng-repeat="item in tc.records">
                             <td>{{item.id_ordine}}</td>
                             <td>{{item.id_cliente}}</td>
                             <td>{{item.data_ordine}}</td>
@@ -268,19 +275,19 @@
                 </table>
                 <div ng-show="pag_number > 1">
                     <ul class="pagination" style="text-align: center;">
-                        <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
+                        <li><span class="page_number">Pag. {{tc.pag_corrente + 1}} / {{tc.pag_number}}</span></li>
                         <li>
-                            <a ng-click="refresh_page(0)"
-                               ng-class="{disabled: pag_corrente == 0}"
+                            <a ng-click="tc.refresh_page(0)"
+                               ng-class="{disabled: tc.pag_corrente == 0}"
                                href="#nav">&lt;&lt;</a>
                         </li>
                         <li>
-                            <a ng-click="refresh_page(pag_corrente-1)"
-                               ng-class="{disabled: pag_corrente == 0}"
+                            <a ng-click="tc.refresh_page(tc.pag_corrente-1)"
+                               ng-class="{disabled: tc.pag_corrente == 0}"
                                href="#nav">&lt;</a>
                         </li>
                         <li ng-repeat="p_nr in [0,1,2,3]">
-                            <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
+                            <a ng-click="refresh_page(tc.nr_pagina_paginatore(p_nr))"
                                ng-bind="nr_pagina_paginatore(p_nr) + 1"
                                ng-hide="nr_pagina_paginatore(p_nr)==-1"
                                ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
@@ -288,13 +295,13 @@
                             </a>
                         </li>
                         <li>
-                            <a ng-click="refresh_page(pag_corrente+1)"
-                               ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                            <a ng-click="tc.refresh_page(tc.pag_corrente+1)"
+                               ng-class="{disabled: tc.pag_corrente >= tc.pag_number - 1}"
                                href="#nav">&gt;</a>
                         </li>
                         <li>
-                            <a ng-click="refresh_page(pag_number-1)"
-                               ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                            <a ng-click="tc.refresh_page(pag_number-1)"
+                               ng-class="{disabled: tc.pag_corrente >= tc.pag_number - 1}"
                                href="#nav">&gt;&gt;</a>
                         </li>
                     </ul>
@@ -304,7 +311,7 @@
     </div> <!--Fine Elenco-->
 
 
-    <div ng-show="displayMode == 'edit'">
+    <div ng-show="tc.displayMode == 'edit'">
         <!-- Dettaglio inizio -->
         <div class="page-toolbar">
             <button class="btn btn-grey" ng-click="saveEdit(current)"><i class="fa fa-floppy-o">&nbsp;</i>Salva</button>

@@ -22,14 +22,7 @@ namespace WebCore.fw
 
         abstract public void delete(NpgsqlConnection con);
 
-        abstract public List<DBObject> loadPage(NpgsqlConnection con, int first, int pageSize, Filters filters);
 
-        abstract public int getCount(NpgsqlConnection con, Filters filters);
-
-        protected string getLimStr(int pag_corrente, int nr_reg_x_pagina)
-        {
-            return " LIMIT " + nr_reg_x_pagina + " OFFSET " + pag_corrente * nr_reg_x_pagina;
-        }
     }
 
 
