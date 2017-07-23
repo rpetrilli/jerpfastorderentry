@@ -27,7 +27,8 @@ namespace fastOrderEntry.Controllers
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
                     "      count(*) as cnt \r\n" +
-                    "from vo_ordini ";
+                    "from vo_ordini " +
+                    filters.toWhereConditions();
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())
@@ -50,7 +51,10 @@ namespace fastOrderEntry.Controllers
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
                     "      * \r\n" +
-                    "from vo_ordini \r\n" + this.getLimStr(first, pageSize);
+                    "from vo_ordini \r\n" +
+                    filters.toWhereConditions() +
+                    "order by esercizio desc, id_ordine desc \r\n"+
+                    this.getLimStr(first, pageSize);
 
                 cmd.ExecuteNonQuery();
 

@@ -1,0 +1,33 @@
+﻿<div ng-show="tc.pag_number > 1">
+    <ul class="pagination" style="text-align: center;">
+        <li><span class="page_number">Pag. {{tc.pag_corrente + 1}} / {{tc.pag_number}}</span></li>
+        <li>
+            <a ng-click="tc.refresh_page(0)"
+               class="btn btn-default"
+               ng-disabled="tc.pag_corrente == 0">&lt;&lt;</a>
+        </li>
+        <li>
+            <a ng-click="tc.refresh_page(tc.pag_corrente-1)"
+               class="btn btn-default"
+               ng-disabled="tc.pag_corrente == 0">&lt;</a>
+        </li>
+        <li ng-repeat="p_nr in [0,1,2,3]">
+            <a ng-click="tc.refresh_page(tc.nr_pagina_paginatore(p_nr))"
+               ng-hide="tc.nr_pagina_paginatore(p_nr)<0"
+               class="btn btn-default"
+               ng-disabled = "tc.pag_corrente == tc.nr_pagina_paginatore(p_nr)" >
+                {{tc.nr_pagina_paginatore(p_nr) + 1}}
+            </a>
+        </li>
+        <li>
+            <a ng-click="tc.refresh_page(tc.pag_corrente+1)"
+               class="btn btn-default"
+               ng-disabled= "tc.pag_corrente >= tc.pag_number - 1">&gt;</a>
+        </li>
+        <li>
+            <a ng-click="tc.refresh_page(tc.pag_number-1)"
+               class="btn btn-default"
+               ng-disabled= "tc.pag_corrente >= tc.pag_number - 1">&gt;&gt;</a>
+        </li>
+    </ul>
+</div> <!--Fine paginatore -->

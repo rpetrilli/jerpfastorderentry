@@ -28,11 +28,12 @@ namespace WebCore.fw
         {
 
             buildWhere();
-            string sql = "1=1 \r\n";
+            string sql = "where 1=1 \r\n";
             foreach (ICondWhere cond  in m_filtri_sql)
             {
-                
-                sql += " and " + cond.toSQL() + "\r\n";
+                if (cond.isApplicable()) {
+                    sql += " and " + cond.toSQL() + "\r\n";
+                }
             }
 
             return sql;
@@ -85,6 +86,8 @@ namespace WebCore.fw
 
         public string escape(string str)
         {
+            if (string.IsNullOrEmpty(str))
+                return "";
             string res = str;
             res.Replace("'", "''");
             return res;

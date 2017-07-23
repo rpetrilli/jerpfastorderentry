@@ -37,7 +37,7 @@ namespace fastOrderEntry.Models
                 cmd.CommandText = "SELECT \r\n" +
                     "      * \r\n" +
                     "from vo_ordini \r\n" +
-                    "where id_societa = '1' and esercizio = &esercizio and id_ordine = &id_ordine";
+                    "where id_societa = '1' and esercizio = @esercizio and id_ordine = @id_ordine";
 
                 cmd.Parameters.AddWithValue("esercizio", esercizio);
                 cmd.Parameters.AddWithValue("id_ordine", id_ordine);

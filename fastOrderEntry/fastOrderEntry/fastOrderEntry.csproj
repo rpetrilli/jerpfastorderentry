@@ -330,6 +330,7 @@
     <Content Include="Scripts\appServices.js" />
     <Content Include="Scripts\shortcut.js" />
     <Content Include="Scripts\webCore.js" />
+    <Content Include="Scripts\webCoreTabControllerPag.tpl.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
