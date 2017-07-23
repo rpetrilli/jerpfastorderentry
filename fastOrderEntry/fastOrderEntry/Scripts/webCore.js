@@ -169,7 +169,18 @@ myModule.directive('tabControllerPag', function () {
     return {
         restrict: 'AE',
         replace: 'true',
-        templateUrl: '/Scripts/webCoreTabControllerPag.tpl.html'
+        templateUrl: '/Scripts/webCoreTabControllerPag.tpl.html',
+        link: function (scope, elem, attrs) {
+            //scope[intTableController] = scope[attrs['tableController']];
+
+        }
     };
 });
 
+
+
+myModule.filter('trimZeros', function () {
+    return function (x) {
+        return x.replace(/^0+/, '');
+    };
+});

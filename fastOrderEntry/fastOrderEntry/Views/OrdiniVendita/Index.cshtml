@@ -106,7 +106,7 @@
             <div class="col-md-12 col-lg-12">
 
                 <h4><i class="fa fa-list-ul"></i> Elenco</h4>
-                <tab-controller-pag></tab-controller-pag>
+                <tab-controller-pag table-controller="tc"></tab-controller-pag>
                 <table class="table table-hover table-striped" id="table">
                     <thead>
                         <tr>
@@ -118,9 +118,9 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="item in tc.records">
-                            <td>{{item.id_ordine}}</td>
-                            <td>{{item.id_cliente}}</td>
-                            <td>{{item.data_ordine}}</td>
+                            <td>{{item.id_ordine | trimZeros}}</td>
+                            <td>{{item.id_cliente | trimZeros}}</td>
+                            <td>{{item.data_ordine | date: short}}</td>
                             <td>
                                 <button class="btn btn-grey btn-xs" ng-click="tc.deleteItem(item)"><i class="glyphicon glyphicon-trash"></i></button>
                                 <button class="btn btn-grey btn-xs" ng-click="tc.editOrCreate(item)"><i class="fa fa-pencil-square-o"></i></button>
