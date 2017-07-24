@@ -15,7 +15,6 @@ namespace fastOrderEntry.Controllers
         // GET: OrdiniVendita
         public ActionResult Index()
         {
-
             return View();
         }
 

@@ -241,6 +241,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\GetController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListiniArticoloController.cs" />
     <Compile Include="Controllers\ListiniClienteController.cs" />
@@ -249,6 +250,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DbUtils.cs" />
+    <Compile Include="Models\AgentiStrutturaModel.cs" />
     <Compile Include="Models\CategorieStrutturaModel.cs" />
     <Compile Include="Models\ClientiStrutturaModel.cs" />
     <Compile Include="Models\ListinoCliente.cs" />
@@ -262,6 +264,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-submenu.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -272,13 +275,15 @@
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\angular-locale_it-it.js" />
-    <Content Include="Scripts\angular-mocks.js" />
-    <Content Include="Scripts\angular-resource.js" />
-    <Content Include="Scripts\angular-resource.min.js" />
-    <Content Include="Scripts\angular.js" />
-    <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\appModules.js" />
+    <Content Include="Scripts\angular\angular-locale_it-it.js" />
+    <Content Include="Scripts\angular\angular-mocks.js" />
+    <Content Include="Scripts\angular\angular-resource.js" />
+    <Content Include="Scripts\angular\angular-resource.min.js" />
+    <Content Include="Scripts\angular\angular.js" />
+    <Content Include="Scripts\angular\angular.min.js" />
+    <Content Include="Scripts\angular\appModules.js" />
+    <Content Include="Scripts\bootstrap-datepicker.it.min.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap-submenu.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -304,8 +309,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\angular.min.js.map" />
-    <Content Include="Scripts\angular-resource.min.js.map" />
+    <Content Include="Scripts\angular\angular.min.js.map" />
+    <Content Include="Scripts\angular\angular-resource.min.js.map" />
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\fontawesome-webfont.woff" />
@@ -315,8 +320,8 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap3-typeahead.js" />
     <Content Include="Scripts\config-template.js" />
-    <Content Include="Scripts\dirPagination.js" />
-    <Content Include="Scripts\dirPagination.tpl.html" />
+    <Content Include="Scripts\angular\dirPagination.js" />
+    <Content Include="Scripts\angular\dirPagination.tpl.html" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -327,10 +332,10 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\appServices.js" />
+    <Content Include="Scripts\angular\appServices.js" />
     <Content Include="Scripts\shortcut.js" />
-    <Content Include="Scripts\webCore.js" />
-    <Content Include="Scripts\webCoreTabControllerPag.tpl.html" />
+    <Content Include="Scripts\angular\webCore.js" />
+    <Content Include="Scripts\angular\webCoreTabControllerPag.tpl.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

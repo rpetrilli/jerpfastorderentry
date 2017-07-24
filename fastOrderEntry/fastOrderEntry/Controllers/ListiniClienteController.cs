@@ -23,22 +23,7 @@ namespace fastOrderEntry.Controllers
         {
             ViewBag.page = "anagrafiche"; 
             return View();
-        }
-
-        public JsonResult GetClienti()
-        {
-            con.Open();
-            ClientiStrutturaModel clienti = new ClientiStrutturaModel();
-            clienti.select(con);
-
-            var jsonResult = Json(clienti.clienti, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-
-            con.Close();
-            return jsonResult;
-        }
-
-     
+        }  
 
         [HttpGet]
         public JsonResult GetCategorie()

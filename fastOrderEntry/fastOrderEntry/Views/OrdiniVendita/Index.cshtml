@@ -3,13 +3,13 @@
     ViewBag.Title = "Ordini di Vendita";
     string currentUrl = HttpContext.Current.Request.Url.AbsoluteUri;
 }
-@section header {
+@section header {   
     <script>
         show_message = function (errore, messaggio) {
             alert(messaggio);
         }
 
-        app.controller('ctrl', ['$scope', '$http', '$resource', 'tabController', function ($scope, $http, $resource, tabController) {
+        app.controller('ctrl', ['$scope', 'tabController', function ($scope, tabController) {
 
             @*@(ViewBag.scope_var)*@
             tabController.config({
@@ -21,45 +21,98 @@
             $scope.tc = tabController;
         }]);
 
-
     </script>
 }
 @section scripts{
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.it.min.js")"></script>
     <script>
+        $('.data-new input').datepicker({ format: "dd/mm/yyyy", weekStart: 1, language: "it", calendarWeeks: true });    
+
+        $('#a-data').change(function () {
+            var current = $('#a-data').val();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.tc.a_data = current;                
+                scope.tc.refresh_page(scope.pag_corrente);
+            });
+        });
+
+        $('#da-data').change(function () {
+            var current = $('#da-data').val();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.tc.da_data = current;
+                scope.tc.refresh_page(scope.pag_corrente);
+            });
+        });
+
+        $.get('@(Url.Action("GetClienti", "Get"))', function (data) {
+             $('#sel-cliente').typeahead({
+                source: data
+            });
+        });
+
+         $('#sel-cliente').change(function () {
+             var current = $('#sel-cliente').typeahead("getActive");
+             var scope = angular.element($("[ng-controller='ctrl']")).scope();
+             scope.$apply(function () {
+                 scope.tc.cliente = current;
+                 scope.tc.id_cliente = current.id;
+                 scope.tc.refresh_page(scope.pag_corrente);
+             });
+         });
+
+         $.get('@(Url.Action("GetAgenti", "Get"))', function (data) {
+             $('#sel-agente').typeahead({
+                source: data
+            });
+        });
+
+         $('#sel-agente').change(function () {
+             var current = $('#sel-agente').typeahead("getActive");
+             var scope = angular.element($("[ng-controller='ctrl']")).scope();
+             scope.$apply(function () {
+                 scope.tc.cliente = current;
+                 scope.tc.id_cliente = current.id;
+                 scope.tc.refresh_page(scope.pag_corrente);
+             });
+         });
+
         shortcut.add("Home", function () {
             $('#query').focus();
         });
         shortcut.add("Up", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
-                scope.previous_record();
+                scope.tc.previous_record();
             });
         });
         shortcut.add("Down", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
-                scope.fc.next_record();
+                scope.tc.next_record();
             });
         });
         shortcut.add("Ctrl+S", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
-                scope.fc.save_current_record();
+                scope.tc.save_current_record();
             });
         });
         shortcut.add("pd", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
-                if (scope.pag_corrente < scope.pag_number - 1) {
-                    scope.fc.refresh_page(scope.pag_corrente + 1);
+                if (scope.tc.pag_corrente < scope.tc.pag_number - 1) {
+                    scope.tc.refresh_page(scope.tc.pag_corrente + 1);
                 }
             });
         });
         shortcut.add("pu", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
-                if (scope.pag_corrente > 0) {
-                    scope.fc.refresh_page(scope.pag_corrente - 1);
+                if (scope.tc.pag_corrente > 0) {
+                    scope.tc.refresh_page(scope.tc.pag_corrente - 1);
                 }
             });
         });
@@ -71,11 +124,11 @@
     <div class="col-md-12">
         <h3 class="header-title">@ViewBag.Title</h3>
         <p class="header-info">gestione ordini di vendita </p>
-        
+
     </div>
 </div>
 <div class="main-content" ng-controller="ctrl">
-    
+
     <div ng-show="tc.displayMode == 'list'">
         <!--Elenco inizio -->
         <div class="page-toolbar">
@@ -87,16 +140,48 @@
         <div class="panel panel-default">
             <div class="panel-heading">Filtri</div>
             <div class="panel-body">
+                <div class="form-inline">
 
-                <div class="input-group">
-                    <input id="query" capitalize
-                           type="text" class="form-control"
-                           ng-model="filtri.id_cliente" placeholder="cerca..."
-                           ng-on-enter="tc.refresh()" />
-                    <span class="input-group-btn">
-                        <button ng-click="tc.refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
-                    </span>
-                </div> <!--Fine -->
+                    <div class="form-group">
+                        <label>Agente</label>
+                        <input type="text" class="form-control" placeholder="seleziona l'agente.." id="sel-agente" />
+                    </div>
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input type="text" class="form-control" placeholder="seleziona il cliente.." id="sel-cliente" />
+                    </div>
+                    <div class="form-group data-new">
+                        <label>da data</label>
+                        <input type="text" class="form-control" id="da-data" />
+                    </div>
+                    <div class="form-group data-new">
+                        <label>a data</label>
+                        <input type="text" class="form-control" id="a-data" />
+                    </div>
+                    <div class="form-group">
+                        <label>da ordine</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>a ordine</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="margin-b-10"></div>
+                <div>
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>&nbsp; Cerca</button>
+                </div>
+
+
+                @*<div class="input-group">
+                        <input id="query" capitalize
+                               type="text" class="form-control"
+                               ng-model="filtri.id_cliente" placeholder="cerca..."
+                               ng-on-enter="tc.refresh()" />
+                        <span class="input-group-btn">
+                            <button ng-click="tc.refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>*@ <!--Fine -->
 
             </div>
         </div>

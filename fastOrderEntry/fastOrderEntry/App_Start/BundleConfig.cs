@@ -26,17 +26,18 @@ namespace fastOrderEntry
 
 
             bundles.Add(new ScriptBundle("~/bundles/angularjs").Include(
-                        "~/Scripts/angular.js",
-                        "~/Scripts/angular-locale_it-it.js",
-                        "~/Scripts/angular-resource.js",
-                        "~/Scripts/dirPagination.js",
-                        "~/Scripts/webCore.js",
-                        "~/Scripts/appModules.js",
-                        "~/Scripts/appServices.js"));
+                        "~/Scripts/angular/angular.js",
+                        "~/Scripts/angular/angular-locale_it-it.js",
+                        "~/Scripts/angular/angular-resource.js",
+                        "~/Scripts/angular/dirPagination.js",
+                        "~/Scripts/angular/webCore.js",
+                        "~/Scripts/angular/appModules.js",
+                        "~/Scripts/angular/appServices.js"));
 
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-datepicker.css",
                       "~/Content/bootstrap-submenu.css",
                       "~/Content/font-awesome.css",
                        "~/Content/admin.css",

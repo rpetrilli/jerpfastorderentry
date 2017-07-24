@@ -17,9 +17,7 @@ myModule.factory('tabController', function ($http) {
     fac.config = function (prop) {
         fac.prop = prop;
     }
-
-
-
+    
 
     fac.refresh_page = function (page_number) {
         fac.filtri.page_number = page_number;
@@ -53,7 +51,7 @@ myModule.factory('tabController', function ($http) {
     }
 
 
-    fac.next_record = function () {
+    fac.next_record = function () {       
         fac.rec_pagina++;
         if (fac.rec_pagina >= fac.records.length) {
             fac.rec_pagina = 0;
@@ -169,15 +167,12 @@ myModule.directive('tabControllerPag', function () {
     return {
         restrict: 'AE',
         replace: 'true',
-        templateUrl: '/Scripts/webCoreTabControllerPag.tpl.html',
-        link: function (scope, elem, attrs) {
+        templateUrl: '/Scripts/angular/webCoreTabControllerPag.tpl.html',
+        link: function (scope, elem, attrs) {           
             //scope[intTableController] = scope[attrs['tableController']];
-
         }
     };
 });
-
-
 
 myModule.filter('trimZeros', function () {
     return function (x) {
