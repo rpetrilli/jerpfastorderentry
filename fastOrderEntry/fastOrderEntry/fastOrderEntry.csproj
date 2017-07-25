@@ -250,6 +250,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DbUtils.cs" />
+    <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Models\AgentiStrutturaModel.cs" />
     <Compile Include="Models\CategorieStrutturaModel.cs" />
     <Compile Include="Models\ClientiStrutturaModel.cs" />

@@ -22,6 +22,33 @@ namespace WebCore.fw
             }
             return scope_var;
         }
+
+        public DateTime? strToDateTime(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return null;
+
+            try
+            {
+                return Convert.ToDateTime(str);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+
+        public string strWithZeros(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return null;
+
+            return Utils.Right("0000000000" + str, 10);
+
+        }
+
+
         protected abstract void buildWhere();
 
         public string toWhereConditions()

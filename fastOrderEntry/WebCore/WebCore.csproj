@@ -109,6 +109,7 @@
     <Compile Include="fw\DBObject.cs" />
     <Compile Include="fw\Filters.cs" />
     <Compile Include="fw\TabCotroller.cs" />
+    <Compile Include="fw\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

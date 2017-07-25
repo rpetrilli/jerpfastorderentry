@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Ordini di Vendita";
-    string currentUrl = HttpContext.Current.Request.Url.AbsoluteUri;
+    string currentUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) +  "/" + ViewContext.RouteData.GetRequiredString("controller") ;
 }
 @section header {   
     <script>
@@ -10,15 +10,20 @@
         }
 
         app.controller('ctrl', ['$scope', 'tabController', function ($scope, tabController) {
+            $scope.select_row = function (index) {
+                console.log(index);
+                $('#table tr').removeClass('text-info');
+                $('#table tr:nth-child(' + (index) + ') ').addClass('text-info');
+            };
 
             @*@(ViewBag.scope_var)*@
-            tabController.config({
+            $scope.tc = tabController.createController({
                 api_root: '@currentUrl',
-                list_table: '#table',
+                select_row_call_back: $scope.select_row,
                 message_function: show_message
             });
-            tabController.refresh();
-            $scope.tc = tabController;
+            $scope.tc.refresh();
+            
         }]);
 
     </script>
@@ -33,8 +38,8 @@
             var current = $('#a-data').val();
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
-                scope.tc.a_data = current;                
-                scope.tc.refresh_page(scope.pag_corrente);
+                scope.tc.filtri.al_data = current.substring(6, 10) + '-' + current.substring(3, 5) + '-' + current.substring(0, 2);                
+                scope.tc.refresh(scope.pag_corrente);
             });
         });
 
@@ -42,8 +47,8 @@
             var current = $('#da-data').val();
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
-                scope.tc.da_data = current;
-                scope.tc.refresh_page(scope.pag_corrente);
+                scope.tc.filtri.da_data = current.substring(6, 10) + '-' + current.substring(3, 5) + '-' + current.substring(0, 2);
+                scope.tc.refresh(scope.pag_corrente);
             });
         });
 
@@ -57,9 +62,8 @@
              var current = $('#sel-cliente').typeahead("getActive");
              var scope = angular.element($("[ng-controller='ctrl']")).scope();
              scope.$apply(function () {
-                 scope.tc.cliente = current;
-                 scope.tc.id_cliente = current.id;
-                 scope.tc.refresh_page(scope.pag_corrente);
+                 scope.tc.filtri.id_cliente = current.id;
+                 scope.tc.refresh(scope.pag_corrente);
              });
          });
 
@@ -73,9 +77,8 @@
              var current = $('#sel-agente').typeahead("getActive");
              var scope = angular.element($("[ng-controller='ctrl']")).scope();
              scope.$apply(function () {
-                 scope.tc.cliente = current;
-                 scope.tc.id_cliente = current.id;
-                 scope.tc.refresh_page(scope.pag_corrente);
+                 scope.tc.filtri.id_agente = current.id;
+                 scope.tc.refresh(scope.pag_corrente);
              });
          });
 
@@ -120,13 +123,6 @@
 }
 
 
-<div class="header">
-    <div class="col-md-12">
-        <h3 class="header-title">@ViewBag.Title</h3>
-        <p class="header-info">gestione ordini di vendita </p>
-
-    </div>
-</div>
 <div class="main-content" ng-controller="ctrl">
 
     <div ng-show="tc.displayMode == 'list'">
@@ -137,7 +133,7 @@
         </div> <!-- page-toolbar -->
         <div class="margin-b-20"></div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-default" style="margin-bottom: 0px;">
             <div class="panel-heading">Filtri</div>
             <div class="panel-body">
                 <div class="form-inline">
@@ -160,52 +156,40 @@
                     </div>
                     <div class="form-group">
                         <label>da ordine</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" ng-model="tc.filtri.id_ordine_da" ng-change="tc.refresh()"  />
                     </div>
                     <div class="form-group">
                         <label>a ordine</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" ng-model="tc.filtri.id_ordine_al" ng-change="tc.refresh()" />
                     </div>
                 </div>
-                <div class="margin-b-10"></div>
-                <div>
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>&nbsp; Cerca</button>
-                </div>
-
-
-                @*<div class="input-group">
-                        <input id="query" capitalize
-                               type="text" class="form-control"
-                               ng-model="filtri.id_cliente" placeholder="cerca..."
-                               ng-on-enter="tc.refresh()" />
-                        <span class="input-group-btn">
-                            <button ng-click="tc.refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
-                        </span>
-                    </div>*@ <!--Fine -->
-
             </div>
         </div>
 
         <div class="row">
 
             <div class="col-md-12 col-lg-12">
-
-                <h4><i class="fa fa-list-ul"></i> Elenco</h4>
                 <tab-controller-pag table-controller="tc"></tab-controller-pag>
-                <table class="table table-hover table-striped" id="table">
+                <table class="table table-striped" id="table">
                     <thead>
                         <tr>
                             <th>Nr Ord.</th>
                             <th>Cliente</th>
+                            <th>Agente</th>
                             <th>Data Ordine</th>
+                            <th>Imponibile</th>
+                            <th>Ord.Chiuso</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in tc.records">
-                            <td>{{item.id_ordine | trimZeros}}</td>
-                            <td>{{item.id_cliente | trimZeros}}</td>
+                        <tr  ng-repeat="item in tc.records">
+                            <td>{{item.esercizio}} - {{item.id_ordine | trimZeros}}</td>
+                            <td>{{item.id_cliente | trimZeros}} {{item.ragione_sociale}}</td>
+                            <td>{{item.id_agente | trimZeros}} {{item.ragione_sociale_agente}}</td>
                             <td>{{item.data_ordine | date: short}}</td>
+                            <td>{{item.totale_doc | number:2}}</td>
+                            <td class="text-center"><i class="fa {{item.ordine_chiuso?'fa-lock text-danger':'fa-unlock text-success'}}"></i></td>
                             <td>
                                 <button class="btn btn-grey btn-xs" ng-click="tc.deleteItem(item)"><i class="glyphicon glyphicon-trash"></i></button>
                                 <button class="btn btn-grey btn-xs" ng-click="tc.editOrCreate(item)"><i class="fa fa-pencil-square-o"></i></button>

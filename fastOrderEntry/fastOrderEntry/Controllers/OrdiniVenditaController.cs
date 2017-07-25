@@ -27,6 +27,10 @@ namespace fastOrderEntry.Controllers
                 cmd.CommandText = "SELECT \r\n" +
                     "      count(*) as cnt \r\n" +
                     "from vo_ordini " +
+                    "left join vo_ordini_provv_testata \r\n" +
+                    "   on  vo_ordini_provv_testata.id_divisione = vo_ordini.id_divisione \r\n" +
+                    "   and  vo_ordini_provv_testata.esercizio = vo_ordini.esercizio \r\n" +
+                    "   and  vo_ordini_provv_testata.id_ordine = vo_ordini.id_ordine \r\n" +
                     filters.toWhereConditions();
                 cmd.ExecuteNonQuery();
 
@@ -49,8 +53,15 @@ namespace fastOrderEntry.Controllers
             {
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
-                    "      * \r\n" +
+                    "      vo_ordini.*, \r\n" +
+                    "       (select ragione_sociale from va_clienti where id_cliente = vo_ordini.id_cliente ) as ragione_sociale, \r\n" +
+                    "       vo_ordini_provv_testata.id_agente, \r\n" + 
+                    "       (select ragione_sociale from va_agenti where id_agente = vo_ordini_provv_testata.id_agente ) as ragione_sociale_agente \r\n" +
                     "from vo_ordini \r\n" +
+                    "left join vo_ordini_provv_testata \r\n" +
+                    "   on  vo_ordini_provv_testata.id_divisione = vo_ordini.id_divisione \r\n" +
+                    "   and  vo_ordini_provv_testata.esercizio = vo_ordini.esercizio \r\n" +
+                    "   and  vo_ordini_provv_testata.id_ordine = vo_ordini.id_ordine \r\n" +
                     filters.toWhereConditions() +
                     "order by esercizio desc, id_ordine desc \r\n"+
                     this.getLimStr(first, pageSize);
@@ -63,9 +74,14 @@ namespace fastOrderEntry.Controllers
                     {
                         RigaElenco item = new RigaElenco();
                         item.id_cliente = Convert.ToString(reader["id_cliente"]);
+                        item.ragione_sociale = Convert.ToString(reader["ragione_sociale"]);
+                        item.id_agente = Convert.ToString(reader["id_agente"]);
+                        item.ragione_sociale_agente = Convert.ToString(reader["ragione_sociale_agente"]);  
                         item.id_ordine = Convert.ToString(reader["id_ordine"]);
-                        item.data_ordine = Convert.ToDateTime(reader["data_ordine"]).ToString("yyyyMMdd");
+                        item.data_ordine = Convert.ToDateTime(reader["data_ordine"]).ToString("yyyy-MM-dd");
                         item.esercizio = Convert.ToInt32(reader["esercizio"]);
+                        item.totale_doc = Convert.ToDecimal(reader["totale_doc"]);
+                        item.ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
                         list.Add(item);
                     }
                 }
@@ -86,18 +102,18 @@ namespace fastOrderEntry.Controllers
         public string id_cliente { get; set; }
         public string id_agente { get; set; }
 
-        public DateTime? da_data { get; set; }
-        public DateTime? al_data { get; set; }
+        public string da_data { get; set; }
+        public string al_data { get; set; }
 
         public string id_ordine_da { get; set; }
         public string id_ordine_al { get; set; }
 
         protected override void buildWhere()
         {
-            addStringExactValue("vo_ordine.id_cliente", id_cliente);
-            //addStringExactValue("va_clienti.id_cliente", id_agente);
-            addDateRange("vo_ordine.data_ordine", da_data, al_data);
-            addStringRange("vo_ordine.id_ordine", id_ordine_da, id_ordine_al);
+            addStringExactValue("vo_ordini.id_cliente", id_cliente);
+            addStringExactValue("vo_ordini_provv_testata.id_agente", id_agente);
+            addDateRange("vo_ordini.data_ordine", strToDateTime(da_data), strToDateTime(al_data));
+            addStringRange("vo_ordini.id_ordine", strWithZeros(id_ordine_da), strWithZeros(id_ordine_al));
             
         }
     }
@@ -108,7 +124,11 @@ namespace fastOrderEntry.Controllers
         public string id_ordine { get; set; }
         public string id_cliente { get; set; }
         public string ragione_sociale { get; set; }
+        public string id_agente { get; set; }
+        public string ragione_sociale_agente { get; set; }
         public string data_ordine { get; set; }
+        public decimal totale_doc { get; set; }
+        public bool ordine_chiuso { get; set; }
 
     }
 }
