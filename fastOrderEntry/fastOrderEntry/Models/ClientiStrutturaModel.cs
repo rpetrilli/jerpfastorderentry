@@ -12,7 +12,7 @@ namespace fastOrderEntry.Models
 
         public virtual IList<Cliente> clienti { get; set; }
 
-        internal void select (NpgsqlConnection conn)
+        internal void select (NpgsqlConnection conn, string query)
         {
             using (var cmd = new NpgsqlCommand())
             {
@@ -21,7 +21,9 @@ namespace fastOrderEntry.Models
                     "      id_cliente,  \r\n" +
                     "      ragione_sociale, \r\n" +
                     "       * \r\n" +
-                    "from va_clienti";
+                    "from va_clienti where ragione_sociale LIKE( @query)";
+
+                cmd.Parameters.AddWithValue("query", query);
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())

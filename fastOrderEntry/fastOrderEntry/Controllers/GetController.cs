@@ -18,11 +18,11 @@ namespace fastOrderEntry.Controllers
             con = DbUtils.GetDefaultConnection();
         }
 
-        public JsonResult GetClienti()
+        public JsonResult GetClienti(string query)
         {
             con.Open();
             ClientiStrutturaModel clienti = new ClientiStrutturaModel();
-            clienti.select(con);
+            clienti.select(con,query);
 
             var jsonResult = Json(clienti.clienti, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
