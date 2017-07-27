@@ -16,6 +16,11 @@
                 $('#table tr:nth-child(' + (index) + ') ').addClass('text-info');
             };
 
+            $scope.select_cliente_filtri = function (item) {
+                $scope.tc.filtri.id_cliente = item?item.id:'';
+                $scope.tc.refresh();
+            };
+
             @*@(ViewBag.scope_var)*@
             $scope.tc = tabController.createController({
                 api_root: '@currentUrl',
@@ -204,7 +209,7 @@
         </div>
 
         <input  type="text" class="form-control" placeholder="seleziona il cliente.." 
-               typehead="@(Url.Action("GetClienti", "Get"))" filter-ref="tc.filtri.id_cliente"  />
+               typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri"  />
 
    
 

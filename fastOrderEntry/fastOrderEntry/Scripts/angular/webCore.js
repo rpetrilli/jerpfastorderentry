@@ -190,34 +190,40 @@ myModule.filter('trimZeros', function () {
 
 myModule.directive('typehead', function () {
     return {
-        
+        scope: {
+            onSelectEvent: '=onSelect'
+        },
         link: function (scope, element, attrs, modelCtrl) {
             element.typeahead({
                 source: function (query, process) {
                     var rss = [];
                     map = {};
+                    mapObj = {};
 
                     return $.post(attrs['typehead'], { query: query }, function (data) {
                         $.each(data, function (i, rs) {
                             map[rs.name] = rs.id;
+                            mapObj[rs.name] = rs;
                             rss.push(rs.name);
                         });
                         process(rss);
                     });
                 },
                 updater: function (item) {
-                    var id = map[item];
+                    var obj = mapObj[item];
                     scope.$apply(function () {
-                        eval('scope.'+attrs['filterRef'] + '=\'' + id + '\'');
-                        scope.tc.refresh(scope.pag_corrente);
+                        scope.onSelectEvent(obj);
+                        //eval('scope.'+attrs['filterRef'] + '=\'' + id + '\'');
+                        //scope.tc.refresh(scope.pag_corrente);
                     });
                     return item;
                 }
             }).on("keyup", function () {
                 if (!$(this).val()) {
                     scope.$apply(function () {
-                        eval('scope.' + attrs['filterRef'] + '=\'\'');
-                        scope.tc.refresh(scope.pag_corrente);
+                        scope.onSelectEvent();
+                        //eval('scope.' + attrs['filterRef'] + '=\'\'');
+                        //scope.tc.refresh(scope.pag_corrente);
                     });
                 }
             });
