@@ -7,12 +7,12 @@ namespace fastOrderEntry.Models
     {
         public ClientiStrutturaModel()
         {
-            this.clienti = new List<Cliente>();
+            this.rs = new List<Cliente>();
         }
 
-        public virtual IList<Cliente> clienti { get; set; }
+        public virtual IList<Cliente> rs { get; set; }
 
-        internal void select (NpgsqlConnection conn, string query)
+        internal void select (NpgsqlConnection conn, string query = "")
         {
             using (var cmd = new NpgsqlCommand())
             {
@@ -21,9 +21,10 @@ namespace fastOrderEntry.Models
                     "      id_cliente,  \r\n" +
                     "      ragione_sociale, \r\n" +
                     "       * \r\n" +
-                    "from va_clienti where ragione_sociale LIKE( @query)";
+                    "from va_clienti where upper(ragione_sociale) LIKE( @query) " +
+                    "limit 10";
 
-                cmd.Parameters.AddWithValue("query", query);
+                cmd.Parameters.AddWithValue("query", "%" + query.ToUpper() + "%" );
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())
@@ -33,7 +34,7 @@ namespace fastOrderEntry.Models
                         Cliente r = new Cliente();
                         r.id = reader["id_cliente"].ToString();
                         r.name = reader["ragione_sociale"].ToString();
-                        clienti.Add(r);
+                        rs.Add(r);
                     }
                 }
             }

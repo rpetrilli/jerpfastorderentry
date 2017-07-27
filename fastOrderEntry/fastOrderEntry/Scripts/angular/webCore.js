@@ -185,3 +185,43 @@ myModule.filter('trimZeros', function () {
         return x.replace(/^0+/, '');
     };
 });
+
+
+
+myModule.directive('typehead', function () {
+    return {
+        
+        link: function (scope, element, attrs, modelCtrl) {
+            element.typeahead({
+                source: function (query, process) {
+                    var rss = [];
+                    map = {};
+
+                    return $.post(attrs['typehead'], { query: query }, function (data) {
+                        $.each(data, function (i, rs) {
+                            map[rs.name] = rs.id;
+                            rss.push(rs.name);
+                        });
+                        process(rss);
+                    });
+                },
+                updater: function (item) {
+                    var id = map[item];
+                    scope.$apply(function () {
+                        eval('scope.'+attrs['filterRef'] + '=\'' + id + '\'');
+                        scope.tc.refresh(scope.pag_corrente);
+                    });
+                    return item;
+                }
+            }).on("keyup", function () {
+                if (!$(this).val()) {
+                    scope.$apply(function () {
+                        eval('scope.' + attrs['filterRef'] + '=\'\'');
+                        scope.tc.refresh(scope.pag_corrente);
+                    });
+                }
+            });
+
+        }
+    };
+});

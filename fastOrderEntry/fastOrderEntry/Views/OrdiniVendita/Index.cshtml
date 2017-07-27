@@ -60,20 +60,34 @@
 
                     return $.post('@(Url.Action("GetClienti", "Get"))', { query: query }, function (data) {
                         $.each(data, function (i, rs) {
-                            map[rs.id_cliente] = rs;
-                            rss.push(rs.ragione_sociale);
+                            map[rs.name] = rs.id;
+                            rss.push(rs.name);
                         });
                         process(rss);
                     });
                 },
                 updater: function (item) {
-                    var selectedShortCode = map[item].ShortCode;
+                    var id_cliente = map[item];
+                    //$("#sel-cliente").text("Selected : " + selectedShortCode);
 
-                    $(this).text("Selected : " + selectedShortCode);
+                    var scope = angular.element($("[ng-controller='ctrl']")).scope();
+                    scope.$apply(function () {
+                        scope.tc.filtri.id_cliente = id_cliente;
+                        scope.tc.refresh(scope.pag_corrente);
+                    });
                     return item;
                 }
-            });
+        }).on("keyup", function () {
+            if (!$(this).val()) {
+                var scope = angular.element($("[ng-controller='ctrl']")).scope();
+                scope.$apply(function () {
+                    scope.tc.filtri.id_cliente = '';
+                    scope.tc.refresh(scope.pag_corrente);
+                });
+            }
+        });
 
+       
 
         @*$.get('@(Url.Action("GetClienti", "Get"))', function (data) {
              $('#sel-cliente').typeahead({
@@ -90,7 +104,7 @@
              });
          });*@
 
-         $.get('@(Url.Action("GetAgenti", "Get"))', function (data) {
+         @*$.get('@(Url.Action("GetAgenti", "Get"))', function (data) {
              $('#sel-agente').typeahead({
                 source: data
             });
@@ -103,7 +117,7 @@
                  scope.tc.filtri.id_agente = current.id;
                  scope.tc.refresh(scope.pag_corrente);
              });
-         });
+         });*@
 
         shortcut.add("Home", function () {
             $('#query').focus();
@@ -156,6 +170,7 @@
         </div> <!-- page-toolbar -->
         <div class="margin-b-20"></div>
 
+
         <div class="panel panel-primary" style="margin-bottom: 0px;">
             <div class="panel-body">
                 <div class="form-inline">
@@ -187,6 +202,11 @@
                 </div>
             </div>
         </div>
+
+        <input  type="text" class="form-control" placeholder="seleziona il cliente.." 
+               typehead="@(Url.Action("GetClienti", "Get"))" filter-ref="tc.filtri.id_cliente"  />
+
+   
 
         <div class="row">
 

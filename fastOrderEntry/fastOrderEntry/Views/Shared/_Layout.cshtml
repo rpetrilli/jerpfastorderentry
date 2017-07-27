@@ -14,10 +14,15 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/angularjs")
+
     <script>
-        var app = angular.module('start', ['ngResource', 'angularUtils.directives.dirPagination', 'appModules', 'appServices','webCore']);
+        var app = angular.module('start', ['ngResource', 'angularUtils.directives.dirPagination', 'appModules', 'appServices', 'webCore']);
     </script>
+
     @RenderSection("header", required: false)
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,8 +41,8 @@
             </section>
         </div>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+
+
     @RenderSection("scripts", required: false)  
     <script>
         $('#nav @(id)').addClass('active');
