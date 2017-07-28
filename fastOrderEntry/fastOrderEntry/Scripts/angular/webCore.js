@@ -34,7 +34,7 @@ myModule.factory('tabController', function ($http) {
             }).catch(function (error, status) {
                 fac.prop.message_function('Errore', error.data);
             });
-        }
+        };
 
         fac.refresh = function () {
             $http({
@@ -49,8 +49,7 @@ myModule.factory('tabController', function ($http) {
             }, function errorCallback(response) {
                 fac.prop.message_function('Errore', error.data);
             });
-
-        }
+        };
 
 
         fac.next_record = function () {
@@ -174,6 +173,9 @@ myModule.directive('tabControllerPag', function () {
         restrict: 'AE',
         replace: 'true',
         templateUrl: '/Scripts/angular/webCoreTabControllerPag.tpl.html',
+        scope: {
+            tc: '=tableController'
+        },
         link: function (scope, elem, attrs) {           
             //scope[intTableController] = scope[attrs['tableController']];
         }
