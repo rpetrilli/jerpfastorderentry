@@ -17,11 +17,15 @@ namespace fastOrderEntry.Models
             using (var cmd = new NpgsqlCommand())
             {
                 cmd.Connection = conn;
-                cmd.CommandText = "SELECT \r\n" +
-                    "      id_cliente,  \r\n" +
-                    "      ragione_sociale, \r\n" +
-                    "       * \r\n" +
-                    "from va_clienti where upper(ragione_sociale) LIKE( @query) " +
+                cmd.CommandText = "SELECT * \r\n" +
+                    "from va_clienti \r\n" +
+                    "inner join va_clienti_soc " +
+                    "   on va_clienti_soc.id_societa = '1' " +
+                    "   and va_clienti_soc.id_cliente = va_clienti.id_cliente " +
+                    "inner join va_clienti_div " +
+                    "   on va_clienti_div.id_divisione = '1' " +
+                    "   and va_clienti_div.id_cliente = va_clienti.id_cliente " +
+                    "where upper(ragione_sociale) LIKE( @query) " +
                     "limit 10";
 
                 cmd.Parameters.AddWithValue("query", "%" + query.ToUpper() + "%" );
@@ -29,11 +33,19 @@ namespace fastOrderEntry.Models
 
                 using (var reader = cmd.ExecuteReader())
                 {
+
                     while (reader.Read())
                     {
                         Cliente r = new Cliente();
                         r.id = reader["id_cliente"].ToString();
                         r.name = reader["ragione_sociale"].ToString();
+                        r.id_cliente = reader["id_cliente"].ToString();
+
+                        r.indirizzo = reader["indirizzo"].ToString();
+                        r.cap = reader["cap"].ToString();
+                        r.comune = reader["comune"].ToString();
+                        r.provincia = reader["provincia"].ToString();
+                        r.note = reader["note"].ToString();
                         rs.Add(r);
                     }
                 }
@@ -46,5 +58,13 @@ namespace fastOrderEntry.Models
     {
         public string id { get; set; }
         public string name { get; set; }
+        public string indirizzo { get; set; }
+        public string cap { get; set; }
+        public string comune { get; set; }
+        public string provincia { get; set; }
+        public string id_cliente { get; set; }
+        public string id_cond_pag { get; set; }
+        public string id_vettore { get; set; }
+        public string note { get; set; }
     }
 }

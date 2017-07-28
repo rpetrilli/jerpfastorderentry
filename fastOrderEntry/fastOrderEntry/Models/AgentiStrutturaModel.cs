@@ -14,7 +14,7 @@ namespace fastOrderEntry.Models
         }
         public virtual IList<Agenti> agenti { get; set; }
 
-        internal void select(NpgsqlConnection conn)
+        internal void select(NpgsqlConnection conn, string query = "")
         {
             using (var cmd = new NpgsqlCommand())
             {
@@ -23,7 +23,9 @@ namespace fastOrderEntry.Models
                     "      id_agente,  \r\n" +
                     "      ragione_sociale, \r\n" +
                     "       * \r\n" +
-                    "from va_agenti";
+                    "from va_agenti \r\n" +
+                    "where upper(ragione_sociale) like ('" + query.ToUpper() + "%') \r\n" +
+                    "limit 10 \r\n";
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())

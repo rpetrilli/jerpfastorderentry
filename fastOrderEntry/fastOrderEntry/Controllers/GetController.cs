@@ -31,13 +31,26 @@ namespace fastOrderEntry.Controllers
             return jsonResult;
         }
 
-        public JsonResult GetAgenti()
+        public JsonResult GetAgenti(string query)
         {
             con.Open();
             AgentiStrutturaModel agenti = new AgentiStrutturaModel();
-            agenti.select(con);
+            agenti.select(con, query);
 
             var jsonResult = Json(agenti.agenti, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+            con.Close();
+            return jsonResult;
+        }
+
+        public JsonResult GetVettori()
+        {
+            con.Open();
+            VettoreStrutturaModel vettori = new VettoreStrutturaModel();
+            vettori.select(con);
+
+            var jsonResult = Json(vettori.vettori, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();

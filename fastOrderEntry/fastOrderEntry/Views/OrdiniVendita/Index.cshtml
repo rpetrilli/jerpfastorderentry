@@ -16,10 +16,29 @@
                 $('#table tr:nth-child(' + (index) + ') ').addClass('text-info');
             };
 
+
+            $http({
+                method: 'POST',
+                url: fac.prop.api_root + '/insert',
+                data: fac.current
+            }).then(function (response) {
+                fac.displayMode = "list";
+                fac.refresh_page(fac.filtri.page_number);
+            }).catch(function (error, status) {
+                fac.prop.message_function('Errore', error.data);
+            });
+
             $scope.select_cliente_filtri = function (item) {
                 $scope.tc.filtri.id_cliente = item?item.id:'';
                 $scope.tc.refresh();
             };
+
+
+            $scope.select_agente_filtri = function (item) {
+                $scope.tc.filtri.id_agente = item ? item.id : '';
+                $scope.tc.refresh();
+            };
+
 
             @*@(ViewBag.scope_var)*@
             $scope.tc = tabController.createController({
@@ -28,6 +47,12 @@
                 message_function: show_message
             });
             $scope.tc.refresh();
+
+
+            $scope.select_cliente = function (item) {
+                Object.assign($scope.tc.current, item);
+            };
+
 
         }]);
 
@@ -58,71 +83,6 @@
         });
 
 
-        $("#sel-cliente").typeahead({
-                source: function (query, process) {
-                    var rss = [];
-                    map = {};
-
-                    return $.post('@(Url.Action("GetClienti", "Get"))', { query: query }, function (data) {
-                        $.each(data, function (i, rs) {
-                            map[rs.name] = rs.id;
-                            rss.push(rs.name);
-                        });
-                        process(rss);
-                    });
-                },
-                updater: function (item) {
-                    var id_cliente = map[item];
-                    //$("#sel-cliente").text("Selected : " + selectedShortCode);
-
-                    var scope = angular.element($("[ng-controller='ctrl']")).scope();
-                    scope.$apply(function () {
-                        scope.tc.filtri.id_cliente = id_cliente;
-                        scope.tc.refresh(scope.pag_corrente);
-                    });
-                    return item;
-                }
-        }).on("keyup", function () {
-            if (!$(this).val()) {
-                var scope = angular.element($("[ng-controller='ctrl']")).scope();
-                scope.$apply(function () {
-                    scope.tc.filtri.id_cliente = '';
-                    scope.tc.refresh(scope.pag_corrente);
-                });
-            }
-        });
-
-       
-
-        @*$.get('@(Url.Action("GetClienti", "Get"))', function (data) {
-             $('#sel-cliente').typeahead({
-                source: data
-            });
-        });
-
-         $('#sel-cliente').change(function () {
-             var current = $('#sel-cliente').typeahead("getActive");
-             var scope = angular.element($("[ng-controller='ctrl']")).scope();
-             scope.$apply(function () {
-                 scope.tc.filtri.id_cliente = current.id;
-                 scope.tc.refresh(scope.pag_corrente);
-             });
-         });*@
-
-         @*$.get('@(Url.Action("GetAgenti", "Get"))', function (data) {
-             $('#sel-agente').typeahead({
-                source: data
-            });
-        });
-
-         $('#sel-agente').change(function () {
-             var current = $('#sel-agente').typeahead("getActive");
-             var scope = angular.element($("[ng-controller='ctrl']")).scope();
-             scope.$apply(function () {
-                 scope.tc.filtri.id_agente = current.id;
-                 scope.tc.refresh(scope.pag_corrente);
-             });
-         });*@
 
         shortcut.add("Home", function () {
             $('#query').focus();
@@ -171,7 +131,7 @@
         <!--Elenco inizio -->
         <div class="page-toolbar">
             <button class="btn btn-grey" ng-click="tc.refresh()"><i class="fa fa-refresh">&nbsp;</i>Refresh</button>
-            <button class="btn btn-grey" ng-click="tc.editOrCreate()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
+            <button class="btn btn-grey" ng-click="tc.create()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
         </div> <!-- page-toolbar -->
         <div class="margin-b-20"></div>
 
@@ -182,11 +142,13 @@
 
                     <div class="form-group">
                         <label>Agente</label>
-                        <input type="text" class="form-control" placeholder="seleziona l'agente.." id="sel-agente" />
+                        <input type="text" class="form-control" placeholder="seleziona l'agente .."
+                               typehead="@(Url.Action("GetAgenti", "Get"))" on-select="select_agente_filtri" />
                     </div>
                     <div class="form-group">
                         <label>Cliente</label>
-                        <input type="text" class="form-control" placeholder="seleziona il cliente.." id="sel-cliente" />
+                        <input type="text" class="form-control" placeholder="seleziona il cliente.."
+                               typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" />
                     </div>
                     <div class="form-group data-new">
                         <label>da data</label>
@@ -208,8 +170,7 @@
             </div>
         </div>
 
-        <input  type="text" class="form-control" placeholder="seleziona il cliente.." 
-               typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri"  />
+
 
    
 
@@ -239,7 +200,7 @@
                             <td class="text-center"><i class="fa {{item.ordine_chiuso?'fa-lock text-danger':'fa-unlock text-success'}}"></i></td>
                             <td>
                                 <button class="btn btn-grey btn-xs" ng-click="tc.deleteItem(item)"><i class="glyphicon glyphicon-trash"></i></button>
-                                <button class="btn btn-grey btn-xs" ng-click="tc.editOrCreate(item)"><i class="fa fa-pencil-square-o"></i></button>
+                                <button class="btn btn-grey btn-xs" ng-click="tc.edit(item)"><i class="fa fa-pencil-square-o"></i></button>
                             </td>
                         </tr>
                     </tbody>
@@ -264,8 +225,9 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <label>Fatturare a</label>
-                                <input type="text" class="form-control" placeholder="seleziona il cliente" />
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" placeholder="seleziona il cliente.."
+                                       typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente" />
+                                <input type="text" class="form-control" ng-model="tc.current.indirizzo" />
                             </div>
                         </div>
                         <div class="form-group">

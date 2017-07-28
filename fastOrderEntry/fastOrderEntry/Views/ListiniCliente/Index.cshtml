@@ -9,24 +9,7 @@
 @section scripts {
     <script>
 
-        var $input = $(".typeahead");
-
-        $.get('@(Url.Action("GetClienti", "Get"))', function (data) {
-            $input.typeahead({
-                source: data
-            });
-        });
-
-        $input.change(function () {
-            var current = $input.typeahead("getActive");
-            console.log(current);
-            var scope = angular.element($("[ng-controller='ctrl']")).scope();
-            scope.$apply(function () {
-                scope.cliente = current;
-                scope.id_cliente = current.id;
-                scope.refresh_page(scope.pag_corrente);
-            });
-        });
+        
 
         function show_message(errore, messaggio) {
             alert(messaggio);
@@ -37,6 +20,11 @@
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
             $scope.cod_cat_merc_sel = '';
+
+            $scope.select_cliente_filtri = function (item) {
+                $scope.id_cliente = item ? item.id : '';
+                $scope.refresh_page($scope.pag_corrente);
+            };
 
             listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
                 $scope.categorie = result.data;
@@ -236,7 +224,8 @@
             <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
             <div class="form-inline">
                 <div class="form-group col-md-4 col-lg-4">
-                    <input type="text" class="typeahead form-control" placeholder="seleziona il cliente..." />
+                    <input type="text" class="form-control" placeholder="seleziona il cliente.."
+                           typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" />
                 </div>
                 <div class="input-group">
                     <input id="query" capitalize

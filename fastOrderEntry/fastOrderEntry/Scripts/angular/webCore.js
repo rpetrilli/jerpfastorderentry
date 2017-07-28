@@ -96,41 +96,44 @@ myModule.factory('tabController', function ($http) {
         };
 
 
-        fac.editOrCreate = function (item) {
-            fac.nuovo = 'undefined' === typeof (item);
-            fac.current = item ? item : {};
-            //Se siamo in modifica
-            if (!fac.nuovo) {
-                $http({
-                    method: 'GET',
-                    url: fac.prop.api_root + '/select',
-                    params: item
-                }).then(function (response) {
-                    fac.displayMode = "edit";
-                    fac.current = response.data;
-                }).catch(function (error, status) {
-                    fac.prop.message_function('Errore', error.data);
-                });
-            } else {
+        fac.edit = function (item) {
+            fac.nuovo = false;
+
+            $http({
+                method: 'GET',
+                url: fac.prop.api_root + '/select',
+                params: item
+            }).then(function (response) {
                 fac.displayMode = "edit";
-                fac.current = {};
-            }
+                fac.current = response.data;
+            }).catch(function (error, status) {
+                fac.prop.message_function('Errore', error.data);
+            });
+
+        };
+
+
+        fac.create = function (item) {
+            fac.nuovo = true;
+
+            fac.displayMode = "edit";
+            fac.current = {};
 
         };
 
         fac.saveEdit = function (item) {
             if (fac.nuovo) {
-                fac.create(item);
+                fac.insert(item);
             } else {
                 fac.update(item);
             }
         };
 
 
-        fac.create = function (item) {
+        fac.insert = function (item) {
             $http({
                 method: 'POST',
-                url: fac.prop.api_root + '/update',
+                url: fac.prop.api_root + '/insert',
                 data: fac.current
             }).then(function (response) {
                 fac.displayMode = "list";
