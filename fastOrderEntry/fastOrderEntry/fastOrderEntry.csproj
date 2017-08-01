@@ -260,6 +260,7 @@
     <Compile Include="Models\OrdineVenditaModel.cs" />
     <Compile Include="Models\PetLineContext.cs" />
     <Compile Include="Models\RecordListinoModel.cs" />
+    <Compile Include="Models\ArticoloStrutturaModel .cs" />
     <Compile Include="Models\VettoreStrutturaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

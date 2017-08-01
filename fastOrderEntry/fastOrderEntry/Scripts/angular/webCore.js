@@ -196,18 +196,23 @@ myModule.filter('trimZeros', function () {
 myModule.directive('typehead', function () {
     return {
         scope: {
-            onSelectEvent: '=onSelect'
+            onSelectEvent: '=onSelect',
+            addParams: '=params'
         },
         link: function (scope, element, attrs, modelCtrl) {
             element.typeahead({
                 source: function (query, process) {
                     var rss = [];
-                    map = {};
                     mapObj = {};
 
-                    return $.post(attrs['typehead'], { query: query }, function (data) {
+                    var params = { query: query };
+                    if (typeof (scope.addParams) != 'undefined') {
+                        Object.assign(params, scope.addParams);
+                    }
+
+                    return $.post(attrs['typehead'], params , function (data) {
                         $.each(data, function (i, rs) {
-                            map[rs.name] = rs.id;
+         
                             mapObj[rs.name] = rs;
                             rss.push(rs.name);
                         });

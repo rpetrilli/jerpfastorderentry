@@ -15,7 +15,7 @@ namespace fastOrderEntry.Models
         public virtual IList<RecordListinoModel> recordlistino { get; set; }
 
   
-        internal void select(NpgsqlConnection conn, string query, string cod_cat_merc = "",int pagina = 0, int REC_X_PAGINA = 0)
+        public void select(NpgsqlConnection conn, string query, string cod_cat_merc = "",int pagina = 0, int REC_X_PAGINA = 0)
         {
             using (var cmd = new NpgsqlCommand())
             {

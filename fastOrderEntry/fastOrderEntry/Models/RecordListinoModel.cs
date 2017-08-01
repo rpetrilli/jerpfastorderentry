@@ -25,7 +25,7 @@ namespace fastOrderEntry.Models
         }
 
 
-        internal void leggiPrezziCliente(NpgsqlConnection conn, string id_cliente)
+        public void leggiPrezziCliente(NpgsqlConnection conn, string id_cliente)
         {
             this.id_cliente = id_cliente;
             prezzo_vendita = leggiListinoCliente(conn, "VA01", id_cliente);

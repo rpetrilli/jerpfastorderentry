@@ -53,6 +53,16 @@
                 Object.assign($scope.tc.current, item);
             };
 
+            $scope.select_articolo = function (item) {
+                if (typeof (item) == 'undefined')
+                    return;
+                if (typeof ($scope.tc.current.righe) == 'undefined') {
+                    $scope.tc.current.righe = [];
+                }
+
+                $scope.tc.current.righe.push(item);
+            }; 
+
 
         }]);
 
@@ -171,7 +181,7 @@
 
 
 
-   
+
 
         <div class="row">
 
@@ -260,6 +270,82 @@
 
         </div>
         <div class="margin-b-20"></div>
+
+        <div class="row">
+            <input type="text" class="form-control" placeholder="seleziona l'agente .."
+                   typehead="@(Url.Action("GetArticoli", "Get"))" on-select="select_articolo" params="tc.current" />
+
+        </div>
+
+        {{tc.current | json}}
+        <div class="row">
+
+            <table class="table table-hover table-striped" id="table">
+                <thead>
+                    <tr>
+                        <th>Art</th>
+                        <th>Descrizione</th>
+                        <th>Q.tà Ordinata</th>
+                        <th>Q.tà In Consegna</th>
+                        <th>Prezzo</th>
+                        <th>Sc 1</th>
+                        <th>Sc 2</th>
+                        <th>Sc 3</th>
+                        <th>Cod.IVA</th>
+                        <th>Imponibile</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in tc.current.righe">
+                        <td>{{item.id_codice_art}}</td>
+                        <td>{{item.descrizione}}</td>
+
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.qta_ordinata" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.qta_in_consegna" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+
+                        <td>
+                            <input type="number" class="form-control text-right request-focus"
+                                   ng-model="item.prezzo_vendita" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.sconto_1" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.sconto_2" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control text-right"
+                                   ng-model="item.sconto_3" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <!--Codice IVA -->
+                        </td>
+                        <td>
+                            <!--Imponibile -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-primary">

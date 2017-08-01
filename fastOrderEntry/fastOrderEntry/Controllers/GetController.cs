@@ -56,5 +56,20 @@ namespace fastOrderEntry.Controllers
             con.Close();
             return jsonResult;
         }
+
+        public JsonResult GetArticoli(string id_cliente, string query)
+        {
+            con.Open();
+
+
+            ArticoloStrutturaModel vettori = new ArticoloStrutturaModel();
+            vettori.select(con, id_cliente, query);
+
+            var jsonResult = Json(vettori.rs, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+
+            con.Close();
+            return jsonResult;
+        }
     }
 }
