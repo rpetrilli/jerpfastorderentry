@@ -50,7 +50,7 @@ namespace fastOrderEntry.Controllers
             VettoreStrutturaModel vettori = new VettoreStrutturaModel();
             vettori.select(con);
 
-            var jsonResult = Json(vettori.vettori, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(vettori.rs, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();
