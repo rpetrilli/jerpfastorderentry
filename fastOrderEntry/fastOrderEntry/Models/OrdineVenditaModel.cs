@@ -4,6 +4,10 @@ using System.Linq;
 using System.Web;
 using Npgsql;
 using WebCore.fw;
+using System.Net.Http;
+using System.Net;
+using System.Collections.Specialized;
+using System.Text;
 
 namespace fastOrderEntry.Models
 {
@@ -24,27 +28,26 @@ namespace fastOrderEntry.Models
 
         public override void delete(NpgsqlConnection con)
         {
-            using (var cmd = new NpgsqlCommand())
-            {
-                cmd.Connection = con;
+            using (PetLineContext db = new PetLineContext()) { 
+                var settings = (from item in db.impostazioni
+                                select item).First();
 
-                cmd.CommandText = "delete from vo_ordini_righe_provv " +
-                "where id_divisione = '1' and esercizio = @esercizio and id_ordine = @id_ordine";
-                cmd.Parameters.AddWithValue("esercizio", esercizio);
-                cmd.Parameters.AddWithValue("id_ordine", id_ordine);
-                cmd.ExecuteNonQuery();
+                using (var client = new WebClient())
+                {
+                    var values = new NameValueCollection();
+                    values["op"] = "delete_order";
+                    values["esercizio"] = esercizio.ToString();
+                    values["id_ordine"] = id_ordine;
+                    values["private_key"] = settings.private_key;
+
+                    var response = client.UploadValues(settings.jerp_url, values);
+
+                    var responseString = Encoding.Default.GetString(response);
+                }
+
             }
 
-            using (var cmd = new NpgsqlCommand())
-            {
-                cmd.Connection = con;
 
-                cmd.CommandText = "delete from vo_ordini_righe_provv " +
-                "where id_divisione = '1' and esercizio = @esercizio and id_ordine = @id_ordine";
-                cmd.Parameters.AddWithValue("esercizio", esercizio);
-                cmd.Parameters.AddWithValue("id_ordine", id_ordine);
-                cmd.ExecuteNonQuery();
-            }
         }
 
 

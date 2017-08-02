@@ -16,6 +16,7 @@ namespace fastOrderEntry.Models
 
         public virtual DbSet<CodiceIva> codiceIva { get; set; }
         public virtual DbSet<CondizionePag> condizionePag { get; set; }
+        public virtual DbSet<Impostazioni> impostazioni { get; set; }
         //public virtual DbSet<ma_articoli_soc> ma_articoli_soc { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBulider)
