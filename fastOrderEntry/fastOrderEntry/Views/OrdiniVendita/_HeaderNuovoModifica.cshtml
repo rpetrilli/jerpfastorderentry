@@ -1,0 +1,56 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label><strong>Note cliente</strong></label>
+                                <textarea rows="5" class="form-control" readonly="readonly">{{tc.current.note}}</textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label><strong>Totale peso</strong></label>
+                                <input type="text" class="form-control" ng-model="tc.current | totpeso" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label><strong>Fatturare a</strong></label>
+                                <input type="text" class="form-control" placeholder="seleziona il cliente.."
+                                       typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente"
+                                       ng-model="tc.current.ragione_sociale" />
+                                <input type="text" class="form-control" ng-model="tc.current.indirizzo" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label><strong>Destinazione merce</strong></label>
+                                <input type="text" class="form-control" placeholder="" />
+                                <input type="text" class="form-control" placeholder="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label><strong>Vettore</strong></label>
+                                <select ng-model="tc.current.vettore" class="form-control">
+                                    <option ng-repeat="item in selVettori" value="{{item.id_vettore}}">{{item.ragione_sociale}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label><strong>Condizioni pagamento</strong></label>
+                                <select ng-model="tc.current.condpag" class="form-control">
+                                    <option ng-repeat="item in selCondPag" value="{{item.id_cond_pag}}">{{item.descrizione}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿<div class="panel panel-primary" style="margin-bottom: 0px;">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-2">
+                <p><strong>Agente</strong></p>
+                <input type="text" class="form-control" placeholder="seleziona l'agente .."
+                       typehead="@(Url.Action("GetAgenti", "Get"))" on-select="select_agente_filtri" />
+            </div>
+            <div class="col-md-2">
+                <p><strong>Cliente</strong></p>
+                <input type="text" class="form-control" placeholder="seleziona il cliente.."
+                       typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" />
+            </div>
+            <div class="col-md-2 data-new">
+                <p><strong>da data</strong></p>
+                <input type="text" class="form-control" id="da-data" />
+            </div>
+            <div class="col-md-2 data-new">
+                <p><strong>a data</strong></p>
+                <input type="text" class="form-control" id="a-data" />
+            </div>
+            <div class="col-md-2">
+                <p><strong>da ordine</strong></p>
+                <input type="text" class="form-control" ng-model="tc.filtri.id_ordine_da" ng-change="tc.refresh()" />
+            </div>
+            <div class="col-md-2">
+                <p><strong>a ordine</strong></p>
+                <input type="text" class="form-control" ng-model="tc.filtri.id_ordine_al" ng-change="tc.refresh()" />
+            </div>
+        </div>
+    </div>
+</div>

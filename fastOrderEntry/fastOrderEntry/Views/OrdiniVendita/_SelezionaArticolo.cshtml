@@ -1,0 +1,9 @@
+﻿<div class="row">
+    <div class="col-sm-6">
+        <div class="well well-sm">
+            <label><strong>Articolo</strong></label>
+            <input type="text" class="form-control" placeholder="seleziona l'articolo .."
+                   typehead="@(Url.Action("GetArticoli", "Get"))" on-select="select_articolo" params="tc.current" />
+        </div>
+    </div>
+</div>

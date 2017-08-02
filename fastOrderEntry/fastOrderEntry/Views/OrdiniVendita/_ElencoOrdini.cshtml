@@ -1,0 +1,41 @@
+﻿<div ng-show="tc.displayMode == 'list'">
+    <!--Elenco inizio -->
+    <div class="page-toolbar">
+        <button class="btn btn-grey" ng-click="tc.refresh()"><i class="fa fa-refresh">&nbsp;</i>Refresh</button>
+        <button class="btn btn-grey" ng-click="tc.create()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
+    </div> <!-- page-toolbar -->
+    <div class="margin-b-20"></div>
+    @Html.Partial("_FiltroRicerca")
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <tab-controller-pag table-controller="tc"></tab-controller-pag>
+            <table class="table table-striped" id="table">
+                <thead>
+                    <tr>
+                        <th>Nr Ord.</th>
+                        <th>Cliente</th>
+                        <th>Agente</th>
+                        <th>Data Ordine</th>
+                        <th>Imponibile</th>
+                        <th>Ord.Chiuso</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in tc.records">
+                        <td>{{item.esercizio}} - {{item.id_ordine | trimZeros}}</td>
+                        <td>{{item.id_cliente | trimZeros}} {{item.ragione_sociale}}</td>
+                        <td>{{item.id_agente | trimZeros}} {{item.ragione_sociale_agente}}</td>
+                        <td>{{item.data_ordine | date: short}}</td>
+                        <td>{{item.totale_doc | number:2}}</td>
+                        <td class="text-center"><i class="fa {{item.ordine_chiuso?'fa-lock text-danger':'fa-unlock text-success'}}"></i></td>
+                        <td>
+                            <button class="btn btn-grey btn-xs" ng-click="tc.deleteItem(item)"><i class="glyphicon glyphicon-trash"></i></button>
+                            <button class="btn btn-grey btn-xs" ng-click="tc.edit(item)"><i class="fa fa-pencil-square-o"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

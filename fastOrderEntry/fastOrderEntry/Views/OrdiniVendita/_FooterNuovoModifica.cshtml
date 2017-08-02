@@ -1,0 +1,11 @@
+﻿<div class="row">
+    Imponibile
+    {{tc.current | totimponibile | number:2}}
+    Iva
+    {{tc.current | totiva | number:2}}
+    Tot documento
+    {{ ((tc.current | totimponibile) + (tc.current | totiva)) | number:2}}
+
+    Totale peso
+    {{tc.current | totpeso}}
+</div>
