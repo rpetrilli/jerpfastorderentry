@@ -341,6 +341,7 @@
     <Content Include="Scripts\angular\webCore.js" />
     <Content Include="Scripts\angular\webCoreTabControllerPag.tpl.html" />
     <Content Include="Scripts\typeahead.js" />
+    <Content Include="sql\0001.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
