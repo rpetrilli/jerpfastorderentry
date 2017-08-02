@@ -285,6 +285,7 @@
     <Content Include="Scripts\angular\angular-resource.min.js" />
     <Content Include="Scripts\angular\angular.js" />
     <Content Include="Scripts\angular\angular.min.js" />
+    <Content Include="Scripts\angular\appFilters.js" />
     <Content Include="Scripts\angular\appModules.js" />
     <Content Include="Scripts\bootstrap-datepicker.it.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
@@ -362,6 +363,13 @@
     <Content Include="Views\Shared\_Nav.cshtml" />
     <Content Include="Views\ListiniCliente\Index.cshtml" />
     <Content Include="Views\OrdiniVendita\Index.cshtml" />
+    <Content Include="Views\OrdiniVendita\_FiltroRicerca.cshtml" />
+    <Content Include="Views\OrdiniVendita\_ElencoOrdini.cshtml" />
+    <Content Include="Views\OrdiniVendita\_NuovoModificaOrdine.cshtml" />
+    <Content Include="Views\OrdiniVendita\_HeaderNuovoModifica.cshtml" />
+    <Content Include="Views\OrdiniVendita\_SelezionaArticolo.cshtml" />
+    <Content Include="Views\OrdiniVendita\_ElencoRigheInOrdine.cshtml" />
+    <Content Include="Views\OrdiniVendita\_FooterNuovoModifica.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

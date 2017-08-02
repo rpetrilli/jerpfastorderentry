@@ -1,0 +1,64 @@
+﻿<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-hover table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>Art</th>
+                    <th>Descrizione</th>
+                    <th>Q.tà Ordinata</th>
+                    <th>Q.tà In Consegna</th>
+                    <th>Prezzo</th>
+                    <th>Sc 1</th>
+                    <th>Sc 2</th>
+                    <th>Sc 3</th>
+                    <th>Cod.IVA</th>
+                    <th>Imponibile</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr dir-paginate="item in tc.current.righe | itemsPerPage: 10">
+                    <td>{{item.id_codice_art}}</td>
+                    <td>{{item.descrizione}}</td>
+                    <td>
+                        <input type="number" class="form-control text-right"
+                               ng-model="item.qta_ordinata" style="width:80px;"
+                               ng-focus="linefocused($index);" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control text-right"
+                               ng-model="item.qta_in_consegna" style="width:80px;"
+                               ng-focus="linefocused($index);" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control text-right request-focus"
+                               ng-model="item.prezzo_vendita" style="width:80px;"
+                               ng-focus="linefocused($index);" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control text-right"
+                               ng-model="item.sconto_1" style="width:80px;"
+                               ng-focus="linefocused($index);" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control text-right"
+                               ng-model="item.sconto_2" style="width:80px;"
+                               ng-focus="linefocused($index);" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control text-right"
+                               ng-model="item.sconto_3" style="width:80px;"
+                               ng-focus="linefocused($index);" />
+                    </td>
+                    <td>
+                        {{item.id_iva}}
+                    </td>
+                    <td>
+                        {{item | imponibile | number:2}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <dir-pagination-controls template-url="@Url.Content("~/Scripts/angular/dirPagination.tpl.html")"></dir-pagination-controls>
+    </div>
+</div>

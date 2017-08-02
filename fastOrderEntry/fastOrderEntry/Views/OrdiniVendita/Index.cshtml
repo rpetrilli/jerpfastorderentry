@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Ordini di Vendita";
     string currentUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/" + ViewContext.RouteData.GetRequiredString("controller");
-
 }
 @section header {
     <script>
@@ -10,59 +9,12 @@
             alert(messaggio);
         }
 
-        app.filter('imponibile', function () {
-            return function (value) {
-                var qta = (value.qta_in_consegna > 0) ? value.qta_in_consegna : value.qta_ordinata;
-                return qta * value.prezzo_vendita * (100 - value.sconto_1) / 100 * (100 - value.sconto_2) / 100 * (100 - value.sconto_3) / 100;
-            }
-        });
-
-        app.filter('iva', function ($filter) {
-            return function (value) {
-                var imponibile = $filter('imponibile')(value);
-                return imponibile * value.aliquota / 100;
-            }
-        });
-
-        app.filter('totpeso', function ($filter) {
-            return function (ordine) {
-                var tot = 0;
-                for (var i = 0; i < ordine.righe.length; i++) {
-                    tot += ordine.righe[i].peso_lordo;
-                }
-                return tot;
-            }
-        });
-
-        app.filter('totimponibile', function ($filter) {
-            return function (ordine) {
-                var tot = 0;
-                for (var i = 0; i < ordine.righe.length; i++) {
-                    tot += $filter('imponibile')(ordine.righe[i]);
-                }
-                return tot;
-            }
-        });
-
-        app.filter('totiva', function ($filter) {
-            return function (ordine) {
-                var tot = 0;
-                for (var i = 0; i < ordine.righe.length; i++) {
-                    tot += $filter('iva')(ordine.righe[i]);
-                }
-                return tot;
-            }
-        });
-
         app.controller('ctrl', ['$scope', 'tabController', function ($scope, tabController) {
             $scope.select_row = function (index) {
                 console.log(index);
                 $('#table tr').removeClass('text-info');
                 $('#table tr:nth-child(' + (index) + ') ').addClass('text-info');
             };
-
-
-
 
             $scope.selCondPag = @{Html.RenderAction("GetCondPag", "Get");};
             $scope.selVettori = @{Html.RenderAction("GetVettori", "Get");};
@@ -73,14 +25,13 @@
                 $scope.tc.refresh();
             };
 
-
             $scope.select_agente_filtri = function (item) {
                 $scope.tc.filtri.id_agente = item ? item.id : '';
                 $scope.tc.refresh();
             };
-
-
+            
             @*@(ViewBag.scope_var)*@
+
             $scope.tc = tabController.createController({
                 api_root: '@currentUrl',
                 select_row_call_back: $scope.select_row,
@@ -99,15 +50,9 @@
                 if (typeof ($scope.tc.current.righe) == 'undefined') {
                     $scope.tc.current.righe = [];
                 }
-
                 $scope.tc.current.righe.push(item);
             };
-
-
-
-
         }]);
-
     </script>
 }
 @section scripts{
@@ -134,29 +79,31 @@
             });
         });
 
-
-
         shortcut.add("Home", function () {
             $('#query').focus();
         });
+
         shortcut.add("Up", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.tc.previous_record();
             });
         });
+
         shortcut.add("Down", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.tc.next_record();
             });
         });
+
         shortcut.add("Ctrl+S", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 scope.tc.save_current_record();
             });
         });
+
         shortcut.add("pd", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
@@ -165,6 +112,7 @@
                 }
             });
         });
+
         shortcut.add("pu", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
@@ -175,244 +123,8 @@
         });
     </script>
 }
-
-
 <div class="main-content" ng-controller="ctrl">
-
-
-    <div ng-show="tc.displayMode == 'list'">
-        <!--Elenco inizio -->
-        <div class="page-toolbar">
-            <button class="btn btn-grey" ng-click="tc.refresh()"><i class="fa fa-refresh">&nbsp;</i>Refresh</button>
-            <button class="btn btn-grey" ng-click="tc.create()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
-        </div> <!-- page-toolbar -->
-        <div class="margin-b-20"></div>
-
-
-        <div class="panel panel-primary" style="margin-bottom: 0px;">
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-2">
-                        <p><strong>Agente</strong></p>
-                        <input type="text" class="form-control" placeholder="seleziona l'agente .."
-                               typehead="@(Url.Action("GetAgenti", "Get"))" on-select="select_agente_filtri" />
-                    </div>
-                    <div class="col-md-2">
-                        <p><strong>Cliente</strong></p>
-                        <input type="text" class="form-control" placeholder="seleziona il cliente.."
-                               typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" />
-                    </div>
-                    <div class="col-md-2 data-new">
-                        <p><strong>da data</strong></p>
-                        <input type="text" class="form-control" id="da-data" />
-                    </div>
-                    <div class="col-md-2 data-new">
-                        <p><strong>a data</strong></p>
-                        <input type="text" class="form-control" id="a-data" />
-                    </div>
-                    <div class="col-md-2">
-                        <p><strong>da ordine</strong></p>
-                        <input type="text" class="form-control" ng-model="tc.filtri.id_ordine_da" ng-change="tc.refresh()" />
-                    </div>
-                    <div class="col-md-2">
-                        <p><strong>a ordine</strong></p>
-                        <input type="text" class="form-control" ng-model="tc.filtri.id_ordine_al" ng-change="tc.refresh()" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <div class="row">
-
-            <div class="col-md-12 col-lg-12">
-                <tab-controller-pag table-controller="tc"></tab-controller-pag>
-                <table class="table table-striped" id="table">
-                    <thead>
-                        <tr>
-                            <th>Nr Ord.</th>
-                            <th>Cliente</th>
-                            <th>Agente</th>
-                            <th>Data Ordine</th>
-                            <th>Imponibile</th>
-                            <th>Ord.Chiuso</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="item in tc.records">
-                            <td>{{item.esercizio}} - {{item.id_ordine | trimZeros}}</td>
-                            <td>{{item.id_cliente | trimZeros}} {{item.ragione_sociale}}</td>
-                            <td>{{item.id_agente | trimZeros}} {{item.ragione_sociale_agente}}</td>
-                            <td>{{item.data_ordine | date: short}}</td>
-                            <td>{{item.totale_doc | number:2}}</td>
-                            <td class="text-center"><i class="fa {{item.ordine_chiuso?'fa-lock text-danger':'fa-unlock text-success'}}"></i></td>
-                            <td>
-                                <button class="btn btn-grey btn-xs" ng-click="tc.deleteItem(item)"><i class="glyphicon glyphicon-trash"></i></button>
-                                <button class="btn btn-grey btn-xs" ng-click="tc.edit(item)"><i class="fa fa-pencil-square-o"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-            </div> <!--Dettaglio-->
-        </div>
-    </div> <!--Fine Elenco-->
-
-
-    <div ng-show="tc.displayMode == 'edit'">
-        <!-- Dettaglio inizio -->
-        <div class="page-toolbar">
-            <button class="btn btn-grey" ng-click="tc.saveEdit(current)"><i class="fa fa-floppy-o">&nbsp;</i>Salva</button>
-            <button class="btn btn-grey" ng-click="tc.cancelEdit()"><i class="fa fa-times">&nbsp;</i>Annulla</button>
-        </div> <!-- page-toolbar -->
-        <div class="margin-b-20"></div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <label>Fatturare a</label>
-                                <input type="text" class="form-control" placeholder="seleziona il cliente.."
-                                       typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente"
-                                       ng-model="tc.current.ragione_sociale" />
-                                <input type="text" class="form-control" ng-model="tc.current.indirizzo" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <label>Destinazione merce</label>
-                                <input type="text" class="form-control" placeholder="" />
-                                <input type="text" class="form-control" placeholder="" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        <label>Tot Peso</label>
-                                        <input type="text" class="form-control" />
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <label>Vettore</label>
-                                        <input type="text" class="form-control" />
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <label>Azienda</label>
-                                        <input type="text" class="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="margin-b-20"></div>
-
-        <div class="row">
-            <input type="text" class="form-control" placeholder="seleziona l'agente .."
-                   typehead="@(Url.Action("GetArticoli", "Get"))" on-select="select_articolo" params="tc.current" />
-
-        </div>
-
-        <div class="row">
-            Imponibile
-            {{tc.current | totimponibile | number:2}} 
-            Iva
-            {{tc.current | totiva | number:2}}
-            Tot documento
-            {{ ((tc.current | totimponibile) + (tc.current | totiva)) | number:2}}
-            
-            Totale peso
-            {{tc.current | totpeso}}
-        </div>
-
-        
-        <div class="row">
-
-            <table class="table table-hover table-striped" id="table">
-                <thead>
-                    <tr>
-                        <th>Art</th>
-                        <th>Descrizione</th>
-                        <th>Q.tà Ordinata</th>
-                        <th>Q.tà In Consegna</th>
-                        <th>Prezzo</th>
-                        <th>Sc 1</th>
-                        <th>Sc 2</th>
-                        <th>Sc 3</th>
-                        <th>Cod.IVA</th>
-                        <th>Imponibile</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr dir-paginate="item in tc.current.righe | itemsPerPage: 10">
-                        <td>{{item.id_codice_art}}</td>
-                        <td>{{item.descrizione}}</td>
-
-                        <td>
-                            <input type="number" class="form-control text-right"
-                                   ng-model="item.qta_ordinata" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-
-                        <td>
-                            <input type="number" class="form-control text-right"
-                                   ng-model="item.qta_in_consegna" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-
-                        <td>
-                            <input type="number" class="form-control text-right request-focus"
-                                   ng-model="item.prezzo_vendita" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control text-right"
-                                   ng-model="item.sconto_1" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control text-right"
-                                   ng-model="item.sconto_2" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control text-right"
-                                   ng-model="item.sconto_3" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            {{item.id_iva}} 
-                        </td>
-                        <td>
-                            {{item | imponibile | number:2}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <dir-pagination-controls template-url="@Url.Content("~/Scripts/angular/dirPagination.tpl.html")"></dir-pagination-controls>
-        </div>
-
-
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-
-                </div>
-            </div>
-        </div>
-    </div> <!-- Dettaglio fine -->
+    @Html.Partial("_ElencoOrdini")
+    @Html.Partial("_NuovoModificaOrdine")
 </div>
 
-@{ 
-    Response.ContentType = "text/html; charset=utf-8";
-}
