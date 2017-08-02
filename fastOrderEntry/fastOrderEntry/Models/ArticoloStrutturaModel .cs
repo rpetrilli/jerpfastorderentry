@@ -42,7 +42,7 @@ namespace fastOrderEntry.Models
                             r.id_codice_art = reader["id_codice_art"].ToString();
                             r.descrizione = reader["descrizione"].ToString();
                             r.id_iva = reader["id_iva"].ToString();
-
+                            r.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]);
 
                             CodiceIva codiceIva = db.codiceIva.FirstOrDefault(x => x.id_iva == r.id_iva);
                             r.aliquota = codiceIva.aliquota;
@@ -84,8 +84,9 @@ namespace fastOrderEntry.Models
         public decimal sconto_3 { get; set; }
         public string id_iva { get; set; }
         public decimal aliquota { get; set; }
-        
-
+        public decimal qta_ordinata { get; set; } = 1;
+        public decimal qta_in_consegna { get; set; } = 0;
+        public decimal peso_lordo { get; set; }
 
     }
 

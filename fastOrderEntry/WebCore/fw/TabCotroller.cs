@@ -159,6 +159,7 @@ namespace WebCore.fw
         public new ViewResult View()
         {
             ViewResult view = base.View();
+
             ViewBag.scope_var = new F().toScopeVariables();
             return view;
         }

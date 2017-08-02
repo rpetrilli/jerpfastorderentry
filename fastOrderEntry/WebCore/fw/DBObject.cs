@@ -13,7 +13,6 @@ namespace WebCore.fw
             List<Message> messaggi = new List<Message>();
             return messaggi;
         }
-
         abstract public void select(NpgsqlConnection con);
 
         abstract public void insert(NpgsqlConnection con);

@@ -2,12 +2,57 @@
 @{
     ViewBag.Title = "Ordini di Vendita";
     string currentUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/" + ViewContext.RouteData.GetRequiredString("controller");
+
 }
 @section header {
     <script>
         show_message = function (errore, messaggio) {
             alert(messaggio);
         }
+
+        app.filter('imponibile', function () {
+            return function (value) {
+                var qta = (value.qta_in_consegna > 0) ? value.qta_in_consegna : value.qta_ordinata;
+                return qta * value.prezzo_vendita * (100 - value.sconto_1) / 100 * (100 - value.sconto_2) / 100 * (100 - value.sconto_3) / 100;
+            }
+        });
+
+        app.filter('iva', function ($filter) {
+            return function (value) {
+                var imponibile = $filter('imponibile')(value);
+                return imponibile * value.aliquota / 100;
+            }
+        });
+
+        app.filter('totpeso', function ($filter) {
+            return function (ordine) {
+                var tot = 0;
+                for (var i = 0; i < ordine.righe.length; i++) {
+                    tot += ordine.righe[i].peso_lordo;
+                }
+                return tot;
+            }
+        });
+
+        app.filter('totimponibile', function ($filter) {
+            return function (ordine) {
+                var tot = 0;
+                for (var i = 0; i < ordine.righe.length; i++) {
+                    tot += $filter('imponibile')(ordine.righe[i]);
+                }
+                return tot;
+            }
+        });
+
+        app.filter('totiva', function ($filter) {
+            return function (ordine) {
+                var tot = 0;
+                for (var i = 0; i < ordine.righe.length; i++) {
+                    tot += $filter('iva')(ordine.righe[i]);
+                }
+                return tot;
+            }
+        });
 
         app.controller('ctrl', ['$scope', 'tabController', function ($scope, tabController) {
             $scope.select_row = function (index) {
@@ -17,16 +62,11 @@
             };
 
 
-            //$http({
-            //    method: 'POST',
-            //    url: fac.prop.api_root + '/insert',
-            //    data: fac.current
-            //}).then(function (response) {
-            //    fac.displayMode = "list";
-            //    fac.refresh_page(fac.filtri.page_number);
-            //}).catch(function (error, status) {
-            //    fac.prop.message_function('Errore', error.data);
-            //});
+
+
+            $scope.selCondPag = @{Html.RenderAction("GetCondPag", "Get");};
+            $scope.selVettori = @{Html.RenderAction("GetVettori", "Get");};
+
 
             $scope.select_cliente_filtri = function (item) {
                 $scope.tc.filtri.id_cliente = item?item.id:'';
@@ -61,7 +101,9 @@
                 }
 
                 $scope.tc.current.righe.push(item);
-            }; 
+            };
+
+
 
 
         }]);
@@ -137,6 +179,7 @@
 
 <div class="main-content" ng-controller="ctrl">
 
+
     <div ng-show="tc.displayMode == 'list'">
         <!--Elenco inizio -->
         <div class="page-toolbar">
@@ -178,7 +221,6 @@
                 </div>
             </div>
         </div>
-
 
 
 
@@ -235,7 +277,8 @@
                             <div class="col-sm-12">
                                 <label>Fatturare a</label>
                                 <input type="text" class="form-control" placeholder="seleziona il cliente.."
-                                       typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente" />
+                                       typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente"
+                                       ng-model="tc.current.ragione_sociale" />
                                 <input type="text" class="form-control" ng-model="tc.current.indirizzo" />
                             </div>
                         </div>
@@ -277,7 +320,19 @@
 
         </div>
 
-        {{tc.current | json}}
+        <div class="row">
+            Imponibile
+            {{tc.current | totimponibile | number:2}} 
+            Iva
+            {{tc.current | totiva | number:2}}
+            Tot documento
+            {{ ((tc.current | totimponibile) + (tc.current | totiva)) | number:2}}
+            
+            Totale peso
+            {{tc.current | totpeso}}
+        </div>
+
+        
         <div class="row">
 
             <table class="table table-hover table-striped" id="table">
@@ -297,7 +352,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in tc.current.righe">
+                    <tr dir-paginate="item in tc.current.righe | itemsPerPage: 10">
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
 
@@ -334,14 +389,16 @@
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
-                            <!--Codice IVA -->
+                            {{item.id_iva}} 
                         </td>
                         <td>
-                            <!--Imponibile -->
+                            {{item | imponibile | number:2}}
                         </td>
                     </tr>
                 </tbody>
             </table>
+
+            <dir-pagination-controls template-url="@Url.Content("~/Scripts/angular/dirPagination.tpl.html")"></dir-pagination-controls>
         </div>
 
 
@@ -355,3 +412,7 @@
         </div>
     </div> <!-- Dettaglio fine -->
 </div>
+
+@{ 
+    Response.ContentType = "text/html; charset=utf-8";
+}

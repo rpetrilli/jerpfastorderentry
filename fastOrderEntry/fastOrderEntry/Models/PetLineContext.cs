@@ -15,6 +15,7 @@ namespace fastOrderEntry.Models
         public PetLineContext() : base(nameOrConnectionString: "DefaultConnectionString") { }
 
         public virtual DbSet<CodiceIva> codiceIva { get; set; }
+        public virtual DbSet<CondizionePag> condizionePag { get; set; }
         //public virtual DbSet<ma_articoli_soc> ma_articoli_soc { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBulider)

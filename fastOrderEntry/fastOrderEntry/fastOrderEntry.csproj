@@ -254,6 +254,7 @@
     <Compile Include="Models\AgentiStrutturaModel.cs" />
     <Compile Include="Models\CategorieStrutturaModel.cs" />
     <Compile Include="Models\ClientiStrutturaModel.cs" />
+    <Compile Include="Models\CondizionePag.cs" />
     <Compile Include="Models\ListinoCliente.cs" />
     <Compile Include="Models\ListinoModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
@@ -364,6 +365,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Providers\" />
+    <Folder Include="Views\SelectItem\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

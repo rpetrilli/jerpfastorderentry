@@ -95,6 +95,7 @@ myModule.factory('tabController', function ($http) {
             });
         };
 
+        
 
         fac.edit = function (item) {
             fac.nuovo = false;
@@ -116,9 +117,16 @@ myModule.factory('tabController', function ($http) {
         fac.create = function (item) {
             fac.nuovo = true;
 
-            fac.displayMode = "edit";
-            fac.current = {};
-
+            $http({
+                method: 'GET',
+                url: fac.prop.api_root + '/newObj',
+                params: item
+            }).then(function (response) {
+                fac.displayMode = "edit";
+                fac.current = response.data;
+            }).catch(function (error, status) {
+                fac.prop.message_function('Errore', error.data);
+            });
         };
 
         fac.saveEdit = function (item) {

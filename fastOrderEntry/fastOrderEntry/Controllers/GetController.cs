@@ -1,5 +1,6 @@
 ﻿using fastOrderEntry.Helpers;
 using fastOrderEntry.Models;
+using Newtonsoft.Json;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace fastOrderEntry.Controllers
     public class GetController : Controller
     {
         private NpgsqlConnection con = null;
+        
 
         public GetController()
         {
@@ -44,7 +46,7 @@ namespace fastOrderEntry.Controllers
             return jsonResult;
         }
 
-        public JsonResult GetVettori()
+        public ContentResult GetVettori()
         {
             con.Open();
             VettoreStrutturaModel vettori = new VettoreStrutturaModel();
@@ -54,7 +56,9 @@ namespace fastOrderEntry.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();
-            return jsonResult;
+
+            string output = JsonConvert.SerializeObject(vettori.rs);
+            return Content(output);
         }
 
         public JsonResult GetArticoli(string id_cliente, string query)
@@ -71,5 +75,19 @@ namespace fastOrderEntry.Controllers
             con.Close();
             return jsonResult;
         }
+
+        public ActionResult GetCondPag()
+        {
+            List<CondizionePag> model = new List<CondizionePag>();
+            using (PetLineContext db = new PetLineContext())
+            {
+                model = db.condizionePag.ToList();
+            }
+
+            string output = JsonConvert.SerializeObject(model);
+            return Content(output);
+
+        }
+
     }
 }
