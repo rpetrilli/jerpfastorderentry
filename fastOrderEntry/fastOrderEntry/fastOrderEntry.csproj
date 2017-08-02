@@ -288,6 +288,7 @@
     <Content Include="Scripts\angular\angular.min.js" />
     <Content Include="Scripts\angular\appFilters.js" />
     <Content Include="Scripts\angular\appModules.js" />
+    <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootstrap-datepicker.it.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap-submenu.js" />

@@ -82,9 +82,9 @@ myModule.factory('tabController', function ($http) {
             bootbox.confirm("Intendi procedere?", function (result) {
                 if (result) {
                     $http({
-                        method: 'DELETE',
+                        method: 'POST',
                         url: fac.prop.api_root + '/delete',
-                        data: fac.current
+                        data: item
                     }).then(function (response) {
                         fac.displayMode = "list";
                         fac.refresh_page(fac.filtri.page_number);

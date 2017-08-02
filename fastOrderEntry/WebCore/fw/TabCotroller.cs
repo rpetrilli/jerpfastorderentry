@@ -119,7 +119,7 @@ namespace WebCore.fw
         }
 
 
-        [HttpDelete]
+        [HttpPost]
         public JsonResult delete(O obj)
         {
             obj.delete(con);

@@ -42,10 +42,83 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal_message" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="modal_message_ok_btn" type="button" class="btn btn-primary btn-min-width" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modal_confirmation" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="modal_confirmation_cancel_btn" type="button" class="btn btn-primary btn-min-width" data-dismiss="modal">Annulla</button>
+                    <button id="modal_confirmation_ok_btn" type="button" class="btn btn-primary btn-min-width" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>	
+
 
     @RenderSection("scripts", required: false)  
     <script>
         $('#nav @(id)').addClass('active');
+
+        function show_message(title, message, okCallBack) {
+            $('#modal_message .modal-title').html(title);
+            $('#modal_message .modal-body p').html(message);
+            $('#modal_message').modal('show');
+            if (!("undefined" === typeof okCallBack)) {
+                $('#modal_message_ok_btn').click(function () {
+                    okCallBack.call();
+                });
+            }
+        };
+
+
+        function show_confirmation(title, message, okCallBack, cancelCallBack) {
+            $('#modal_confirmation .modal-title').html(title);
+            $('#modal_confirmation .modal-body p').html(message);
+            $('#modal_confirmation').modal('show');
+
+            if (!("undefined" === typeof okCallBack)) {
+                $('#modal_confirmation_ok_btn').click(function () {
+                    okCallBack.call();
+                });
+            }
+
+            if (!("undefined" === typeof cancelCallBack)) {
+                $('#modal_confirmation_cancel_btn').click(function () {
+                    cancelCallBack.call();
+                });
+            }
+        };   
+
     </script>
 </body>
 </html>

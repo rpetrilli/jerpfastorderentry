@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net;
 using System.Collections.Specialized;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace fastOrderEntry.Models
 {
@@ -53,7 +54,27 @@ namespace fastOrderEntry.Models
 
         public override void insert(NpgsqlConnection con)
         {
-            throw new NotImplementedException();
+            using (PetLineContext db = new PetLineContext())
+            {
+                var settings = (from item in db.impostazioni
+                                select item).First();
+
+                using (var client = new WebClient())
+                {
+                    var values = new NameValueCollection();
+
+                    string ordine = JsonConvert.SerializeObject(this);
+
+                    values["op"] = "update_order";
+                    values["ordine"] = ordine;
+                    values["private_key"] = settings.private_key;
+
+                    var response = client.UploadValues(settings.jerp_url, values);
+
+                    var responseString = Encoding.Default.GetString(response);
+                }
+
+            }
         }
 
         public override void select(NpgsqlConnection con)
@@ -86,7 +107,27 @@ namespace fastOrderEntry.Models
 
         public override void update(NpgsqlConnection con)
         {
-            throw new NotImplementedException();
+            using (PetLineContext db = new PetLineContext())
+            {
+                var settings = (from item in db.impostazioni
+                                select item).First();
+
+                using (var client = new WebClient())
+                {
+                    var values = new NameValueCollection();
+
+                    string ordine = JsonConvert.SerializeObject(this);
+
+                    values["op"] = "update_order";
+                    values["ordine"] = ordine;
+                    values["private_key"] = settings.private_key;
+
+                    var response = client.UploadValues(settings.jerp_url, values);
+
+                    var responseString = Encoding.Default.GetString(response);
+                }
+
+            }
         }
     }
 

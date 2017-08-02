@@ -19,6 +19,7 @@ namespace fastOrderEntry
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/bootstrap-submenu.js",
+                      "~/Scripts/bootbox.js",
                       "~/Scripts/typeahead.js",
                       "~/Scripts/respond.js",
                       "~/Scripts/shortcut.js",
