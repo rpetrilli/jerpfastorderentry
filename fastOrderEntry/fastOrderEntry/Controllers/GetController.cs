@@ -66,10 +66,10 @@ namespace fastOrderEntry.Controllers
             con.Open();
 
 
-            ArticoloStrutturaModel vettori = new ArticoloStrutturaModel();
-            vettori.select(con, id_cliente, query);
+            ArticoloStrutturaModel articoli = new ArticoloStrutturaModel();
+            articoli.select(con, id_cliente, query);
 
-            var jsonResult = Json(vettori.rs, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(articoli.rs, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();

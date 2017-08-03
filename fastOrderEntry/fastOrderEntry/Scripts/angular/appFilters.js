@@ -17,6 +17,9 @@ app.filter('iva', function ($filter) {
 app.filter('totpeso', function ($filter) {
     return function (ordine) {
         var tot = 0;
+        if (!ordine.righe) {
+            return 0;
+        }
         for (var i = 0; i < ordine.righe.length; i++) {
             tot += ordine.righe[i].peso_lordo;
         }
@@ -26,6 +29,9 @@ app.filter('totpeso', function ($filter) {
 
 app.filter('totimponibile', function ($filter) {
     return function (ordine) {
+        if (!ordine.righe) {
+            return 0;
+        }
         var tot = 0;
         for (var i = 0; i < ordine.righe.length; i++) {
             tot += $filter('imponibile')(ordine.righe[i]);
@@ -36,6 +42,9 @@ app.filter('totimponibile', function ($filter) {
 
 app.filter('totiva', function ($filter) {
     return function (ordine) {
+        if (!ordine.righe) {
+            return 0;
+        }
         var tot = 0;
         for (var i = 0; i < ordine.righe.length; i++) {
             tot += $filter('iva')(ordine.righe[i]);

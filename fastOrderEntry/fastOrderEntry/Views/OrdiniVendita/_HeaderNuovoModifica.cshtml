@@ -21,9 +21,13 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label><strong>Fatturare a</strong></label>
-                                <input type="text" class="form-control" placeholder="seleziona il cliente.."
-                                       typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente"
-                                       ng-model="tc.current.ragione_sociale" />
+                                <div class="input-group">
+                                    <input type="text" class="form-control disabled" ng-model="tc.current.id_cliente"  />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" ng-click="cerca_cliente()"><i class="fa fa-search"></i></button>
+                                    </span>
+                                </div>
+                                <span>{{tc.current.name}}</span>
                                 <input type="text" class="form-control" ng-model="tc.current.indirizzo" />
                             </div>
                         </div>
