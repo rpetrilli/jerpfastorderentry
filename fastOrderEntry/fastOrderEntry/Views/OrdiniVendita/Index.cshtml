@@ -5,6 +5,8 @@
 }
 @section header {
     <script>
+        var nriga = 0;
+
         show_message = function (errore, messaggio) {
             alert(messaggio);
         }
@@ -44,14 +46,14 @@
                 Object.assign($scope.tc.current, item);
             };
 
+            
             $scope.select_articolo = function (item) {
                 if (typeof (item) == 'undefined')
                     return;
                 if (typeof ($scope.tc.current.righe) == 'undefined') {
                     $scope.tc.current.righe = [];
                 }
-
-
+                item.nriga = nriga++;
                 $scope.tc.current.righe.push(item);
             };
 
@@ -82,7 +84,7 @@
             $scope.cerca_cliente = function () {
                 $('#modal_ricerca_clienti').modal('show');
             };
-
+            
 
             $scope.riseleziona_cliente = function () {
 
@@ -178,22 +180,15 @@
 <div class="main-content" ng-controller="ctrl">
     @Html.Partial("_ElencoOrdini")
     @Html.Partial("_NuovoModificaOrdine")
-
     <div class="modal fade" id="modal_ricerca_clienti" role="dialog">
         <div class="modal-dialog">
-
-            <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Seleziona cliente</h4>
-                </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12">
+                            <label><strong>Seleziona cliente</strong></label>
                             <input type="text" class="form-control" placeholder="seleziona cliente .." ng-change="riseleziona_cliente()" 
                                    ng-model="query_nuovo_cliente" />
-
                             <table class="table table-hover table-striped" id="table" ng-show="clienteSeleziona">
                                 <thead>
                                     <tr>
@@ -214,19 +209,11 @@
                                     </tr>
                                 </tbody>
                             </table>
-
-
                         </div>
-
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button  type="button" class="btn btn-primary btn-min-width btn-annulla" data-dismiss="modal">Annulla</button>
-                </div>
             </div>
-
         </div>
     </div>	
-
 </div>
 

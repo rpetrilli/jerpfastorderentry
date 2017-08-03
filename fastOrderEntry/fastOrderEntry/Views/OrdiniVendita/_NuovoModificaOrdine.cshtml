@@ -1,12 +1,13 @@
 ﻿
 <div ng-show="tc.displayMode == 'edit'">
     <div class="page-toolbar">
-        <button class="btn btn-grey" ng-click="tc.saveEdit(current)"><i class="fa fa-floppy-o">&nbsp;</i>Salva</button>
+        <button class="btn btn-success" ng-click="tc.saveEdit(current)"><i class="fa fa-floppy-o">&nbsp;</i>Salva</button>
         <button class="btn btn-grey" ng-click="tc.cancelEdit()"><i class="fa fa-times">&nbsp;</i>Annulla</button>
+        <button class="btn btn-grey" ng-click="tc.print()"><i class="fa fa-print">&nbsp;</i>Stampa</button>
     </div>
     <div class="margin-b-10"></div>
     @Html.Partial("_HeaderNuovoModifica")
+    @Html.Partial("_SelezionaArticolo")
     @Html.Partial("_ElencoRigheInOrdine")
     @Html.Partial("_FooterNuovoModifica")
-    @Html.Partial("_SelezionaArticolo")
 </div>

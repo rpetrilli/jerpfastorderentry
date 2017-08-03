@@ -3,6 +3,7 @@
         <table class="table table-hover table-striped" id="table">
             <thead>
                 <tr>
+                    <th>Nr</th>
                     <th>Art</th>
                     <th>Descrizione</th>
                     <th>Q.tà Ordinata</th>
@@ -18,6 +19,7 @@
             </thead>
             <tbody>
                 <tr dir-paginate="item in tc.current.righe | itemsPerPage: 10">
+                    <td>{{item.nriga}}</td>
                     <td>{{item.id_codice_art}}</td>
                     <td>{{item.descrizione}}</td>
                     <td>

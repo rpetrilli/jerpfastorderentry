@@ -1,54 +1,38 @@
 ﻿<div class="row">
     <div class="col-sm-12">
-        <div class="well well-sm">
-            <label><strong>Aggiunta nuovi Articoli</strong></label>
+        <button class="btn btn-primary" ng-click="shAdd = !shAdd"><i class="fa fa-plus"></i></button>
+        <div class="margin-b-10"></div>
+        <div class="well well-sm" ng-show="shAdd" >
+            <label><strong>Aggiunta Articoli</strong></label>
             <input type="text" class="form-control" placeholder="seleziona l'articolo .." ng-change="riseleziona_articoli()" ng-model="id_codice_art_new" />
+            <table class="table table-hover table-condensed" id="table" ng-show="articoliaggiunta">
+                <thead>
+                    <tr>
+                        <th>Art</th>
+                        <th>Descrizione</th>
+                        <th>Prezzo</th>
+                        <th>Sc 1</th>
+                        <th>Sc 2</th>
+                        <th>Sc 3</th>
+                        <th>Cod.IVA</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in articoliaggiunta">
+                        <td>{{item.id_codice_art}}</td>
+                        <td>{{item.descrizione}}</td>
+                        <td>{{item.prezzo_vendita | number}}</td>
+                        <td>{{item.sconto_1 | number}}</td>
+                        <td>{{item.sconto_2 | number}}</td>
+                        <td>{{item.sconto_3 | number}}</td>
+                        <td>{{item.id_iva}}</td>
+                        <td><button class="btn btn-grey btn-xs" ng-click="select_articolo(item)"><i class="glyphicon glyphicon-check"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-
-
-        <table class="table table-hover table-striped" id="table" ng-show="articoliaggiunta">
-            <thead>
-                <tr>
-                    <th>Art</th>
-                    <th>Descrizione</th>
-                    <th>Prezzo</th>
-                    <th>Sc 1</th>
-                    <th>Sc 2</th>
-                    <th>Sc 3</th>
-                    <th>Cod.IVA</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="item in articoliaggiunta">
-                    <td>{{item.id_codice_art}}</td>
-                    <td>{{item.descrizione}}</td>
-
-                    <td>
-                        {{item.prezzo_vendita | number}}
-                    </td>
-                    <td>
-                        {{item.sconto_1 | number}}
-                    </td>
-                    <td>
-                        {{item.sconto_2 | number}}
-                    </td>
-                    <td>
-                        {{item.sconto_3 | number}}
-                    </td>
-                    <td>
-                        {{item.id_iva}}
-                    </td>
-
-                    <td>
-                        <button class="btn btn-grey btn-xs" ng-click="select_articolo(item)"><i class="glyphicon glyphicon-check"></i></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        
     </div>
-
-
-
 </div>
+<div class="margin-b-10"></div>

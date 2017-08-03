@@ -19,23 +19,24 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-3">
                                 <label><strong>Fatturare a</strong></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control disabled" ng-model="tc.current.id_cliente"  />
+                                    <input type="text" class="form-control disabled" ng-model="tc.current.id_cliente" />
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" ng-click="cerca_cliente()"><i class="fa fa-search"></i></button>
                                     </span>
                                 </div>
-                                <span>{{tc.current.name}}</span>
-                                <input type="text" class="form-control" ng-model="tc.current.indirizzo" />
+                            </div>
+                            <div class="col-md-9">
+                                <label><strong>Cliente</strong></label>
+                                <input type="text" class="form-control disabled" ng-model="tc.current.name" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <label><strong>Destinazione merce</strong></label>
-                                <input type="text" class="form-control" placeholder="" />
-                                <input type="text" class="form-control" placeholder="" />
+                                <label><strong>Indirizzo</strong></label>
+                                <input type="text" class="form-control" ng-model="tc.current.indirizzo" />
                             </div>
                         </div>
                         <div class="row">
