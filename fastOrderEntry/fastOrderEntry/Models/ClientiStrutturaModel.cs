@@ -46,6 +46,8 @@ namespace fastOrderEntry.Models
                         r.comune = reader["comune"].ToString();
                         r.provincia = reader["provincia"].ToString();
                         r.note = reader["note"].ToString();
+                        r.id_cond_pag = reader["id_cond_pag"].ToString();
+                        r.id_vettore = reader["id_vettore"].ToString();
                         rs.Add(r);
                     }
                 }
