@@ -9,6 +9,7 @@ using System.Net;
 using System.Collections.Specialized;
 using System.Text;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace fastOrderEntry.Models
 {
@@ -65,13 +66,20 @@ namespace fastOrderEntry.Models
 
                     string ordine = JsonConvert.SerializeObject(this);
 
-                    values["op"] = "update_order";
+                    values["op"] = "insert_order";
                     values["ordine"] = ordine;
                     values["private_key"] = settings.private_key;
 
-                    var response = client.UploadValues(settings.jerp_url, values);
-
-                    var responseString = Encoding.Default.GetString(response);
+                    try
+                    {
+                        var response = client.UploadValues(settings.jerp_url, values);
+                        var responseString = Encoding.Default.GetString(response);
+                    }
+                    catch (WebException e) 
+                    {
+                        var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                        throw new Exception(messaggio);
+                    }
                 }
 
             }

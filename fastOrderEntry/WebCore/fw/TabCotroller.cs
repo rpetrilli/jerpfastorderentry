@@ -80,14 +80,17 @@ namespace WebCore.fw
             {
                 obj.update(con);
                 transaction.Commit();
+                obj.db_obj_ack = "OK";
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
+                obj.db_obj_ack = "KO";
+                obj.db_obj_message = ex.Message;
             }
             con.Close();
 
-            var jsonResult 
+            var jsonResult
                 = Json(obj, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
@@ -104,10 +107,13 @@ namespace WebCore.fw
             {
                 obj.insert(con);
                 transaction.Commit();
+                obj.db_obj_ack = "OK";
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
+                obj.db_obj_ack = "KO";
+                obj.db_obj_message = ex.Message;
             }
             con.Close();
             
@@ -122,13 +128,29 @@ namespace WebCore.fw
         [HttpPost]
         public JsonResult delete(O obj)
         {
-            obj.delete(con);
+            con.Open();
+            NpgsqlTransaction transaction = con.BeginTransaction();
+            try
+            {
+                obj.delete(con);
+                transaction.Commit();
+                obj.db_obj_ack = "OK";
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                obj.db_obj_ack = "KO";
+                obj.db_obj_message = ex.Message;
+            }
+            con.Close();
+
             var jsonResult
                 = Json(obj, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             return jsonResult;
         }
+
 
         [HttpGet]
         public JsonResult select(O obj)

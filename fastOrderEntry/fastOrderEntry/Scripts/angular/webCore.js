@@ -86,8 +86,12 @@ myModule.factory('tabController', function ($http) {
                         url: fac.prop.api_root + '/delete',
                         data: item
                     }).then(function (response) {
-                        fac.displayMode = "list";
-                        fac.refresh_page(fac.filtri.page_number);
+                        if (response.data.db_obj_ack == 'OK') {
+                            fac.displayMode = "list";
+                            fac.refresh_page(fac.filtri.page_number);
+                        } else {
+                            fac.prop.message_function('Errore', response.data.db_obj_message);
+                        }
                     }).catch(function (error, status) {
                         fac.prop.message_function('Errore', error.data);
                     });
@@ -137,8 +141,12 @@ myModule.factory('tabController', function ($http) {
                 url: fac.prop.api_root + '/insert',
                 data: fac.current
             }).then(function (response) {
-                fac.displayMode = "list";
-                fac.refresh_page(fac.filtri.page_number);
+                if (response.data.db_obj_ack == 'OK') {
+                    fac.displayMode = "list";
+                    fac.refresh_page(fac.filtri.page_number);
+                } else {
+                    fac.prop.message_function('Errore', response.data.db_obj_message);
+                }
             }).catch(function (error, status) {
                 fac.prop.message_function('Errore', error.data);
             });
