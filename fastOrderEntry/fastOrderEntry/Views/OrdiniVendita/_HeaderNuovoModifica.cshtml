@@ -7,13 +7,25 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label><strong>Note cliente</strong></label>
-                                <textarea rows="5" class="form-control" readonly="readonly">{{tc.current.note}}</textarea>
+                                <textarea rows="5" class="form-control" disabled="disabled">{{tc.current.note}}</textarea>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-2 text-right text-danger">
                                 <label><strong>Totale peso</strong></label>
-                                <input type="text" class="form-control" ng-model="tc.current | totpeso" readonly="readonly" />
+                                <h3 style="font-weight:700;">{{tc.current | totpeso}}</h3>
+                            </div>
+                            <div class="col-sm-3 text-right text-warning">
+                                <label><strong>Imponibile</strong></label>
+                                <h3 style="font-weight:700;">{{tc.current | totimponibile | number:2}}</h3>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <label><strong>Totale iva</strong></label>
+                                <h3 style="font-weight:700;">{{tc.current | totiva | number:2}}</h3>
+                            </div>
+                            <div class="col-sm-5 text-success text-right">
+                                <label><strong>Totale documento</strong></label>
+                                <h3 style="font-weight:700;">{{ ((tc.current | totimponibile) + (tc.current | totiva)) | number:2}}</h3>
                             </div>
                         </div>
                     </div>
@@ -24,19 +36,31 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control disabled" ng-model="tc.current.id_cliente" />
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" ng-click="cerca_cliente()"><i class="fa fa-search"></i></button>
+                                        <button class="btn btn-primary" ng-click="cerca_cliente()" ng-disabled="tc.current.id_cliente.length > 0"><i class="fa fa-search"></i></button>
                                     </span>
                                 </div>
                             </div>
                             <div class="col-md-9">
                                 <label><strong>Cliente</strong></label>
-                                <input type="text" class="form-control disabled" ng-model="tc.current.name" />
+                                <input type="text" class="form-control disabled" ng-model="tc.current.name" disabled="disabled" />
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-6">
                                 <label><strong>Indirizzo</strong></label>
                                 <input type="text" class="form-control" ng-model="tc.current.indirizzo" />
+                            </div>
+                            <div class="col-sm-2">
+                                <label><strong>Cap</strong></label>
+                                <input type="text" class="form-control" ng-model="tc.current.cap" />
+                            </div>
+                            <div class="col-sm-3">
+                                <label><strong>Comune</strong></label>
+                                <input type="text" class="form-control" ng-model="tc.current.comune"/>
+                            </div>
+                            <div class="col-sm-1">
+                                <label><strong>Pr</strong></label>
+                                <input type="text" class="form-control" ng-model="tc.current.provincia" />
                             </div>
                         </div>
                         <div class="row">
