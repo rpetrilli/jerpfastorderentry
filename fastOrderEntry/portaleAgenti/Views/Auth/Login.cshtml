@@ -1,0 +1,93 @@
+﻿@model portaleAgenti.Models.LoginModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /*
+ * Login
+ */
+        body.cover {
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .login-wrap {
+            margin: 0 auto;
+            padding-top: 70px;
+            width: 350px;
+        }
+
+            .login-wrap .brand {
+                text-align: center;
+                display: block;
+                margin: 0 auto;
+                text-decoration: none;
+                font-size: 22px;
+                color: #FFF;
+                text-shadow: 1px 1px 3px rgba(150, 150, 150, 0.7);
+            }
+
+            .login-wrap .panel {
+                padding: 15px 20px;
+                margin-top: 10px;
+                background-color: #ffffff;
+                border-color: rgba(255, 255, 255, 0.2);
+                -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+
+                .login-wrap .panel .panel-title {
+                    font-weight: normal;
+                }
+    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Login</title>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body class="cover" style="background-color: #444;">
+
+    <div class="login-wrap">
+        <span class="brand">
+            <h1><i class="fa fa-first-order"></i>&nbsp; Fast Order</h1>
+        </span>
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">Accesso</h3>
+            </div>
+            <div class="panel-body">
+                <form accept-charset="UTF-8" role="form" method="post">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Nome utente" name="nomeUtente" type="text" value="@Model.nomeUtente">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Password" name="password" type="password" value="@Model.password">
+                    </div>
+                    @Html.ValidationMessage("LoginMessage")
+                    <input class="btn btn-primary btn-block" type="submit" value="Login">
+
+                </form>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/angularjs")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

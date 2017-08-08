@@ -20,6 +20,7 @@
             $scope.selCondPag = @{Html.RenderAction("GetCondPag", "Get");};
             $scope.selVettori = @{Html.RenderAction("GetVettori", "Get");};
 
+            $scope.test = 'test';
 
             $scope.select_cliente_filtri = function (item) {
                 $scope.tc.filtri.id_cliente = item?item.id:'';
@@ -33,16 +34,28 @@
 
             @*@(ViewBag.scope_var)*@
 
+            var exit_edit = function () {
+                
+            };
+
+            var exit_new = function () {
+                
+            };
+
             $scope.tc = tabController.createController({
                 api_root: '@currentUrl',
                 select_row_call_back: $scope.select_row,
-                message_function: show_message
+                message_function: show_message,
+                exit_edit: exit_edit,
+                exit_new: exit_new
             });
+
             $scope.tc.refresh();
 
 
             $scope.select_cliente = function (item) {
                 Object.assign($scope.tc.current, item);
+                $scope.tc.current.ragione_sociale = item.name;
             };
 
             
@@ -179,7 +192,7 @@
         });
     </script>
 }
-<div class="main-content" ng-controller="ctrl">
+<div class="main-content" ng-controller="ctrl" ng-cloak>
     @Html.Partial("_ElencoOrdini")
     @Html.Partial("_NuovoModificaOrdine")
     <div class="modal fade" id="modal_ricerca_clienti" role="dialog">
@@ -202,7 +215,7 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="item in clienteSeleziona">
-                                        <td>{{item.id}}</td>
+                                        <td>{{item.id | trimZeros}}</td>
                                         <td>{{item.name}}</td>
                                         <td>{{item.comune}}</td>
                                         <td>

@@ -1,7 +1,7 @@
 ﻿using Npgsql;
 using System.Configuration;
 
-namespace fastOrderEntry.Helpers
+namespace portaleAgenti.Helpers
 {
     public static class DbUtils
     {

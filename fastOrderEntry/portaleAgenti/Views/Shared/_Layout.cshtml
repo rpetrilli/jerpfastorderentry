@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html ng-app="myapp">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+
+    <!-- Google Fonts
+    ============================================ -->
+    <link href='https://fonts.googleapis.com/css?family=Poppins:400,300,500,600,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500">
+
+    <title>@ViewBag.Title - Petline</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="login-info-area" ng-controller="ctrl">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="breadcrumb">
+                        Utente: @User.Identity.Name
+                    </div>
+                </div>
+
+                <div class="col-md-6" style="text-align: right;">
+                    <div class="breadcrumb" ng-show="cliente_ragione_sociale">
+                        Cliente selezionato: {{cliente_ragione_sociale}}
+                    </div>
+                    <div class="breadcrumb" ng-hide="cliente_ragione_sociale">
+                        Nessun cliente selezionato
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @RenderBody()
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/angularjs")
+    @RenderSection("scripts", required: false)
+
+    <script>
+        var myapp = angular.module(['myapp']);
+
+        app.controller('ctrl', ['$scope', '$http', 'tabController', function ($scope, $http, tabController) {
+        
+        }]);
+
+    </script>
+</body>
+</html>

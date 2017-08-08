@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fastOrderEntry", "fastOrder
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCore", "WebCore\WebCore.csproj", "{A8A1EA46-3FAD-49C0-8962-346D5E96887D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "portaleAgenti", "portaleAgenti\portaleAgenti.csproj", "{39594136-2BC2-401F-901A-98FDAEE647EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A8A1EA46-3FAD-49C0-8962-346D5E96887D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8A1EA46-3FAD-49C0-8962-346D5E96887D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8A1EA46-3FAD-49C0-8962-346D5E96887D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39594136-2BC2-401F-901A-98FDAEE647EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39594136-2BC2-401F-901A-98FDAEE647EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39594136-2BC2-401F-901A-98FDAEE647EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39594136-2BC2-401F-901A-98FDAEE647EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

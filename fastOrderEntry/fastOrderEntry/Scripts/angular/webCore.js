@@ -1,5 +1,32 @@
 ﻿var myModule = angular.module('webCore', []);
 
+
+
+
+myModule.directive('leadZeros', function () {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, element, attrs, ngModel) {
+            var valueToDisplay = function(value){
+                return value.replace(/^0+/, '');
+            }
+
+            var displayToValue = function (display) {
+                var str = '0000000000' + display;
+                return str.substr(str.length - 10);
+            }
+
+            //format text going to user (model to view)
+            ngModel.$formatters.push(valueToDisplay);
+
+            //format text from the user (view to model)
+            ngModel.$parsers.push(displayToValue);
+            displayToValue(scope[attrs.ngModel]);
+        }
+    }
+});
+
 myModule.factory('tabController', function ($http) {
     var factory = {};
 
@@ -86,7 +113,7 @@ myModule.factory('tabController', function ($http) {
                         url: fac.prop.api_root + '/delete',
                         data: item
                     }).then(function (response) {
-                        if (response.data.db_obj_ack == 'OK') {
+                        if (response.data.db_obj_ack === 'OK') {
                             fac.displayMode = "list";
                             fac.refresh_page(fac.filtri.page_number);
                         } else {
@@ -111,6 +138,11 @@ myModule.factory('tabController', function ($http) {
             }).then(function (response) {
                 fac.displayMode = "edit";
                 fac.current = response.data;
+
+                if (typeof (prop.exit_edit) !== 'undefined') {
+                    prop.exit_edit();
+                }
+
             }).catch(function (error, status) {
                 fac.prop.message_function('Errore', error.data);
             });
@@ -123,6 +155,12 @@ myModule.factory('tabController', function ($http) {
 
             fac.displayMode = "edit";
             fac.current = {};
+
+            if (typeof (prop.exit_edit) !== 'undefined') {
+                prop.exit_new();
+            }
+            
+            
 
         };
 
@@ -141,7 +179,7 @@ myModule.factory('tabController', function ($http) {
                 url: fac.prop.api_root + '/insert',
                 data: fac.current
             }).then(function (response) {
-                if (response.data.db_obj_ack == 'OK') {
+                if (response.data.db_obj_ack === 'OK') {
                     fac.displayMode = "list";
                     fac.refresh_page(fac.filtri.page_number);
                 } else {
@@ -215,7 +253,7 @@ myModule.directive('typehead', function () {
                     mapObj = {};
 
                     var params = { query: query };
-                    if (typeof (scope.addParams) != 'undefined') {
+                    if (typeof (scope.addParams) !== 'undefined') {
                         Object.assign(params, scope.addParams);
                     }
 

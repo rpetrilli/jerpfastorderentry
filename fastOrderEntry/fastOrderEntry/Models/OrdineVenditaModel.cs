@@ -26,7 +26,9 @@ namespace fastOrderEntry.Models
         public string comune { get; set; }
         public string provincia { get; set; }
         public string nazioni { get; set; }
-
+        public string id_vettore { get; set; }
+        public IList<OrdineRiga> righe { get; set; }
+        public string name { get; set; }
 
         public override void delete(NpgsqlConnection con)
         {
@@ -85,6 +87,7 @@ namespace fastOrderEntry.Models
             }
         }
 
+        
         public override void select(NpgsqlConnection con)
         {
             using (var cmd = new NpgsqlCommand())
@@ -106,11 +109,71 @@ namespace fastOrderEntry.Models
                     {
                         id_cliente = Convert.ToString(reader["id_cliente"]);
                         data_ordine = Convert.ToDateTime(reader["data_ordine"]);
-                        ragione_sociale = Convert.ToString(reader["id_cliente"]);
+                        ragione_sociale = Convert.ToString(reader["ragione_sociale"]);
+                        name = Convert.ToString(reader["ragione_sociale"]);
+                        indirizzo = Convert.ToString(reader["indirizzo"]);
+                        cap = Convert.ToString(reader["cap"]);
+                        nazioni = Convert.ToString(reader["nazioni"]);
+                        id_vettore = Convert.ToString(reader["zpet_id_vettore"]);
+                        id_cond_pag = Convert.ToString(reader["id_cond_pag"]);
+
 
                     }
                 }
             }
+
+            righe = new List<OrdineRiga>();
+
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT \r\n" +
+                    "      * \r\n" +
+                    "from vo_ordini_righe \r\n" +
+                    "left join ma_articoli_soc " +
+                    "   on ma_articoli_soc.id_societa = '1' " +
+                    "   and ma_articoli_soc.id_codice_art = vo_ordini_righe.id_codice_art \r\n" +
+                    "left join ca_iva \r\n" +
+                    "   on ca_iva.id_societa = '1' \r\n" +
+                    "   and ca_iva.id_iva = ma_articoli_soc.id_iva \r\n" +
+                    "where vo_ordini_righe.id_societa = '1' \r\n" +
+                    "  and vo_ordini_righe.esercizio = @esercizio \r\n" +
+                    "  and vo_ordini_righe.id_ordine = @id_ordine \r\n" +
+                    "order by nr_riga";
+
+                cmd.Parameters.AddWithValue("esercizio", esercizio);
+                cmd.Parameters.AddWithValue("id_ordine", id_ordine);
+
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        OrdineRiga item = new OrdineRiga();
+                        item.nr_riga = Convert.ToInt32(reader["nr_riga"]);
+                        item.id_iva = Convert.ToString(reader["id_iva"]);
+                        item.id_codice_art = Convert.ToString(reader["id_codice_art"]);
+                        item.descrizione = Convert.ToString(reader["descrizione"]);
+                        item.id_um = Convert.ToString(reader["id_um"]);
+                        item.quantita = Convert.ToDecimal(reader["quantita"]);
+                        
+                        item.prezzo_vendita = Convert.ToDecimal(reader["prezzo_unitario"]);
+                        try { item.sconto_1 = Convert.ToDecimal(reader["zpet_sconto_1"]); } catch { }
+                        try { item.sconto_2 = Convert.ToDecimal(reader["zpet_sconto_2"]); } catch { }
+                        try { item.sconto_3 = Convert.ToDecimal(reader["zpet_sconto_3"]); } catch { }
+                        try { item.qta_ordinata = Convert.ToDecimal(reader["zpet_qta_ordinata"]); } catch { }
+                        try{ item.qta_in_consegna = Convert.ToDecimal(reader["zpet_qta_in_consegna"]); } catch { }
+                        try { item.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]); } catch { }
+                        try { item.aliquota = Convert.ToDecimal(reader["aliquota"]); } catch { }
+
+                        righe.Add(item);
+
+
+                    }
+                }
+            }
+
         }
 
         public override void update(NpgsqlConnection con)
@@ -147,14 +210,16 @@ namespace fastOrderEntry.Models
         public string descrizione { get; set; }
         public string id_um { get; set; }
         public decimal quantita { get; set; }
-        public decimal prezzo_unitario { get; set; }
+        public decimal prezzo_vendita { get; set; }
         public string str_sconto { get; set; }
 
-        public decimal qta_ordinata { get; set; }
-        public decimal qta_in_consegna { get; set; }
-        public decimal sconto_1 { get; set; }
-        public decimal sconto_2 { get; set; }
-        public decimal sconto_3 { get; set; }
+        public decimal qta_ordinata { get; set; } = 0;
+        public decimal qta_in_consegna { get; set; } = 0;
+        public decimal sconto_1 { get; set; } = 0;
+        public decimal sconto_2 { get; set; } = 0;
+        public decimal sconto_3 { get; set; } = 0;
+        public decimal peso_lordo { get; set; } = 0;
+        public decimal aliquota { get; set; } = 0;
     }
 
 }
