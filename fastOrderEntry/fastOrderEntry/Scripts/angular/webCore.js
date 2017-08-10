@@ -8,8 +8,12 @@ myModule.directive('leadZeros', function () {
         restrict: 'A',
         require: 'ngModel',
         link: function (scope, element, attrs, ngModel) {
-            var valueToDisplay = function(value){
-                return value.replace(/^0+/, '');
+            var valueToDisplay = function (value) {
+                if (typeof (value) === 'undefined') {
+                    '';
+                } else {
+                    return value.replace(/^0+/, ''); 
+                }
             }
 
             var displayToValue = function (display) {
@@ -288,3 +292,4 @@ myModule.directive('typehead', function () {
         }
     };
 });
+

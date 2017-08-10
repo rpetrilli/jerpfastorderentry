@@ -196,8 +196,6 @@
                 }
             });
         });
-
-
     </script>
 }
 
@@ -225,7 +223,7 @@
             <div class="form-inline">
                 <div class="form-group col-md-4 col-lg-4">
                     <input type="text" class="form-control" placeholder="seleziona il cliente.."
-                           typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" />
+                           typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" autofocus />
                 </div>
                 <div class="input-group">
                     <input id="query" capitalize
@@ -259,31 +257,31 @@
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
                         <td>
-                            <input type="number" class="form-control text-right request-focus"
+                            <input type="number" class="form-control form-control-custom text-right request-focus"
                                    ng-model="item.prezzo_vendita" style="width:80px;"
                                    ng-disabled="!id_cliente"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
-                            <input type="number" class="form-control text-right"
+                            <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_1" style="width:80px;"
                                    ng-disabled="!id_cliente"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
-                            <input type="number" class="form-control text-right"
+                            <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_2" style="width:80px;"
                                    ng-disabled="!id_cliente"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
-                            <input type="number" class="form-control text-right"
+                            <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_3" style="width:80px;"
                                    ng-disabled="!id_cliente"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
-                            <button class="btn btn-primary"
+                            <button class="btn btn-primary btn-xs"
                                     ng-click="save(item);">
                                 <span class="fa fa-save" />
                             </button>

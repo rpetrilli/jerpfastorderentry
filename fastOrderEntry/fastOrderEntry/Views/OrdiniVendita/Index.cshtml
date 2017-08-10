@@ -25,6 +25,7 @@
             $scope.select_cliente_filtri = function (item) {
                 $scope.tc.filtri.id_cliente = item?item.id:'';
                 $scope.tc.refresh();
+                //$('#cercaClienteModal').removeAttr("autofocus");
             };
 
             $scope.select_agente_filtri = function (item) {
@@ -35,11 +36,13 @@
             @*@(ViewBag.scope_var)*@
 
             var exit_edit = function () {
-                
+                //$scope.clienteSeleziona = {};
+                //$scope.query_nuovo_cliente = {};
             };
 
             var exit_new = function () {
-                
+                $scope.clienteSeleziona = {}; 
+                $scope.query_nuovo_cliente = '';
             };
 
             $scope.tc = tabController.createController({
@@ -79,6 +82,11 @@
                 }
             };
 
+            $scope.showAdd = function () {
+                $scope.shAdd = !$scope.shAdd
+                angular.element("#selectArticoloAdd").focus();
+            }
+
 
             $scope.riseleziona_articoli = function () {
 
@@ -98,6 +106,7 @@
 
             $scope.cerca_cliente = function () {
                 $('#modal_ricerca_clienti').modal('show');
+                //$('#cercaClienteModal').attr("autofocus");
             };
             
 
@@ -119,8 +128,6 @@
             $scope.select_cliente = function (item) {
                 Object.assign($scope.tc.current, item);
             };
-
-
         }]);
     </script>
 }
@@ -190,6 +197,60 @@
                 }
             });
         });
+
+        shortcut.add("F10", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.tc.displayMode == 'edit') {
+                    scope.cerca_cliente();
+                }
+            });
+        });
+
+        shortcut.add("F5", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.tc.displayMode == 'list') {
+                    scope.refresh();
+                }
+            });
+        });
+
+        shortcut.add("Ctrl+Alt+N", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.tc.displayMode == 'list') {
+                    scope.tc.create();
+                }
+            });
+        });
+
+        shortcut.add("Ctrl+Alt+X", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.tc.displayMode == 'edit') {
+                    scope.tc.cancelEdit();
+                }
+            });
+        });
+
+        shortcut.add("Ctrl+Alt+S", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.tc.displayMode == 'edit' && scope.current.length > 0) {
+                    scope.tc.saveEdit(scope.current);
+                }
+            });
+        });
+
+        shortcut.add("1", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.tc.displayMode == 'edit' && scope.tc.current.id_cliente.length > 0) {
+                    scope.shAdd = !scope.shAdd;
+                }
+            });
+        });
     </script>
 }
 <div class="main-content" ng-controller="ctrl" ng-cloak>
@@ -202,8 +263,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label><strong>Seleziona cliente</strong></label>
-                            <input type="text" class="form-control" placeholder="seleziona cliente .." ng-change="riseleziona_cliente()" 
-                                   ng-model="query_nuovo_cliente" />
+                            <input type="text" id="cercaClienteModal" class="form-control" placeholder="seleziona cliente .." ng-change="riseleziona_cliente()" 
+                                   ng-model="query_nuovo_cliente" autofocus />
                             <table class="table table-hover table-striped" id="table" ng-show="clienteSeleziona">
                                 <thead>
                                     <tr>
