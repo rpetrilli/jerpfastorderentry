@@ -243,7 +243,7 @@
             });
         });
 
-        shortcut.add("1", function () {
+        shortcut.add("Ctrl+1", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.tc.displayMode == 'edit' && scope.tc.current.id_cliente.length > 0) {

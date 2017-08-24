@@ -62,6 +62,7 @@ namespace fastOrderEntry.Models
                     RecordListinoModel listinoArticolo = new RecordListinoModel();
                     listinoCliente.leggiPrezzi(con);
 
+                    r.prezzo_acquisto = listinoArticolo.prezzo_acquisto;
                     r.prezzo_vendita = listinoCliente.prezzo_vendita > 0 ? listinoCliente.prezzo_vendita : listinoArticolo.prezzo_vendita;
                     r.sconto_1 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_1 : listinoArticolo.sconto_1;
                     r.sconto_2 = listinoCliente.sconto_2 > 0 ? listinoCliente.sconto_2 : listinoArticolo.sconto_2;
@@ -78,6 +79,8 @@ namespace fastOrderEntry.Models
         public string id_codice_art { get; set; }
         public string descrizione { get; set; }
         public string name { get; set; }
+
+        public decimal prezzo_acquisto { get; set; }
         public decimal prezzo_vendita { get; set; }
         public decimal sconto_1 { get; set; }
         public decimal sconto_2 { get; set; }

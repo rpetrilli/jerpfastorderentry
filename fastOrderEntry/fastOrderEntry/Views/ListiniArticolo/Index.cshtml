@@ -12,6 +12,7 @@
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
             $scope.categorie = [];
+            $scope.massivo = { prezzo_vendita: 0, sconto_1: 0, sconto_2: 0, sconto_3: 0 }
 
             listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
                 $scope.categorie = result.data;
@@ -208,11 +209,30 @@
                     <tr>
                         <th>Art</th>
                         <th>Descrizione</th>
-                        <th>Pr Acq </th>
-                        <th>Pr Ven </th>
-                        <th>Sc 1</th>
-                        <th>Sc 2</th>
-                        <th>Sc 3</th>
+                        <th>Pr Acq 
+                        </th>
+                        <th>Pr Ven 
+                        <br />
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="massivo.prezzo_vendita" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </th>
+                        <th>Sc 1
+                        <br />
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="massivo.sconto_1" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </th>
+                        <th>Sc 2
+                        <br />
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="massivo.sconto_2" style="width:80px;"
+                                   ng-focus="linefocused($index);" /></th>
+                        <th>Sc 3
+                        <br />
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="massivo.sconto_3" style="width:80px;"
+                                   ng-focus="linefocused($index);" /></th>
                         <th></th>
                     </tr>
                 </thead>

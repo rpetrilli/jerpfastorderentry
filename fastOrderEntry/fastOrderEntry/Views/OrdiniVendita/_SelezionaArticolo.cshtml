@@ -8,8 +8,10 @@
             <table class="table table-hover table-condensed" id="table" ng-show="articoliaggiunta">
                 <thead>
                     <tr>
+                        <th>Qta Ord</th>
                         <th>Art</th>
                         <th>Descrizione</th>
+                        <th>Prezzo Acq</th>
                         <th>Prezzo</th>
                         <th>Sc 1</th>
                         <th>Sc 2</th>
@@ -20,8 +22,14 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="item in articoliaggiunta">
+                        <td><input type="number" 
+                                   ng-model="item.qta_ordinata" 
+                                   style="width:50px;" 
+                                   class="form-control form-control-custom text-right"
+                                    ng-focus="linefocused($index)"/></td>
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
+                        <td>{{item.prezzo_acquisto | number}}</td>
                         <td>{{item.prezzo_vendita | number}}</td>
                         <td>{{item.sconto_1 | number}}</td>
                         <td>{{item.sconto_2 | number}}</td>

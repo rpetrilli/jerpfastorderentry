@@ -14,28 +14,8 @@ namespace fastOrderEntry.Controllers
         {
             ViewBag.page = "home";
             return View();
-        }
-
-        public ActionResult Articoli()
-        {
-            return View();
-        }
-
-        public ActionResult Listini()
-        {
-            return View();
-        }
-
-        public ActionResult OrdiniAcquisto()
-        {
-            return View();
-        }
-
-        public ActionResult OrdiniVendita()
-        {          
-            return View();
-        }
-
+        }        
+        
         protected override void Dispose(bool disposing)
         {
             db.Dispose();

@@ -1,38 +1,71 @@
 ﻿
 @{
-    ViewBag.Title = "Listini Cliente";
+    ViewBag.Title = " Articoli";
 }
 @section header {
-
-}
-
-@section scripts {
     <script>
-
-        
-
         function show_message(errore, messaggio) {
             alert(messaggio);
         };
-
-        app.controller('ctrl', ['$scope', '$http', 'listiniService', 'tabController', function ($scope, $http, listiniService, tabController) {
-            $scope.categorie = [];
+        app.controller('ctrl', ['$scope', '$http', 'listiniService', function ($scope, $http, listiniService) {
+            $scope.cod_cat_merc_sel = '';
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
-            $scope.cod_cat_merc_sel = '';
-            $scope.massivo = { prezzo_vendita: 0, sconto_1: 0, sconto_2: 0, sconto_3: 0 }
-
-            $scope.select_cliente_filtri = function (item) {
-                $scope.id_cliente = item ? item.id : '';
-                $scope.refresh_page($scope.pag_corrente);
-            };
-
+            $scope.categorie = [];
+            
             listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
                 $scope.categorie = result.data;
             }, function (error) {
                 show_message(error);
-            });
+                });
 
+            $scope.refresh = function () {
+                $http({
+                method: 'GET',
+                url: '@(Url.Action("getPaginatore"))',
+                params: { query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel }
+            }).then(function successCallback(response) {
+                    $scope.rec_x_pagina = response.data.rec_x_pagina;
+                    $scope.rec_number = response.data.rec_number;
+                    $scope.pag_number = response.data.pag_number;
+                    $scope.refresh_page(0);
+                    }, function errorCallback(response) {
+                        show_message('Errore', error.data);
+             });
+            };
+            $scope.refresh_page = function (page_number) {
+                $http({
+                    method: 'GET',
+                    url: '@(Url.Action("getConenutoPagina"))',
+                    params: {
+                        query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, page_number: page_number
+                    }
+                }).then(function (response) {
+                        $scope.records = response.data;
+                        $scope.pag_corrente = page_number;
+                        $scope.rec_pagina = -1;
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+            };
+            $scope.refresh();
+            $scope.next_record = function () {
+                $scope.rec_pagina++;
+                if ($scope.rec_pagina >= $scope.records.length ) {
+                    $scope.rec_pagina = 0;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) +') input.request-focus').focus();
+            };
+            $scope.previous_record = function () {
+                $scope.rec_pagina--;
+                if ($scope.rec_pagina < 0 ) {
+                    $scope.rec_pagina = $scope.records.length - 1;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
+            };
+            $scope.linefocused = function (line) {
+                $scope.rec_pagina = line;
+            };
             $scope.selezionaCategoria = function (item_sel) {
                 if ("undefined" === typeof item_sel) {
                     $scope.filtro = "Tutti gli articoli";
@@ -61,63 +94,6 @@
                 };
                 $scope.refresh();
             };
-            
-
-            $scope.refresh = function () {
-                $http({
-                method: 'GET',
-                url: '@(Url.Action("getPaginatore"))',
-                params: { query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel }
-            }).then(function successCallback(response) {
-                    $scope.rec_x_pagina = response.data.rec_x_pagina;
-                    $scope.rec_number = response.data.rec_number;
-                    $scope.pag_number = response.data.pag_number;
-                    $scope.refresh_page(0);
-                    }, function errorCallback(response) {
-                        show_message('Errore', error.data);
-             });
-            };
-
-            $scope.refresh_page = function (page_number) {
-                $http({
-                    method: 'GET',
-                    url: '@(Url.Action("getConenutoPagina"))',
-                    params: {
-                        query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, id_cliente: $scope.id_cliente, page_number: page_number
-                    }
-                }).then(function (response) {
-                        $scope.records = response.data;
-                        $scope.pag_corrente = page_number;
-                        $scope.rec_pagina = -1;
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });
-            };
-            $scope.refresh();
-
-            //$scope.next_record = tabController.next_record;
-            //$scope.previous_record = tabController.previous_record;
-
-            $scope.next_record = function () {
-                $scope.rec_pagina++;
-                if ($scope.rec_pagina >= $scope.records.length ) {
-                    $scope.rec_pagina = 0;
-                }
-                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) +') input.request-focus').focus();
-            };
-
-            $scope.previous_record = function () {
-                $scope.rec_pagina--;
-                if ($scope.rec_pagina < 0 ) {
-                    $scope.rec_pagina = $scope.records.length - 1;
-                }
-                $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
-            };
-
-            $scope.linefocused = function (line) {
-                $scope.rec_pagina = line;
-            };
-
             /* Gestione paginatore*/
             $scope.nr_pagine_display = 4;
             $scope.nr_pagina_paginatore = function (indice) {
@@ -129,10 +105,8 @@
                     return $scope.pag_corrente + indice - $scope.nr_pagine_display;
                 }
             };
-
             $scope.save = function (item) {
-                item.id_cliente = $scope.id_cliente;
-                $http({
+                @*$http({
                     method: 'POST',
                     url: '@(Url.Action("saveListino"))',
                     data: item
@@ -140,9 +114,8 @@
                         //gestire ACK
                     }).catch(function (error, status) {
                         show_message('Errore', error.data);
-                    });
+                    });*@
             };
-
             $scope.save_current_record = function () {
                 if ($scope.rec_pagina >= 0 && $scope.rec_pagina < $scope.records.length) {
                     $scope.save($scope.records[$scope.rec_pagina]);
@@ -150,19 +123,14 @@
                     show_message('Errore', "Nessun record selezionato");
                 }
             };
-
-            $scope.aggiornaMassimoPrezziAcquisto = function () {
-                for (var j = 0; j < $scope.records.length; j++) {
-                    $scope.records[j].prezzo_acquisto = $scope.prezzo_acquisto;
-                }
-            };
-
         }]);
-
+    </script>
+}
+@section scripts{
+    <script>
         shortcut.add("Home", function () {
             $('#query').focus();
         });
-
         shortcut.add("Up", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
@@ -199,7 +167,6 @@
         });
     </script>
 }
-
 <div class="main-content" ng-controller="ctrl" ng-cloak>
     <div class="row">
         <div class="col-md-2 col-lg-2">
@@ -221,59 +188,21 @@
         </div>
         <div class="col-md-10 col-lg-10">
             <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
-            <div class="form-inline">
-                <div class="form-group col-md-4 col-lg-4">
-                    <input type="text" class="form-control" placeholder="seleziona il cliente.."
-                           typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" autofocus />
-                </div>
-                <div class="input-group">
-                    <input id="query" capitalize
-                           type="text" 
-                           class="form-control" 
-                           placeholder="cerca per codice articolo o descrizione..." 
-                           ng-model="query" 
-                           ng-on-enter="refresh()" />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="refresh()"><i class="fa fa-search"></i>&nbsp;Cerca</button>
-                    </span>
-                </div>
+            <div class="input-group">
+                <input id="query" capitalize
+                       type="text" class="form-control"
+                       ng-model="query" placeholder="cerca per codice articolo o descrizione..."
+                       ng-on-enter="refresh()" autofocus />
+                <span class="input-group-btn">
+                    <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;Cerca</button>
+                </span>
             </div>
-            <h4><i class="fa fa-list-ul"></i> Listino {{cliente.name}} </h4>
-            <!--{{cliente}}-->
-
+            <h4><i class="fa fa-list-ul"></i> Elenco</h4>
             <table class="table table-hover table-striped" id="table">
                 <thead>
                     <tr>
                         <th>Art</th>
                         <th>Descrizione</th>
-                        <th>
-                            Pr Ven
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="massivo.prezzo_vendita" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </th>
-                        <th>
-                            Sc 1
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="massivo.sconto_1" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </th>
-                        <th>
-                            Sc 2
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="massivo.sconto_2" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </th>
-                        <th>
-                            Sc 3
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="massivo.sconto_3" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -282,33 +211,9 @@
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
                         <td>
-                            <input type="number" class="form-control form-control-custom text-right request-focus"
-                                   ng-model="item.prezzo_vendita" style="width:80px;"
-                                   ng-disabled="!id_cliente"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_1" style="width:80px;"
-                                   ng-disabled="!id_cliente"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_2" style="width:80px;"
-                                   ng-disabled="!id_cliente"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_3" style="width:80px;"
-                                   ng-disabled="!id_cliente"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
                             <button class="btn btn-primary btn-xs"
                                     ng-click="save(item);">
-                                <span class="fa fa-save" />
+                                <span class="fa fa-copy" />
                             </button>
                         </td>
                     </tr>
@@ -347,8 +252,6 @@
                     </li>
                 </ul>
             </div> <!--Fine paginatore -->
-
-
-        </div>
+        </div> <!--Dettaglio-->
     </div>
 </div>

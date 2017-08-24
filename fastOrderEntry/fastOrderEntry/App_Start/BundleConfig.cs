@@ -44,6 +44,8 @@ namespace fastOrderEntry
                       "~/Content/font-awesome.css",
                        "~/Content/admin.css",
                       "~/Content/custom.css"));
+
+            BundleTable.EnableOptimizations = false;
         }
     }
 }

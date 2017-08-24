@@ -51,7 +51,6 @@ namespace fastOrderEntry.Models
 
             }
 
-
         }
 
 
@@ -116,8 +115,6 @@ namespace fastOrderEntry.Models
                         nazioni = Convert.ToString(reader["nazioni"]);
                         id_vettore = Convert.ToString(reader["zpet_id_vettore"]);
                         id_cond_pag = Convert.ToString(reader["id_cond_pag"]);
-
-
                     }
                 }
             }
@@ -157,7 +154,7 @@ namespace fastOrderEntry.Models
                         item.descrizione = Convert.ToString(reader["descrizione"]);
                         item.id_um = Convert.ToString(reader["id_um"]);
                         item.quantita = Convert.ToDecimal(reader["quantita"]);
-                        
+
                         item.prezzo_vendita = Convert.ToDecimal(reader["prezzo_unitario"]);
                         try { item.sconto_1 = Convert.ToDecimal(reader["zpet_sconto_1"]); } catch { }
                         try { item.sconto_2 = Convert.ToDecimal(reader["zpet_sconto_2"]); } catch { }
@@ -220,6 +217,7 @@ namespace fastOrderEntry.Models
         public decimal sconto_3 { get; set; } = 0;
         public decimal peso_lordo { get; set; } = 0;
         public decimal aliquota { get; set; } = 0;
+        
     }
 
 }
