@@ -129,6 +129,90 @@
                     $scope.records[j].prezzo_acquisto = $scope.prezzo_acquisto;
                 }
             }
+
+
+            $scope.copia_prezzo = function () {
+
+                var r = confirm("Confermi la copia massiva prezzo");
+                if (r == true) {
+                    $http({
+                        method: 'POST',
+                        url: '@(Url.Action("copia_prezzo"))',
+                        data: {
+                            prezzo_massivo: $scope.prezzo_vendita_massivo,
+                            query: $scope.query,
+                            cod_cat_merc: $scope.cod_cat_merc_sel
+                        }
+                    }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                }
+
+            };
+
+            $scope.copia_sconto1 = function () {
+                var r = confirm("Confermi la copia massiva dello sconto 1");
+                if (r == true) {
+                    $http({
+                        method: 'POST',
+                        url: '@(Url.Action("copia_sconto1"))',
+                        data: {
+                            sconto_massivo: $scope.sconto_1_massivo,
+                            query: $scope.query,
+                            cod_cat_merc: $scope.cod_cat_merc_sel
+                        }
+                    }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                }
+
+            };
+
+            $scope.copia_sconto2 = function () {
+                var r = confirm("Confermi la copia massiva dello sconto 2");
+                if (r == true) {
+                    $http({
+                        method: 'POST',
+                        url: '@(Url.Action("copia_sconto2"))',
+                        data: {
+                            sconto_massivo: $scope.sconto_2_massivo,
+                            query: $scope.query,
+                            cod_cat_merc: $scope.cod_cat_merc_sel
+                        }
+                    }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                }
+
+            };
+
+            $scope.copia_sconto3 = function () {
+                var r = confirm("Confermi la copia massiva dello sconto 3");
+                if (r == true) {
+                    $http({
+                        method: 'POST',
+                        url: '@(Url.Action("copia_sconto3"))',
+                        data: {
+                            sconto_massivo: $scope.sconto_3_massivo,
+                            query: $scope.query,
+                            cod_cat_merc: $scope.cod_cat_merc_sel
+                        }
+                    }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                        //gestire ACK
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                }
+
+            };
+
         }]);
     </script>
 }
@@ -211,28 +295,45 @@
                         <th>Descrizione</th>
                         <th>Pr Acq 
                         </th>
-                        <th>Pr Ven 
-                        <br />
+                        <th>
+                            Pr Ven 
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="copia_prezzo()">
+                                <span class="fa fa-clone" />
+                            </button>
+                            <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="massivo.prezzo_vendita" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
+                                   ng-model="prezzo_vendita_massivo" style="width:80px;" />
+    
                         </th>
-                        <th>Sc 1
-                        <br />
+                        <th>
+                             Sc 1
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="copia_sconto1()">
+                                <span class="fa fa-clone" />
+                            </button>
+                            <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="massivo.sconto_1" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
+                                   ng-model="sconto_1_massivo" style="width:80px;" />
                         </th>
-                        <th>Sc 2
-                        <br />
+                        <th>
+                            Sc 2
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="copia_sconto2()">
+                                <span class="fa fa-clone" />
+                            </button>
+                            <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="massivo.sconto_2" style="width:80px;"
-                                   ng-focus="linefocused($index);" /></th>
-                        <th>Sc 3
-                        <br />
+                                   ng-model="sconto_2_massivo" style="width:80px;" /></th>
+                        <th>
+                            Sc 3
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="copia_sconto3()">
+                                <span class="fa fa-clone" />
+                            </button>
+                            <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="massivo.sconto_3" style="width:80px;"
-                                   ng-focus="linefocused($index);" /></th>
+                                   ng-model="sconto_3_massivo" style="width:80px;" /></th>
                         <th></th>
                     </tr>
                 </thead>

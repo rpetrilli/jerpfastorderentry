@@ -109,6 +109,60 @@ namespace fastOrderEntry.Controllers
         }
 
 
+        [HttpPost]
+        public JsonResult copia_prezzo(decimal prezzo_massivo, String query, String cod_cat_merc, String id_cliente)
+        {
+            con.Open();
+
+            ListinoModel listino = new ListinoModel();
+            listino.update_massivo_prezzo_vendita_cliente(con, prezzo_massivo, query, cod_cat_merc, id_cliente);
+
+            //TODO: copia listino
+
+            con.Close();
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult copia_sconto1(decimal sconto_massivo, String query, String cod_cat_merc, String id_cliente)
+        {
+            con.Open();
+
+            ListinoModel listino = new ListinoModel();
+            listino.update_massivo_sconto_cliente(con, "SC01", sconto_massivo, query, cod_cat_merc, id_cliente);
+
+            con.Close();
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public JsonResult copia_sconto2(decimal sconto_massivo, String query, String cod_cat_merc, String id_cliente)
+        {
+            con.Open();
+
+            ListinoModel listino = new ListinoModel();
+            listino.update_massivo_sconto_cliente(con, "SC02", sconto_massivo, query, cod_cat_merc, id_cliente);
+
+            con.Close();
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult copia_sconto3(decimal sconto_massivo, String query, String cod_cat_merc, String id_cliente)
+        {
+            con.Open();
+
+            ListinoModel listino = new ListinoModel();
+            listino.update_massivo_sconto_cliente(con, "SC03", sconto_massivo, query, cod_cat_merc, id_cliente);
+
+            con.Close();
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
 
         protected override void Dispose(bool disposing)
         {

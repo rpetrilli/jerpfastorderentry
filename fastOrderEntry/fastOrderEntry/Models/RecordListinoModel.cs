@@ -166,7 +166,7 @@ namespace fastOrderEntry.Models
         }
 
 
-        private void updatePrezzo(NpgsqlConnection conn, decimal prezzo, string id_cond_prezzo)
+        public void updatePrezzo(NpgsqlConnection conn, decimal prezzo, string id_cond_prezzo)
         {
             int cnt = 0;
             if (prezzo > 0)
@@ -219,7 +219,7 @@ namespace fastOrderEntry.Models
 
         }
 
-        private void updateSconto(NpgsqlConnection conn, decimal sconto, string id_cond_prezzo)
+        public void updateSconto(NpgsqlConnection conn, decimal sconto, string id_cond_prezzo)
         {
             int cnt = 0;
             if (sconto > 0)
@@ -273,7 +273,7 @@ namespace fastOrderEntry.Models
         }
 
 
-        private void updatePrezzoCliente(NpgsqlConnection conn, decimal prezzo, string id_cond_prezzo)
+        public void updatePrezzoCliente(NpgsqlConnection conn, decimal prezzo, string id_cond_prezzo)
         {
             int cnt = 0;
             if (prezzo > 0)
@@ -332,7 +332,7 @@ namespace fastOrderEntry.Models
 
         }
 
-        private void updateScontoCliente(NpgsqlConnection conn, decimal sconto, string id_cond_prezzo)
+        public void updateScontoCliente(NpgsqlConnection conn, decimal sconto, string id_cond_prezzo)
         {
             int cnt = 0;
             if (sconto > 0)
