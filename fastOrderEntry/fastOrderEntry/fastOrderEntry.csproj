@@ -225,6 +225,7 @@
     <Compile Include="Helpers\DbUtils.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Models\AgentiStrutturaModel.cs" />
+    <Compile Include="Models\AnaArticoloModel.cs" />
     <Compile Include="Models\CategorieStrutturaModel.cs" />
     <Compile Include="Models\ClientiStrutturaModel.cs" />
     <Compile Include="Models\CondizionePag.cs" />

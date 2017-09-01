@@ -12,7 +12,10 @@
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
             $scope.categorie = [];
-            
+
+            $scope.page_status = 'ricerca';
+
+
             listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
                 $scope.categorie = result.data;
             }, function (error) {
@@ -105,17 +108,7 @@
                     return $scope.pag_corrente + indice - $scope.nr_pagine_display;
                 }
             };
-            $scope.save = function (item) {
-                @*$http({
-                    method: 'POST',
-                    url: '@(Url.Action("saveListino"))',
-                    data: item
-                }).then(function (response) {
-                        //gestire ACK
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });*@
-            };
+
             $scope.save_current_record = function () {
                 if ($scope.rec_pagina >= 0 && $scope.rec_pagina < $scope.records.length) {
                     $scope.save($scope.records[$scope.rec_pagina]);
@@ -123,6 +116,45 @@
                     show_message('Errore', "Nessun record selezionato");
                 }
             };
+
+            $scope.copy = function (item) {
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("leggi_articolo"))',
+                    data: item
+                }).then(function (response) {
+                    $scope.articolo_corrente = response.data;
+                    $scope.page_status = 'copia';
+                }).catch(function (error, status) {
+                    show_message('Errore', error.data);
+                });
+            };
+
+            $scope.annulla = function () {
+                $scope.page_status = 'ricerca';
+            };
+
+
+            $scope.save = function () {
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("copia_articolo"))',
+                    data: $scope.articolo_corrente
+                }).then(function (response) {
+                    if ("OK" == response.data.ack) {
+                        $scope.page_status = 'ricerca';
+                        show_message('Info', "Articolo Copiato");
+                    } else if ("KO" == response.data.ack) {
+                        show_message('Errore', response.data.messaggio);
+                    }
+
+
+                }).catch(function (error, status) {
+                    show_message('Errore', error.data);
+                });
+            };
+
+
         }]);
     </script>
 }
@@ -168,7 +200,7 @@
     </script>
 }
 <div class="main-content" ng-controller="ctrl" ng-cloak>
-    <div class="row">
+    <div class="row" ng-show="page_status == 'ricerca'">
         <div class="col-md-2 col-lg-2">
             <h4><i class="fa fa-bars"></i> Menu</h4>
             <ul class="nav nav-stacked nav-pills">
@@ -212,7 +244,7 @@
                         <td>{{item.descrizione}}</td>
                         <td>
                             <button class="btn btn-primary btn-xs"
-                                    ng-click="save(item);">
+                                    ng-click="copy(item);">
                                 <span class="fa fa-copy" />
                             </button>
                         </td>
@@ -252,6 +284,93 @@
                     </li>
                 </ul>
             </div> <!--Fine paginatore -->
-        </div> <!--Dettaglio-->
-    </div>
+        </div> <!--dettaglio-->
+    </div> <!-- Fine scheda di ricerca -->
+
+    <div class="row" ng-show="page_status == 'copia'">
+        <div class="btn-toolbar" role="toolbar">
+            <button class="btn btn-default" ng-click="annulla()" >Annulla</button>
+            <button class="btn btn-default" ng-click="save()"><i class="fa fa-copy"></i>Copia</button>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="id_codice_art">Codice Articolo:</label>
+                <input type="text" class="form-control" id="id_codice_art" ng-model="articolo_corrente.id_codice_art" placeholder="Codice articolo">
+            </div>
+
+            <div class="form-group">
+                <label for="descrizione">Descrizione Articolo:</label>
+                <input type="text" class="form-control" id="descrizione" ng-model="articolo_corrente.descrizione" placeholder="Descrizione Articolo">
+            </div>
+        </div><!--Fine dati anagrafici-->
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="prezzo_acquisto">Prezzo Acquisto:</label>
+                <input type="number" class="form-control" id="prezzo_acquisto" ng-model="articolo_corrente.prezzo_acquisto" placeholder="Prezzo Acq.">
+            </div>
+            <div class="form-group">
+                <label for="prezzo_vendita">Prezzo Vendita:</label>
+                <input type="number" class="form-control" id="prezzo_vendita" ng-model="articolo_corrente.prezzo_vendita" placeholder="Prezzo Vend.">
+            </div>
+            <div class="form-group">
+                <label for="peso_lordo">Peso:</label>
+                <input type="number" class="form-control" id="peso_lordo" ng-model="articolo_corrente.peso_lordo" placeholder="Peso">
+            </div>
+
+        </div> <!-- Fine Condizioni prezzo -->
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="sconto_1">Sconto 1:</label>
+                <input type="number" class="form-control" id="sconto_1" ng-model="articolo_corrente.sconto_1" placeholder="Sconto 1">
+            </div>
+            <div class="form-group">
+                <label for="sconto_2">Sconto 2:</label>
+                <input type="number" class="form-control" id="sconto_2" ng-model="articolo_corrente.sconto_2" placeholder="Sconto 2">
+            </div>
+            <div class="form-group">
+                <label for="sconto_3">Sconto 3:</label>
+                <input type="number" class="form-control" id="sconto_3" ng-model="articolo_corrente.sconto_3" placeholder="Sconto 3">
+            </div>
+        </div> <!-- Fine sconti -->
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Codice Cliente</th>
+                        <th>Ragione Sociale</th>
+                        <th>Prezzo Vendita</th>
+                        <th>Sconto 1</th>
+                        <th>Sconto 2</th>
+                        <th>Sconto 3</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in articolo_corrente.condizioni_cliente">
+                        <td>{{item.id_cliente | trimZeros}}</td>
+                        <td>{{item.ragione_sociale}}</td>
+                        <td>
+                            <input type="number" class="form-control" ng-model="item.prezzo_vendita" placeholder="Prezzo Vend" style="width: 100%">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" ng-model="item.sconto_1" placeholder="Sconto 1" style="width: 100%">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" ng-model="item.sconto_2" placeholder="Sconto 2" style="width: 100%">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" ng-model="item.sconto_3" placeholder="Sconto 3" style="width: 100%">
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div> <!-- Fine scheda di copia -->
 </div>

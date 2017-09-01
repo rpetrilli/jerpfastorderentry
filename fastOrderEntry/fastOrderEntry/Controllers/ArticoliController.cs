@@ -1,9 +1,14 @@
 ﻿using fastOrderEntry.Helpers;
 using fastOrderEntry.Models;
+using Newtonsoft.Json;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -127,6 +132,48 @@ namespace fastOrderEntry.Controllers
             return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpPost]
+        public JsonResult leggi_articolo(RecordListinoModel item)
+        {
+            AnaArticoloModel articolo = new AnaArticoloModel();
+            articolo.id_codice_art_rif = item.id_codice_art;
+            articolo.select();
+
+            return Json(articolo, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult copia_articolo(AnaArticoloModel articolo)
+        {
+            using (PetLineContext db = new PetLineContext())
+            using (var client = new WebClient())
+            {
+                var values = new NameValueCollection();
+
+                string dati_copia = JsonConvert.SerializeObject(articolo);
+
+                var settings = (from item in db.impostazioni
+                                select item).First();
+
+                values["op"] = "copia_articolo";
+                values["dati_copia"] = dati_copia;
+                values["private_key"] = settings.private_key;
+
+                try
+                {
+                    var response = client.UploadValues(settings.jerp_url, values);
+                    var responseString = Encoding.Default.GetString(response);
+                }
+                catch (WebException e)
+                {
+                    var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                    return Json(new { ack = "KO", messaggio = messaggio }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
+        }
 
 
         protected override void Dispose(bool disposing)
