@@ -162,7 +162,7 @@ namespace fastOrderEntry.Controllers
 
                 try
                 {
-                    var response = client.UploadValues(settings.jerp_url, values);
+                    var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
                     var responseString = Encoding.Default.GetString(response);
                 }
                 catch (WebException e)

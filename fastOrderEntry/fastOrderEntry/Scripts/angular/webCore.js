@@ -168,16 +168,16 @@ myModule.factory('tabController', function ($http) {
 
         };
 
-        fac.saveEdit = function (item) {
+        fac.saveEdit = function (item, callback) {
             if (fac.nuovo) {
-                fac.insert(item);
+                fac.insert(item, callback);
             } else {
-                fac.update(item);
+                fac.update(item, callback);
             }
         };
 
 
-        fac.insert = function (item) {
+        fac.insert = function (item, callback) {
             $http({
                 method: 'POST',
                 url: fac.prop.api_root + '/insert',
@@ -186,6 +186,9 @@ myModule.factory('tabController', function ($http) {
                 if (response.data.db_obj_ack === 'OK') {
                     fac.displayMode = "list";
                     fac.refresh_page(fac.filtri.page_number);
+                    if (typeof (callback) == 'function') {
+                        callback(item);
+                    }
                 } else {
                     fac.prop.message_function('Errore', response.data.db_obj_message);
                 }
@@ -194,14 +197,21 @@ myModule.factory('tabController', function ($http) {
             });
         };
 
-        fac.update = function (item) {
+        fac.update = function (item, callback) {
             $http({
                 method: 'PUT',
                 url: fac.prop.api_root + '/update',
                 data: fac.current
             }).then(function (response) {
-                fac.displayMode = "list";
-                fac.refresh_page(fac.filtri.page_number);
+                if (response.data.db_obj_ack === 'OK') {
+                    fac.displayMode = "list";
+                    fac.refresh_page(fac.filtri.page_number);
+                    if (typeof (callback) == 'function'){
+                        callback(item);
+                    }
+                } else {
+                    fac.prop.message_function('Errore', response.data.db_obj_message);
+                }
             }).catch(function (error, status) {
                 fac.prop.message_function('Errore', error.data);
             });

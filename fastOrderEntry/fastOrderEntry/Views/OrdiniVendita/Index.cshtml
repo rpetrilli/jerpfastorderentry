@@ -10,7 +10,7 @@
             alert(messaggio);
         }
 
-        app.controller('ctrl', ['$scope', '$http', 'tabController', function ($scope, $http, tabController) {
+        app.controller('ctrl', ['$scope', '$http', '$window', 'tabController', function ($scope, $http, $window, tabController) {
             $scope.select_row = function (index) {
                 console.log(index);
                 $('#table tr').removeClass('text-info');
@@ -128,7 +128,19 @@
             $scope.select_cliente = function (item) {
                 Object.assign($scope.tc.current, item);
             };
+
+            $scope.print = function (item) {
+                $scope.tc.saveEdit(item, openstampa);
+            };
+
         }]);
+
+
+        function openstampa(item) {
+            var url = 'http://localhost:8080/petline' + '/vendite/ordiniVendita_download.jsp?formato=vendite_ordiniVend&esercizio=' + item.esercizio + '&id_ordine=' + item.id_ordine;
+            window.open(url, "_blank");
+
+        };
     </script>
 }
 @section scripts{

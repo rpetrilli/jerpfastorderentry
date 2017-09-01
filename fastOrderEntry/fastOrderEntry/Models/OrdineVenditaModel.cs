@@ -44,7 +44,7 @@ namespace fastOrderEntry.Models
                     values["id_ordine"] = id_ordine;
                     values["private_key"] = settings.private_key;
 
-                    var response = client.UploadValues(settings.jerp_url, values);
+                    var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
 
                     var responseString = Encoding.Default.GetString(response);
                 }
@@ -73,7 +73,7 @@ namespace fastOrderEntry.Models
 
                     try
                     {
-                        var response = client.UploadValues(settings.jerp_url, values);
+                        var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
                         var responseString = Encoding.Default.GetString(response);
                     }
                     catch (WebException e) 
@@ -190,7 +190,7 @@ namespace fastOrderEntry.Models
                     values["ordine"] = ordine;
                     values["private_key"] = settings.private_key;
 
-                    var response = client.UploadValues(settings.jerp_url, values);
+                    var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
 
                     var responseString = Encoding.Default.GetString(response);
                 }
