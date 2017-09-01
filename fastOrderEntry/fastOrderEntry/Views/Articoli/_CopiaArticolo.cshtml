@@ -1,0 +1,86 @@
+﻿<div class="row" ng-show="page_status == 'copia'">
+    <div class="btn-toolbar" role="toolbar">
+        <button class="btn btn-default" ng-click="annulla()">Annulla</button>
+        <button class="btn btn-default" ng-click="save()"><i class="fa fa-copy"></i>Copia</button>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="id_codice_art">Codice Articolo:</label>
+            <input type="text" class="form-control" id="id_codice_art" ng-model="articolo_corrente.id_codice_art" placeholder="Codice articolo">
+        </div>
+
+        <div class="form-group">
+            <label for="descrizione">Descrizione Articolo:</label>
+            <input type="text" class="form-control" id="descrizione" ng-model="articolo_corrente.descrizione" placeholder="Descrizione Articolo">
+        </div>
+    </div><!--Fine dati anagrafici-->
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="prezzo_acquisto">Prezzo Acquisto:</label>
+            <input type="number" class="form-control" id="prezzo_acquisto" ng-model="articolo_corrente.prezzo_acquisto" placeholder="Prezzo Acq.">
+        </div>
+        <div class="form-group">
+            <label for="prezzo_vendita">Prezzo Vendita:</label>
+            <input type="number" class="form-control" id="prezzo_vendita" ng-model="articolo_corrente.prezzo_vendita" placeholder="Prezzo Vend.">
+        </div>
+        <div class="form-group">
+            <label for="peso_lordo">Peso:</label>
+            <input type="number" class="form-control" id="peso_lordo" ng-model="articolo_corrente.peso_lordo" placeholder="Peso">
+        </div>
+
+    </div> <!-- Fine Condizioni prezzo -->
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="sconto_1">Sconto 1:</label>
+            <input type="number" class="form-control" id="sconto_1" ng-model="articolo_corrente.sconto_1" placeholder="Sconto 1">
+        </div>
+        <div class="form-group">
+            <label for="sconto_2">Sconto 2:</label>
+            <input type="number" class="form-control" id="sconto_2" ng-model="articolo_corrente.sconto_2" placeholder="Sconto 2">
+        </div>
+        <div class="form-group">
+            <label for="sconto_3">Sconto 3:</label>
+            <input type="number" class="form-control" id="sconto_3" ng-model="articolo_corrente.sconto_3" placeholder="Sconto 3">
+        </div>
+    </div> <!-- Fine sconti -->
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Codice Cliente</th>
+                    <th>Ragione Sociale</th>
+                    <th>Prezzo Vendita</th>
+                    <th>Sconto 1</th>
+                    <th>Sconto 2</th>
+                    <th>Sconto 3</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in articolo_corrente.condizioni_cliente">
+                    <td>{{item.id_cliente | trimZeros}}</td>
+                    <td>{{item.ragione_sociale}}</td>
+                    <td>
+                        <input type="number" class="form-control" ng-model="item.prezzo_vendita" placeholder="Prezzo Vend" style="width: 100%">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" ng-model="item.sconto_1" placeholder="Sconto 1" style="width: 100%">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" ng-model="item.sconto_2" placeholder="Sconto 2" style="width: 100%">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" ng-model="item.sconto_3" placeholder="Sconto 3" style="width: 100%">
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div> <!-- Fine scheda di copia -->

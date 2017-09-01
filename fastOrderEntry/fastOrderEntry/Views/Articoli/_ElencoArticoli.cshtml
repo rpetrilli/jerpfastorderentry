@@ -1,0 +1,86 @@
+﻿<div class="row" ng-show="page_status == 'ricerca'">
+    <div class="col-md-2 col-lg-2">
+        <h4><i class="fa fa-bars"></i> Menu</h4>
+        <ul class="nav nav-stacked nav-pills">
+            <li>
+                <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
+            </li>
+            <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_merc == cod_cat_merc_sel}">
+                <a class="livello{{item.livello}}"
+                   ng-click="selezionaCategoria(item)"
+                   ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">
+                    <span class="fa fa-caret-right"></span>&nbsp;
+                    {{item.descrizione}}
+                </a>
+
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-10 col-lg-10">
+        <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
+        <div class="input-group">
+            <input id="query" capitalize
+                   type="text" class="form-control"
+                   ng-model="query" placeholder="cerca per codice articolo o descrizione..."
+                   ng-on-enter="refresh()" autofocus />
+            <span class="input-group-btn">
+                <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;Cerca</button>
+            </span>
+        </div>
+        <h4><i class="fa fa-list-ul"></i> Elenco</h4>
+        <table class="table table-hover table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>Art</th>
+                    <th>Descrizione</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in records">
+                    <td>{{item.id_codice_art}}</td>
+                    <td>{{item.descrizione}}</td>
+                    <td>
+                        <button class="btn btn-primary btn-xs"
+                                ng-click="copy(item);">
+                            <span class="fa fa-copy" />
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div ng-show="pag_number > 1">
+            <ul class="pagination" style="text-align: center;">
+                <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
+                <li>
+                    <a ng-click="refresh_page(0)"
+                       ng-class="{disabled: pag_corrente == 0}"
+                       href="#nav">&lt;&lt;</a>
+                </li>
+                <li>
+                    <a ng-click="refresh_page(pag_corrente-1)"
+                       ng-class="{disabled: pag_corrente == 0}"
+                       href="#nav">&lt;</a>
+                </li>
+                <li ng-repeat="p_nr in [0,1,2,3]">
+                    <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
+                       ng-bind="nr_pagina_paginatore(p_nr) + 1"
+                       ng-hide="nr_pagina_paginatore(p_nr)==-1"
+                       ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
+                       href="#nav">
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="refresh_page(pag_corrente+1)"
+                       ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                       href="#nav">&gt;</a>
+                </li>
+                <li>
+                    <a ng-click="refresh_page(pag_number-1)"
+                       ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                       href="#nav">&gt;&gt;</a>
+                </li>
+            </ul>
+        </div> <!--Fine paginatore -->
+    </div> <!--dettaglio-->
+</div> <!-- Fine scheda di ricerca -->

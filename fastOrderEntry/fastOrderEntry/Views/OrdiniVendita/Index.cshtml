@@ -78,7 +78,7 @@
             $scope.eminina_riga = function (item) {
                 var index = $scope.tc.current.righe.indexOf(item);
                 if (index > -1) {
-                    array.splice(index, 1);
+                    $scope.tc.current.righe.splice(index, 1);
                 }
             };
 
