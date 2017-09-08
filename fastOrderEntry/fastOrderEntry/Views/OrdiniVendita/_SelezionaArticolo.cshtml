@@ -5,7 +5,7 @@
         <div class="well well-sm" ng-show="shAdd" >
             <label><strong>Aggiunta Articoli</strong></label>
             <input type="text" class="form-control" placeholder="seleziona l'articolo .." ng-change="riseleziona_articoli()" ng-model="id_codice_art_new" id="selectArticoloAdd" />
-            <table class="table table-hover table-condensed" id="table" ng-show="articoliaggiunta">
+            <table class="table table-hover table-condensed" ng-show="articoliaggiunta">
                 <thead>
                     <tr>
                         <th>Qta Ord</th>
@@ -25,8 +25,8 @@
                         <td><input type="number" 
                                    ng-model="item.qta_ordinata" 
                                    style="width:50px;" 
-                                   class="form-control form-control-custom text-right"
-                                    ng-focus="linefocused($index)"/></td>
+                                   class="form-control form-control-custom text-right request-focus"
+                                    ng-on-enter="select_articolo(item)"/></td>
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
                         <td>{{item.prezzo_acquisto | number}}</td>

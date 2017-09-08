@@ -103,7 +103,7 @@
                 if ($scope.rec_pagina >= $scope.records.length ) {
                     $scope.rec_pagina = 0;
                 }
-                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) +') input.request-focus').focus();
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) + ') input.request-focus').focus().select();
             };
 
             $scope.previous_record = function () {
@@ -111,7 +111,7 @@
                 if ($scope.rec_pagina < 0 ) {
                     $scope.rec_pagina = $scope.records.length - 1;
                 }
-                $('#table tr:nth-child(' + ($scope.rec_pagina + 1)  + ') input.request-focus').focus();
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) + ') input.request-focus').focus().select();
             };
 
             $scope.linefocused = function (line) {

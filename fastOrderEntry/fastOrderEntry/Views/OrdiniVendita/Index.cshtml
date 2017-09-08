@@ -12,9 +12,10 @@
 
         app.controller('ctrl', ['$scope', '$http', '$window', 'tabController', function ($scope, $http, $window, tabController) {
             $scope.select_row = function (index) {
-                console.log(index);
-                $('#table tr').removeClass('text-info');
-                $('#table tr:nth-child(' + (index) + ') ').addClass('text-info');
+                //console.log(index);
+                $('.table tr').removeClass('text-info');
+                $('.table tr:nth-child(' + (index) + ') ').addClass('text-info');
+                $('.table tr:nth-child(' + (index) + ') input.request-focus').focus().select();
             };
 
             $scope.selCondPag = @{Html.RenderAction("GetCondPag", "Get");};
@@ -84,9 +85,10 @@
 
             $scope.showAdd = function () {
                 $scope.shAdd = !$scope.shAdd
-                angular.element("#selectArticoloAdd").focus();
-            }
-
+                console.log("ci sono");
+                $('input#selectArticoloAdd').focus();
+                //angular.element("#selectArticoloAdd").focus();
+            }           
 
             $scope.riseleziona_articoli = function () {
 
@@ -105,8 +107,7 @@
             };
 
             $scope.cerca_cliente = function () {
-                $('#modal_ricerca_clienti').modal('show');
-                //$('#cercaClienteModal').attr("autofocus");
+                $('#modal_ricerca_clienti').modal('show');                
             };
             
 
@@ -277,7 +278,7 @@
                             <label><strong>Seleziona cliente</strong></label>
                             <input type="text" id="cercaClienteModal" class="form-control" placeholder="seleziona cliente .." ng-change="riseleziona_cliente()" 
                                    ng-model="query_nuovo_cliente" autofocus />
-                            <table class="table table-hover table-striped" id="table" ng-show="clienteSeleziona">
+                            <table class="table table-hover table-striped"  ng-show="clienteSeleziona">
                                 <thead>
                                     <tr>
                                         <th>Codice</th>
