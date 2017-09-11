@@ -172,6 +172,10 @@
             $('#query').focus();
         });
 
+        shortcut.add("F4", function () {
+            $('#selectArticoloAdd').focus().select();
+        });
+
         shortcut.add("Up", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {

@@ -7,10 +7,10 @@
             <input type="text" class="form-control" placeholder="seleziona l'articolo .." ng-change="riseleziona_articoli()" ng-model="id_codice_art_new" id="selectArticoloAdd" />
             <table class="table table-hover table-condensed" ng-show="articoliaggiunta">
                 <thead>
-                    <tr>
-                        <th>Qta Ord</th>
+                    <tr>                        
                         <th>Art</th>
                         <th>Descrizione</th>
+                        <th>Qta Ord</th>
                         <th>Prezzo Acq</th>
                         <th>Prezzo</th>
                         <th>Sc 1</th>
@@ -21,14 +21,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in articoliaggiunta">
-                        <td><input type="number" 
-                                   ng-model="item.qta_ordinata" 
-                                   style="width:50px;" 
-                                   class="form-control form-control-custom text-right request-focus"
-                                    ng-on-enter="select_articolo(item)"/></td>
+                    <tr ng-repeat="item in articoliaggiunta">                       
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
+                        <td>
+                            <input type="number"
+                                   ng-model="item.qta_ordinata"
+                                   style="width:50px;"
+                                   class="form-control form-control-custom text-right request-focus"
+                                   ng-on-enter="select_articolo(item)" />
+                        </td>
                         <td>{{item.prezzo_acquisto | number}}</td>
                         <td>{{item.prezzo_vendita | number}}</td>
                         <td>{{item.sconto_1 | number}}</td>
