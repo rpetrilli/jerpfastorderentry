@@ -65,6 +65,7 @@ namespace fastOrderEntry.Models
                 {
                     var values = new NameValueCollection();
 
+
                     string ordine = JsonConvert.SerializeObject(this);
 
                     values["op"] = "insert_order";

@@ -57,18 +57,23 @@ namespace fastOrderEntry.Models
                 foreach (var r in rs)
                 {
                     RecordListinoModel listinoCliente = new RecordListinoModel();
+                    listinoCliente.id_codice_art = r.id_codice_art;
                     listinoCliente.leggiPrezziCliente(con, id_cliente);
 
                     RecordListinoModel listinoArticolo = new RecordListinoModel();
-                    listinoCliente.leggiPrezzi(con);
+                    listinoArticolo.id_codice_art = r.id_codice_art;
+                    listinoArticolo.leggiPrezzi(con);
 
                     r.prezzo_acquisto = listinoArticolo.prezzo_acquisto;
                     r.prezzo_vendita = listinoCliente.prezzo_vendita > 0 ? listinoCliente.prezzo_vendita : listinoArticolo.prezzo_vendita;
                     r.sconto_1 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_1 : listinoArticolo.sconto_1;
                     r.sconto_2 = listinoCliente.sconto_2 > 0 ? listinoCliente.sconto_2 : listinoArticolo.sconto_2;
                     r.sconto_3 = listinoCliente.sconto_3 > 0 ? listinoCliente.sconto_3 : listinoArticolo.sconto_3;
+                    r.leggiUltimoOrdine(con);
 
                 }
+
+
             }
                        
         }
@@ -91,6 +96,39 @@ namespace fastOrderEntry.Models
         public decimal qta_in_consegna { get; set; } = 0;
         public decimal peso_lordo { get; set; }
 
+        public string data_ordine { get; set; }
+        public decimal prezzo_unitario { get; set; }
+        public string str_sconto { get; set; }
+
+        internal void leggiUltimoOrdine(NpgsqlConnection con)
+        {
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = @"select data_ordine, prezzo_unitario, str_sconto 
+                    from vo_ordini_righe
+                    inner join vo_ordini
+                    on vo_ordini_righe.id_divisione = vo_ordini.id_divisione
+                            and vo_ordini_righe.esercizio = vo_ordini.esercizio
+
+                        and vo_ordini_righe.id_ordine = vo_ordini.id_ordine
+                    where id_codice_art = @id_codice_art
+                    order by vo_ordini_righe.id_divisione, vo_ordini_righe.esercizio, vo_ordini_righe.id_ordine
+                    limit 1 ";
+                cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        data_ordine = Convert.ToDateTime(reader["data_ordine"]).ToString("dd-MM-yyyy");
+                        prezzo_unitario = Convert.ToDecimal(reader["prezzo_unitario"]);
+                        str_sconto =  reader["str_sconto"].ToString();
+                    }
+                }
+            }
+        }
     }
 
     [Table("ca_iva", Schema = "public")]

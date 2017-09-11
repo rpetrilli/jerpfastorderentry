@@ -21,6 +21,9 @@ namespace fastOrderEntry.Models
         public decimal sconto_1 { get; set; }
         public decimal sconto_2 { get; set; }
         public decimal sconto_3 { get; set; }
+        public string codice_ean { get; set; }
+        public string id_fornitore { get; set; }
+        public string cod_fornitore { get; set; }
         public List<CondizioneCliente> condizioni_cliente { get; set; }
 
         public void select()
@@ -62,6 +65,55 @@ namespace fastOrderEntry.Models
                     item.sconto_2 = getValoreScontoCliente(db, "SC02", this.id_codice_art_rif, item.id_cliente);
                     item.sconto_3 = getValoreScontoCliente(db, "SC03", this.id_codice_art_rif, item.id_cliente);
                 }
+
+                //Leggi ultimo codice articolo
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = (NpgsqlConnection)  db.Database.Connection;
+                    cmd.Connection.Open();
+                    cmd.CommandText = "select max(cast(id_codice_art as integer)) as id_codice_art from ma_articoli_soc where id_codice_art ~ E'^\\d+$' \r\n";
+                    cmd.ExecuteNonQuery();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            id_codice_art = reader["id_codice_art"].ToString();
+                        }
+                    }
+
+                    cmd.Connection.Close();
+                }
+
+                try
+                {
+                    id_codice_art = "" + int.Parse(id_codice_art) + 1;
+                }
+                catch
+                {
+                    id_codice_art = "1";
+                }
+
+
+                //Leggi codice a barre
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = (NpgsqlConnection)db.Database.Connection;
+                    cmd.Connection.Open();
+                    cmd.CommandText = "select codice_ean from ma_articoli_ean where id_societa = '1' and id_codice_art = @id_codice_art \r\n";
+                    cmd.Parameters.AddWithValue("id_codice_art", id_codice_art_rif);
+                    cmd.ExecuteNonQuery();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            codice_ean = reader["codice_ean"].ToString();
+                        }
+                    }
+
+                    cmd.Connection.Close();
+                }
+
 
 
             }

@@ -137,10 +137,9 @@
         }]);
 
 
-        function openstampa(item) {
+        function openstampa(item) { 
             var url = 'http://localhost:8080/petline' + '/vendite/ordiniVendita_download.jsp?formato=vendite_ordiniVend&esercizio=' + item.esercizio + '&id_ordine=' + item.id_ordine;
-            window.open(url, "_blank");
-
+            location.href = url;
         };
     </script>
 }
