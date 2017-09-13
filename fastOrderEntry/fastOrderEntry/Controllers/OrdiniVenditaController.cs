@@ -7,6 +7,11 @@ using System.Web.Mvc;
 using WebCore.fw;
 using Npgsql;
 using fastOrderEntry.Helpers;
+using System.Net;
+using System.Collections.Specialized;
+using Newtonsoft.Json;
+using System.Text;
+using System.IO;
 
 namespace fastOrderEntry.Controllers
 {
@@ -88,6 +93,37 @@ namespace fastOrderEntry.Controllers
             }
 
             return list;
+        }
+
+        [HttpPost]
+        public JsonResult DdtFattura(OrdineVenditaModel model)
+        {
+            using (PetLineContext db = new PetLineContext())
+            using (var client = new WebClient())
+            {
+                var values = new NameValueCollection();
+
+                string ordine = JsonConvert.SerializeObject(model);
+
+                var settings = (from item in db.impostazioni
+                                select item).First();
+
+                values["op"] = "ddt_fattura";
+                values["ordine"] = ordine;
+                values["private_key"] = settings.private_key;
+
+                try
+                {
+                    var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
+                    var responseString = Encoding.Default.GetString(response);
+                }
+                catch (WebException e)
+                {
+                    var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                    return Json(new { ack = "KO", messaggio = messaggio }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
         }
 
         protected override NpgsqlConnection getConnection()

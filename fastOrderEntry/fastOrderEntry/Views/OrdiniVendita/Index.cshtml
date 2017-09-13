@@ -12,10 +12,29 @@
 
         app.controller('ctrl', ['$scope', '$http', '$window', 'tabController', function ($scope, $http, $window, tabController) {
             $scope.select_row = function (index) {
-                //console.log(index);
-                $('.table tr').removeClass('text-info');
-                $('.table tr:nth-child(' + (index) + ') ').addClass('text-info');
-                $('.table tr:nth-child(' + (index) + ') input.request-focus').focus().select();
+                switch ($scope.tc.table) {
+                    case 'tableSelCliente':
+                        $('#tableClienti tr').removeClass('text-info');
+                        $('#tableClienti tr:nth-child(' + (index) + ') ').addClass('text-info');
+                        $('#tableClienti tr:nth-child(' + (index) + ') input.request-focus').focus().select();
+                        break;
+                    case 'tableSelArticoli':
+                        $('#tableArticoli tr').removeClass('text-info');
+                        $('#tableArticoli tr:nth-child(' + (index) + ') ').addClass('text-info');
+                        $('#tableArticoli tr:nth-child(' + (index) + ') input.request-focus').focus().select();
+                        break;
+                    case 'tableOrdine':
+                        $('#tableOrdine tr').removeClass('text-info');
+                        $('#tableOrdine tr:nth-child(' + (index) + ') ').addClass('text-info');
+                        $('#tableOrdine tr:nth-child(' + (index) + ') input.request-focus').focus().select();
+                        break;
+                    default:
+                        $('.table tr').removeClass('text-info');
+                        $('.table tr:nth-child(' + (index) + ') ').addClass('text-info');
+                        $('.table tr:nth-child(' + (index) + ') input.request-focus').focus().select();
+                        break;
+                }
+
             };
 
             $scope.selCondPag = @{Html.RenderAction("GetCondPag", "Get");};
@@ -42,7 +61,7 @@
             };
 
             var exit_new = function () {
-                $scope.clienteSeleziona = {}; 
+                $scope.tc.clienteSeleziona = {};
                 $scope.query_nuovo_cliente = '';
             };
 
@@ -62,7 +81,7 @@
                 $scope.tc.current.ragione_sociale = item.name;
             };
 
-            
+
             $scope.select_articolo = function (item) {
                 if (typeof (item) == 'undefined')
                     return;
@@ -72,7 +91,7 @@
                 var newLine = {};
 
                 Object.assign(newLine, item);
-                
+
                 $scope.tc.current.righe.push(newLine);
             };
 
@@ -85,10 +104,8 @@
 
             $scope.showAdd = function () {
                 $scope.shAdd = !$scope.shAdd
-                console.log("ci sono");
-                $('input#selectArticoloAdd').focus();
-                //angular.element("#selectArticoloAdd").focus();
-            }           
+                $scope.tc.table = 'tableOrdine';
+            }
 
             $scope.riseleziona_articoli = function () {
 
@@ -100,16 +117,33 @@
                         id_cliente: $scope.tc.current.id_cliente
                         }
                 }).then(function (response) {
-                    $scope.articoliaggiunta = response.data;
+                    $scope.tc.articoliaggiunta = response.data;
+                    $scope.tc.table = "tableSelArticoli";
+                    $scope.tc.rec_pagina = 0;
                 }).catch(function (error, status) {
                     fac.prop.message_function('Errore', error.data);
                 });
             };
 
             $scope.cerca_cliente = function () {
-                $('#modal_ricerca_clienti').modal('show');                
+                $scope.tc.table = "tableSelCliente";
+                $scope.tc.rec_pagina = 0;
+                $('#modal_ricerca_clienti').modal('show');
             };
-            
+
+            $scope.ddtfattura = function (item, tipo) {
+                item.tipo = tipo;
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("DdtFattura"))',
+                    data: item
+                }).then(function (response) {
+                    console.log("ok fatto")
+                }).catch(function (error, status) {
+                    show_message('Errore', error.data);
+                });
+            };
+
 
             $scope.riseleziona_cliente = function () {
 
@@ -120,7 +154,7 @@
                         query: $scope.query_nuovo_cliente
                         }
                 }).then(function (response) {
-                    $scope.clienteSeleziona = response.data;
+                    $scope.tc.clienteSeleziona = response.data;
                 }).catch(function (error, status) {
                     fac.prop.message_function('Errore', error.data);
                 });
@@ -137,7 +171,7 @@
         }]);
 
 
-        function openstampa(item) { 
+        function openstampa(item) {
             var url = 'http://localhost:8080/petline' + '/vendite/ordiniVendita_download.jsp?formato=vendite_ordiniVend&esercizio=' + item.esercizio + '&id_ordine=' + item.id_ordine;
             location.href = url;
         };
@@ -171,7 +205,7 @@
             $('#query').focus();
         });
 
-        shortcut.add("F4", function () {
+        shortcut.add("F2", function () {
             $('#selectArticoloAdd').focus().select();
         });
 
@@ -254,16 +288,17 @@
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.tc.displayMode == 'edit' && scope.current.length > 0) {
-                    scope.tc.saveEdit(scope.current);
+                    scope.tc.saveEdit(scope.current);                    
                 }
             });
         });
 
-        shortcut.add("Ctrl+1", function () {
+        shortcut.add("F1", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.tc.displayMode == 'edit' && scope.tc.current.id_cliente.length > 0) {
                     scope.shAdd = !scope.shAdd;
+                    scope.tc.table = 'tableOrdine';
                 }
             });
         });
@@ -272,40 +307,6 @@
 <div class="main-content" ng-controller="ctrl" ng-cloak>
     @Html.Partial("_ElencoOrdini")
     @Html.Partial("_NuovoModificaOrdine")
-    <div class="modal fade" id="modal_ricerca_clienti" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label><strong>Seleziona cliente</strong></label>
-                            <input type="text" id="cercaClienteModal" class="form-control" placeholder="seleziona cliente .." ng-change="riseleziona_cliente()" 
-                                   ng-model="query_nuovo_cliente" autofocus />
-                            <table class="table table-hover table-striped"  ng-show="clienteSeleziona">
-                                <thead>
-                                    <tr>
-                                        <th>Codice</th>
-                                        <th>Ragione Sociale</th>
-                                        <th>Comune</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="item in clienteSeleziona">
-                                        <td>{{item.id | trimZeros}}</td>
-                                        <td>{{item.name}}</td>
-                                        <td>{{item.comune}}</td>
-                                        <td>
-                                            <button class="btn btn-grey btn-xs" ng-click="select_cliente(item)" data-dismiss="modal"><i class="glyphicon glyphicon-check"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>	
+    @Html.Partial("_ModalCercaCliente")
 </div>
 

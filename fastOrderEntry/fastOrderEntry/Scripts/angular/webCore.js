@@ -47,10 +47,7 @@ myModule.factory('tabController', function ($http) {
 
         fac.nr_pagine_display = 4;
 
-
         fac.prop = prop;
-        
-
 
         fac.refresh_page = function (page_number) {
             fac.filtri.page_number = page_number;
@@ -59,6 +56,7 @@ myModule.factory('tabController', function ($http) {
                 url: fac.prop.api_root + '/getConenutoPagina',
                 params: fac.filtri
             }).then(function (response) {
+                fac.table = "";
                 fac.records = response.data;
                 fac.pag_corrente = page_number;
                 fac.rec_pagina = -1;
@@ -82,19 +80,70 @@ myModule.factory('tabController', function ($http) {
             });
         };
 
+        fac.next_record = function () {  
 
-        fac.next_record = function () {
-            fac.rec_pagina++;
-            if (fac.rec_pagina >= fac.records.length) {
-                fac.rec_pagina = 0;
-            }
+            switch (fac.table)
+            {
+                case 'tableSelCliente':
+                    fac.rec_pagina++;
+                    if (fac.rec_pagina >= fac.clienteSeleziona.length) {
+                        fac.rec_pagina = 0;
+                    }
+                    break;
+                case 'tableSelArticoli':
+                    fac.rec_pagina++;
+                    if (fac.rec_pagina >= fac.articoliaggiunta.length) {
+                        fac.rec_pagina = 0;
+                    }
+                    break;
+                case 'tableOrdine':
+                    fac.rec_pagina++;
+                    if (fac.rec_pagina >= fac.current.righe.length) {
+                        fac.rec_pagina = 0;
+                    }
+                    break;
+                default:
+                    fac.rec_pagina++;
+                    if (fac.rec_pagina >= fac.records.length) {
+                        fac.rec_pagina = 0;
+                    }
+                    break;
+            }          
+           
             fac.prop.select_row_call_back(fac.rec_pagina + 1);
         };
+
+
         fac.previous_record = function () {
-            fac.rec_pagina--;
-            if (fac.rec_pagina < 0) {
-                fac.rec_pagina = fac.records.length - 1;
-            }
+
+            switch (fac.table) {
+                case 'tableSelCliente':
+                    fac.rec_pagina--;
+                    if (fac.rec_pagina < 0) {
+                        fac.rec_pagina = fac.clienteSeleziona.length - 1;
+                    }                    
+                    break;
+                case 'tableSelArticoli':
+                    fac.rec_pagina--;
+                    if (fac.rec_pagina < 0) {
+                        fac.rec_pagina = fac.articoliaggiunta.length - 1;
+                    }                   
+                    break;
+                case 'tableOrdine':
+                    fac.rec_pagina--;
+                    if (fac.rec_pagina < 0) {
+                        fac.rec_pagina = fac.current.righe.length - 1;
+                    }
+                    break;
+                default:
+                    fac.rec_pagina--;
+                    if (fac.rec_pagina < 0) {
+                        fac.rec_pagina = fac.records.length - 1;
+                    }
+                    break;
+            }        
+
+           
             fac.prop.select_row_call_back(fac.rec_pagina + 1);
         };
 
@@ -169,6 +218,7 @@ myModule.factory('tabController', function ($http) {
         };
 
         fac.saveEdit = function (item, callback) {
+            fac.table = '';
             if (fac.nuovo) {
                 fac.insert(item, callback);
             } else {
@@ -219,6 +269,7 @@ myModule.factory('tabController', function ($http) {
 
 
         fac.cancelEdit = function () {
+            fac.table = '';
             fac.current = {};
             fac.displayMode = "list";
             fac.refresh_page(fac.filtri.page_number);

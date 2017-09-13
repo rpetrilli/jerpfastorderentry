@@ -327,6 +327,7 @@
     <Content Include="Views\Articoli\Index.cshtml" />
     <Content Include="Views\Articoli\_ElencoArticoli.cshtml" />
     <Content Include="Views\Articoli\_CopiaArticolo.cshtml" />
+    <Content Include="Views\OrdiniVendita\_ModalCercaCliente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

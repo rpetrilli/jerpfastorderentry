@@ -29,6 +29,7 @@ namespace fastOrderEntry.Models
         public string id_vettore { get; set; }
         public IList<OrdineRiga> righe { get; set; }
         public string name { get; set; }
+        public string tipo { get; set; }
 
         public override void delete(NpgsqlConnection con)
         {

@@ -5,7 +5,7 @@
         <div class="well well-sm" ng-show="shAdd" >
             <label><strong>Aggiunta Articoli</strong></label>
             <input type="text" class="form-control" placeholder="seleziona l'articolo .." ng-change="riseleziona_articoli()" ng-model="id_codice_art_new" id="selectArticoloAdd" />
-            <table class="table table-hover table-condensed" ng-show="articoliaggiunta">
+            <table class="table table-hover table-condensed" ng-show="tc.articoliaggiunta" id="tableArticoli">
                 <thead>
                     <tr>                        
                         <th>Art</th>
@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in articoliaggiunta">                       
+                    <tr ng-repeat="item in tc.articoliaggiunta">                       
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
                         <td>{{item.data_ordine}} {{item.prezzo_unitario | number}} {{item.str_sconto}}</td>
