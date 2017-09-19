@@ -138,6 +138,17 @@
                     url: '@(Url.Action("DdtFattura"))',
                     data: item
                 }).then(function (response) {
+                    if (response.data.ack == 'KO') {
+                        show_message('Errore', response.data.messaggio);
+                    } else {
+                        if (tipo == 'ddt') {
+                            show_message('Info', 'Consegna ' + response.data.esercizio + ' ' + response.data.id_consegna + ' creata');
+                        } else if (tipo == 'fat') {
+                            show_message('Info', 'Fattura ' + response.data.esercizio + ' ' + response.data.prot_iva + ' creata');
+                        }
+                    }
+                    $scope.tc.refresh_page($scope.tc.pag_corrente);
+
                     console.log("ok fatto")
                 }).catch(function (error, status) {
                     show_message('Errore', error.data);

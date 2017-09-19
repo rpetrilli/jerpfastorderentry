@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using Newtonsoft.Json;
 using System.Text;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace fastOrderEntry.Controllers
 {
@@ -60,6 +61,7 @@ namespace fastOrderEntry.Controllers
                 cmd.CommandText = "SELECT \r\n" +
                     "      vo_ordini.*, \r\n" +
                     "       (select ragione_sociale from va_clienti where id_cliente = vo_ordini.id_cliente ) as ragione_sociale, \r\n" +
+                    "       (select id_gc_cliente_id from va_clienti where id_cliente = vo_ordini.id_cliente ) as id_gc_cliente_id, \r\n" +
                     "       vo_ordini_provv_testata.id_agente, \r\n" + 
                     "       (select ragione_sociale from va_agenti where id_agente = vo_ordini_provv_testata.id_agente ) as ragione_sociale_agente \r\n" +
                     "from vo_ordini \r\n" +
@@ -87,6 +89,7 @@ namespace fastOrderEntry.Controllers
                         item.esercizio = Convert.ToInt32(reader["esercizio"]);
                         item.totale_doc = Convert.ToDecimal(reader["totale_doc"]);
                         item.ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
+                        item.id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
                         list.Add(item);
                     }
                 }
@@ -96,7 +99,7 @@ namespace fastOrderEntry.Controllers
         }
 
         [HttpPost]
-        public JsonResult DdtFattura(OrdineVenditaModel model)
+        public ContentResult DdtFattura(OrdineVenditaModel model)
         {
             using (PetLineContext db = new PetLineContext())
             using (var client = new WebClient())
@@ -108,7 +111,15 @@ namespace fastOrderEntry.Controllers
                 var settings = (from item in db.impostazioni
                                 select item).First();
 
-                values["op"] = "ddt_fattura";
+                if (model.tipo == "ddt")
+                {
+                    values["op"] = "ordine_to_consegna";
+                }
+                else if (model.tipo == "fat")
+                {
+                    values["op"] = "ordine_to_fattura";
+                }
+
                 values["ordine"] = ordine;
                 values["private_key"] = settings.private_key;
 
@@ -116,14 +127,23 @@ namespace fastOrderEntry.Controllers
                 {
                     var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
                     var responseString = Encoding.Default.GetString(response);
+
+                    JObject obj = JObject.Parse(responseString);
+                    obj.Add("ack", "OK");
+
+                    return Content(obj.ToString(), "application/json");
+
                 }
                 catch (WebException e)
                 {
                     var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
-                    return Json(new { ack = "KO", messaggio = messaggio }, JsonRequestBehavior.AllowGet);
+                    JObject obj = new JObject();
+                    obj.Add("ack", "KO");
+                    obj.Add("messaggio", messaggio);
+                    return Content(obj.ToString(), "application/json");
+                    //return Json(new { ack = "KO", messaggio = messaggio }, JsonRequestBehavior.AllowGet);
                 }
             }
-            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
         }
 
         protected override NpgsqlConnection getConnection()
@@ -165,6 +185,7 @@ namespace fastOrderEntry.Controllers
         public string data_ordine { get; set; }
         public decimal totale_doc { get; set; }
         public bool ordine_chiuso { get; set; }
+        public string id_gc_cliente_id { get; set; }
 
     }
 }
