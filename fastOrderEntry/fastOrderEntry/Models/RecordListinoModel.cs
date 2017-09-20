@@ -13,6 +13,7 @@ namespace fastOrderEntry.Models
         public decimal sconto_1 { get; set; }
         public decimal sconto_2 { get; set; }
         public decimal sconto_3 { get; set; }
+        public decimal sconto_agente { get; set; }
 
         internal void leggiPrezzi(NpgsqlConnection conn)
         {

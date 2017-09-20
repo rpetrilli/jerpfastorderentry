@@ -299,6 +299,27 @@
     <Content Include="Scripts\angular\webCore.js" />
     <Content Include="Scripts\angular\webCoreTabControllerPag.tpl.html" />
     <Content Include="Scripts\typeahead.js" />
+    <Content Include="Scripts\uniform\css\agent.css" />
+    <Content Include="Scripts\uniform\css\aristo.css" />
+    <Content Include="Scripts\uniform\css\default.css" />
+    <Content Include="Scripts\uniform\css\jeans.css" />
+    <Content Include="Scripts\uniform\images\agent\bg-input-agent.png" />
+    <Content Include="Scripts\uniform\images\agent\bg-input-focus-agent.png" />
+    <Content Include="Scripts\uniform\images\agent\sprite-agent.png" />
+    <Content Include="Scripts\uniform\images\aristo\bg-input-aristo.png" />
+    <Content Include="Scripts\uniform\images\aristo\bg-input-focus-aristo.png" />
+    <Content Include="Scripts\uniform\images\aristo\sprite-aristo.png" />
+    <Content Include="Scripts\uniform\images\default\bg-input-focus.png" />
+    <Content Include="Scripts\uniform\images\default\bg-input.png" />
+    <Content Include="Scripts\uniform\images\default\sprite.png" />
+    <Content Include="Scripts\uniform\images\jeans\bg-input-focus-jeans.png" />
+    <Content Include="Scripts\uniform\images\jeans\bg-input-focus-retina-jeans.png" />
+    <Content Include="Scripts\uniform\images\jeans\bg-input-jeans.png" />
+    <Content Include="Scripts\uniform\images\jeans\bg-input-retina-jeans.png" />
+    <Content Include="Scripts\uniform\images\jeans\sprite-jeans.png" />
+    <Content Include="Scripts\uniform\images\jeans\sprite-retina-jeans.png" />
+    <Content Include="Scripts\uniform\js\jquery.uniform.bundled.js" />
+    <Content Include="Scripts\uniform\js\jquery.uniform.standalone.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

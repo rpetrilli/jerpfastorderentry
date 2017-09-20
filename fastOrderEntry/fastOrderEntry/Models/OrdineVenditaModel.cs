@@ -30,6 +30,7 @@ namespace fastOrderEntry.Models
         public IList<OrdineRiga> righe { get; set; }
         public string name { get; set; }
         public string tipo { get; set; }
+        public string id_gc_cliente_id { get; set; }
 
         public override void delete(NpgsqlConnection con)
         {
@@ -95,7 +96,8 @@ namespace fastOrderEntry.Models
             {
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
-                    "      * \r\n" +
+                    "      vo_ordini.*, \r\n" +
+                    "       (select id_gc_cliente_id from va_clienti where id_cliente = vo_ordini.id_cliente ) as id_gc_cliente_id \r\n" +
                     "from vo_ordini \r\n" +
                     "where id_societa = '1' and esercizio = @esercizio and id_ordine = @id_ordine";
 
@@ -117,6 +119,7 @@ namespace fastOrderEntry.Models
                         nazioni = Convert.ToString(reader["nazioni"]);
                         id_vettore = Convert.ToString(reader["zpet_id_vettore"]);
                         id_cond_pag = Convert.ToString(reader["id_cond_pag"]);
+                        id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
                     }
                 }
             }
@@ -161,6 +164,7 @@ namespace fastOrderEntry.Models
                         try { item.sconto_1 = Convert.ToDecimal(reader["zpet_sconto_1"]); } catch { }
                         try { item.sconto_2 = Convert.ToDecimal(reader["zpet_sconto_2"]); } catch { }
                         try { item.sconto_3 = Convert.ToDecimal(reader["zpet_sconto_3"]); } catch { }
+                        try { item.sconto_agente = Convert.ToDecimal(reader["zpet_sconto_agente"]); } catch { }
                         try { item.qta_ordinata = Convert.ToDecimal(reader["zpet_qta_ordinata"]); } catch { }
                         try{ item.qta_in_consegna = Convert.ToDecimal(reader["zpet_qta_in_consegna"]); } catch { }
                         try { item.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]); } catch { }
@@ -217,6 +221,7 @@ namespace fastOrderEntry.Models
         public decimal sconto_1 { get; set; } = 0;
         public decimal sconto_2 { get; set; } = 0;
         public decimal sconto_3 { get; set; } = 0;
+        public decimal sconto_agente { get; set; } = 0;
         public decimal peso_lordo { get; set; } = 0;
         public decimal aliquota { get; set; } = 0;
         

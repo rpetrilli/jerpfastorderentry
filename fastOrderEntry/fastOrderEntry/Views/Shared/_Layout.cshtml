@@ -11,14 +11,14 @@
     <meta name="author" content="">
     <title>@ViewBag.Title</title>
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/angularjs")
-
+    @Scripts.Render("~/bundles/angularjs")    
+    
     <script>
         var app = angular.module('start', ['ngResource', 'angularUtils.directives.dirPagination', 'appModules', 'appServices', 'appFilters', 'webCore']);
     </script>

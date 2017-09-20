@@ -6,13 +6,13 @@
             <button class="btn btn-grey" ng-click="tc.cancelEdit()"><i class="fa fa-times">&nbsp;</i>Annulla</button>            
         </div>
         <div class="pull-right">
-            <button class="btn btn-info" ng-click="ddtfattura(tc.current, 'ddt')"><i class="fa fa-file">&nbsp;</i>DDT</button>
-            <button class="btn btn-danger" ng-click="ddtfattura(tc.current, 'fat')"><i class="fa fa-file-o">&nbsp;</i>Fattura</button>
+            <button class="btn" ng-class="{'btn-warning': tc.current.id_gc_cliente_id == 'CLD', 'btn-info': tc.current.id_gc_cliente_id == 'CL' }"  ng-click="ddtfattura(tc.current, 'ddt')" ng-hide="tc.nuovo"><i class="fa fa-file">&nbsp;</i>DDT</button>
+            <button class="btn" ng-class="{'btn-warning': tc.current.id_gc_cliente_id == 'CL', 'btn-danger': tc.current.id_gc_cliente_id == 'CLD' }" ng-click="ddtfattura(tc.current, 'fat')"  ng-hide="tc.nuovo"><i class="fa fa-file-o">&nbsp;</i>FAT</button>
             <button class="btn btn-grey" ng-click="print(tc.current)"><i class="fa fa-print">&nbsp;</i>Stampa</button>
         </div>
     </div>
     <div class="clearfix"></div>
-    <div class="margin-b-10"></div>
+    <div class="margin-b-10"></div>    
     @Html.Partial("_HeaderNuovoModifica")
     @Html.Partial("_SelezionaArticolo")
     @Html.Partial("_ElencoRigheInOrdine")

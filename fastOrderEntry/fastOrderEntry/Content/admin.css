@@ -2954,69 +2954,7 @@ fieldset[disabled] .form-control {
 .has-error .input-group-addon {
     border-color: #d97572;
 }
-/*
- * Uniform styles
- */
-input[type="radio"],
-input[type="checkbox"] {
-    visibility: hidden;
-}
 
-.radiobox,
-.checkbox,
-.radio-inline,
-.checkbox-inline {
-    padding-left: 0px;
-}
-
-.radiobox {
-    display: block;
-    min-height: 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    vertical-align: middle;
-}
-
-    .radiobox label {
-        display: inline;
-        margin-bottom: 0;
-        font-weight: normal;
-        cursor: pointer;
-    }
-
-div.checker span {
-    font-family: FontAwesome;
-    font-size: 16px;
-    line-height: 20px;
-    color: #666;
-    background-image: none;
-}
-
-    div.checker span:before {
-        content: "\f096";
-        margin-left: 0px;
-    }
-
-    div.checker span.checked:before {
-        content: "\f046";
-        margin-left: 2px;
-    }
-
-div.radio span {
-    font-family: FontAwesome;
-    font-size: 16px;
-    line-height: 20px;
-    color: #666;
-    background-image: none;
-}
-
-    div.radio span:before {
-        content: "\f10c";
-    }
-
-    div.radio span.checked:before {
-        content: "\f192";
-    }
 /**
  * Nestable
  */

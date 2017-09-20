@@ -2,10 +2,10 @@
     <div class="col-sm-12">
         <button class="btn btn-primary" ng-click="showAdd()"><i class="fa fa-plus"></i></button>
         <div class="margin-b-10"></div>
-        <div class="well well-sm" ng-show="shAdd" >
+        <div class="well well-sm" ng-show="tc.shAdd" >
             <label><strong>Aggiunta Articoli</strong></label>
-            <input type="text" class="form-control" placeholder="seleziona l'articolo .." ng-change="riseleziona_articoli()" ng-model="id_codice_art_new" id="selectArticoloAdd" />
-            <table class="table table-hover table-condensed" ng-show="tc.articoliaggiunta" id="tableArticoli">
+            <input type="text" class="form-control" placeholder="seleziona l'articolo .." ng-change="riseleziona_articoli()" ng-model="tc.id_codice_art_new" id="selectArticoloAdd" />
+            <table class="table table-condensed" ng-show="tc.articoliaggiunta" id="tableArticoli">
                 <thead>
                     <tr>                        
                         <th>Art</th>
@@ -17,6 +17,7 @@
                         <th>Sc 1</th>
                         <th>Sc 2</th>
                         <th>Sc 3</th>
+                        
                         <th>Cod.IVA</th>
                         <th></th>
                     </tr>
@@ -38,6 +39,7 @@
                         <td>{{item.sconto_1 | number}}</td>
                         <td>{{item.sconto_2 | number}}</td>
                         <td>{{item.sconto_3 | number}}</td>
+                       
                         <td>{{item.id_iva}}</td>
                         <td><button class="btn btn-grey btn-xs" ng-click="select_articolo(item)"><i class="glyphicon glyphicon-check"></i></button></td>
                     </tr>

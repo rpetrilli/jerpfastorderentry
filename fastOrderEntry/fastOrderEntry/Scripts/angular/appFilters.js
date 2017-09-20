@@ -2,8 +2,8 @@
 
 app.filter('imponibile', function () {
     return function (value) {
-        var qta = (value.qta_in_consegna > 0) ? value.qta_in_consegna : value.qta_ordinata;
-        return qta * value.prezzo_vendita * (100 - value.sconto_1) / 100 * (100 - value.sconto_2) / 100 * (100 - value.sconto_3) / 100;
+        var qta = (value.qta_in_consegna > 0) ? value.qta_in_consegna : value.qta_ordinata;        
+        return qta * value.prezzo_vendita * (100 - value.sconto_1) / 100 * (100 - value.sconto_2) / 100 * (100 - value.sconto_3) / 100 * (100 - value.sconto_agente) / 100;
     }
 });
 

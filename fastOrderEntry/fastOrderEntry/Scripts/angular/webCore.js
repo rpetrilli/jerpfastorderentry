@@ -44,6 +44,7 @@ myModule.factory('tabController', function ($http) {
         fac.rec_x_pagina = 0;
         fac.rec_number = 0;
         fac.pag_number = 0;
+        fac.rec_pagina = -1;
 
         fac.nr_pagine_display = 4;
 
@@ -84,7 +85,7 @@ myModule.factory('tabController', function ($http) {
 
             switch (fac.table)
             {
-                case 'tableSelCliente':
+                case 'tableClienti':
                     fac.rec_pagina++;
                     if (fac.rec_pagina >= fac.clienteSeleziona.length) {
                         fac.rec_pagina = 0;
@@ -117,7 +118,7 @@ myModule.factory('tabController', function ($http) {
         fac.previous_record = function () {
 
             switch (fac.table) {
-                case 'tableSelCliente':
+                case 'tableClienti':
                     fac.rec_pagina--;
                     if (fac.rec_pagina < 0) {
                         fac.rec_pagina = fac.clienteSeleziona.length - 1;
@@ -183,6 +184,7 @@ myModule.factory('tabController', function ($http) {
 
         fac.edit = function (item) {
             fac.nuovo = false;
+            fac.table = 'tableOrdine';
 
             $http({
                 method: 'GET',
@@ -218,7 +220,9 @@ myModule.factory('tabController', function ($http) {
         };
 
         fac.saveEdit = function (item, callback) {
+            fac.shAdd = false;
             fac.table = '';
+            fac.id_codice_art_new = '';
             if (fac.nuovo) {
                 fac.insert(item, callback);
             } else {
@@ -269,6 +273,8 @@ myModule.factory('tabController', function ($http) {
 
 
         fac.cancelEdit = function () {
+            fac.shAdd = false;
+            fac.id_codice_art_new = '';
             fac.table = '';
             fac.current = {};
             fac.displayMode = "list";

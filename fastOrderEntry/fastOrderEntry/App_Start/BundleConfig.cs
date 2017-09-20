@@ -18,7 +18,7 @@ namespace fastOrderEntry
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/bootstrap-submenu.js",
+                      "~/Scripts/bootstrap-submenu.js",                      
                       "~/Scripts/bootbox.js",
                       "~/Scripts/typeahead.js",
                       "~/Scripts/respond.js",
@@ -40,7 +40,7 @@ namespace fastOrderEntry
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-datepicker.css",
-                      "~/Content/bootstrap-submenu.css",
+                      "~/Content/bootstrap-submenu.css",                      
                       "~/Content/font-awesome.css",
                        "~/Content/admin.css",
                       "~/Content/custom.css"));

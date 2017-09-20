@@ -31,13 +31,20 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
+                        <div class="row" ng-hide="tc.nuovo">
+                            <div class="col-sm-12">
+                                <h3>
+                                    <span class="label label-info">Ordine {{tc.current.esercizio}} - {{tc.current.id_ordine | trimZeros}}</span>
+                                </h3>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-3">
                                 <label><strong>Fatturare a</strong></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control disabled" ng-model="tc.current.id_cliente" lead-zeros />
+                                    <input type="text" class="form-control disabled" ng-model="tc.current.id_cliente" lead-zeros ng-disabled="!tc.nuovo" />
                                     <span class="input-group-btn">
-                                        <button class="btn btn-primary" ng-click="cerca_cliente()" ng-disabled="tc.current.id_cliente.length > 0"><i class="fa fa-search"></i></button>
+                                        <button class="btn btn-primary" ng-click="cerca_cliente()" ng-disabled="!tc.nuovo"><i class="fa fa-search"></i></button>
                                     </span>
                                 </div>
                             </div>

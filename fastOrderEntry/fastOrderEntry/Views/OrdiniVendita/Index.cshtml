@@ -14,24 +14,24 @@
             $scope.select_row = function (index) {
                 switch ($scope.tc.table) {
                     case 'tableSelCliente':
-                        $('#tableClienti tr').removeClass('text-info');
-                        $('#tableClienti tr:nth-child(' + (index) + ') ').addClass('text-info');
+                        $('#tableClienti tr').removeClass('success');
+                        $('#tableClienti tr:nth-child(' + (index) + ') ').addClass('success');
                         $('#tableClienti tr:nth-child(' + (index) + ') input.request-focus').focus().select();
                         break;
                     case 'tableSelArticoli':
-                        $('#tableArticoli tr').removeClass('text-info');
-                        $('#tableArticoli tr:nth-child(' + (index) + ') ').addClass('text-info');
+                        $('#tableArticoli tr').removeClass('success');
+                        $('#tableArticoli tr:nth-child(' + (index) + ') ').addClass('success');
                         $('#tableArticoli tr:nth-child(' + (index) + ') input.request-focus').focus().select();
                         break;
                     case 'tableOrdine':
-                        $('#tableOrdine tr').removeClass('text-info');
-                        $('#tableOrdine tr:nth-child(' + (index) + ') ').addClass('text-info');
+                        $('#tableOrdine tr').removeClass('success');
+                        $('#tableOrdine tr:nth-child(' + (index) + ') ').addClass('success');
                         $('#tableOrdine tr:nth-child(' + (index) + ') input.request-focus').focus().select();
                         break;
                     default:
-                        $('.table tr').removeClass('text-info');
-                        $('.table tr:nth-child(' + (index) + ') ').addClass('text-info');
-                        $('.table tr:nth-child(' + (index) + ') input.request-focus').focus().select();
+                        $('.table tr').removeClass('success');
+                        $('.table tr:nth-child(' + (index) + ') ').addClass('success');
+                        $('.table tr:nth-child(' + (index) + ') button.request-focus').focus().select();
                         break;
                 }
 
@@ -103,8 +103,9 @@
             };
 
             $scope.showAdd = function () {
-                $scope.shAdd = !$scope.shAdd
+                $scope.tc.shAdd = !$scope.tc.shAdd
                 $scope.tc.table = 'tableOrdine';
+                $scope.tc.rec_pagina = -1;
             }
 
             $scope.riseleziona_articoli = function () {
@@ -113,21 +114,22 @@
                     method: 'POST',
                     url: '@(Url.Action("GetArticoli", "Get"))',
                     data: {
-                        query: $scope.id_codice_art_new,
+                        query: $scope.tc.id_codice_art_new,
                         id_cliente: $scope.tc.current.id_cliente
                         }
                 }).then(function (response) {
                     $scope.tc.articoliaggiunta = response.data;
                     $scope.tc.table = "tableSelArticoli";
-                    $scope.tc.rec_pagina = 0;
+                    $scope.tc.rec_pagina = -1;
                 }).catch(function (error, status) {
                     fac.prop.message_function('Errore', error.data);
                 });
             };
 
             $scope.cerca_cliente = function () {
-                $scope.tc.table = "tableSelCliente";
-                $scope.tc.rec_pagina = 0;
+                $scope.tc.table = "tableClienti";
+                $scope.tc.rec_pagina = -1;
+                $scope.query_nuovo_cliente = '';
                 $('#modal_ricerca_clienti').modal('show');
             };
 
@@ -185,6 +187,7 @@
         function openstampa(item) {
             var url = 'http://localhost:8080/petline' + '/vendite/ordiniVendita_download.jsp?formato=vendite_ordiniVend&esercizio=' + item.esercizio + '&id_ordine=' + item.id_ordine;
             location.href = url;
+            window.open(url, '_blank');
         };
     </script>
 }
@@ -259,13 +262,14 @@
             });
         });
 
-        shortcut.add("F10", function () {
+        shortcut.add("F11", function () {            
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
-                if (scope.tc.displayMode == 'edit') {
+                if (scope.tc.displayMode == 'edit' && scope.tc.nuovo == true ) {
                     scope.cerca_cliente();
                 }
             });
+            $('#cercaClienteModal').focus();
         });
 
         shortcut.add("F5", function () {
@@ -308,7 +312,7 @@
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.tc.displayMode == 'edit' && scope.tc.current.id_cliente.length > 0) {
-                    scope.shAdd = !scope.shAdd;
+                    scope.tc.shAdd = !scope.tc.shAdd;
                     scope.tc.table = 'tableOrdine';
                 }
             });
