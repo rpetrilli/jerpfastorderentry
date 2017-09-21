@@ -31,6 +31,7 @@ namespace fastOrderEntry.Models
         public string name { get; set; }
         public string tipo { get; set; }
         public string id_gc_cliente_id { get; set; }
+        public bool massivo { get; set; }
 
         public override void delete(NpgsqlConnection con)
         {

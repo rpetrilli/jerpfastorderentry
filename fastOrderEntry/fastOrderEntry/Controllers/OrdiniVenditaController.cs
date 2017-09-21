@@ -140,9 +140,70 @@ namespace fastOrderEntry.Controllers
                     JObject obj = new JObject();
                     obj.Add("ack", "KO");
                     obj.Add("messaggio", messaggio);
-                    return Content(obj.ToString(), "application/json");
-                    //return Json(new { ack = "KO", messaggio = messaggio }, JsonRequestBehavior.AllowGet);
+                    return Content(obj.ToString(), "application/json");                   
                 }
+            }
+        }
+
+        [HttpPost]
+        public ContentResult Massivo(List<OrdineVenditaModel> model)
+        {
+            int conta = 0;
+            using (PetLineContext db = new PetLineContext())
+            using (var client = new WebClient())
+            {
+                var values = new NameValueCollection();
+                string ordine = JsonConvert.SerializeObject(model);
+                var settings = (from item in db.impostazioni
+                                select item).First();
+
+                JObject obj = new JObject();
+
+                foreach (var x in model)
+                {                    
+
+                    if(x.massivo)
+                    {
+                        if (x.id_gc_cliente_id == "CLD")
+                        {
+                            values["op"] = "ordine_to_consegna";
+                        }
+                        else if (x.id_gc_cliente_id == "CL")
+                        {
+                            values["op"] = "ordine_to_fattura";
+                        }
+
+                        values["ordine"] = ordine;
+                        values["private_key"] = settings.private_key;
+
+                        try
+                        {
+                            var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
+                            var responseString = Encoding.Default.GetString(response);
+                            obj = JObject.Parse(responseString);
+                            obj.Add("ack", "OK");
+
+                        }
+                        catch (WebException e)
+                        {
+                            var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();                            
+                            obj.Add("ack", "KO");
+                            obj.Add("messaggio", messaggio);
+                        }
+                    }
+                    conta++;
+                }
+
+                if(conta == 0)
+                {
+                    obj.Add("ack", "KO");
+                    obj.Add("messaggio", "devi selzionare almeno un ordine");
+                }
+
+                return Content(obj.ToString(), "application/json");
+
+
+
             }
         }
 

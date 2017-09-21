@@ -157,6 +157,25 @@
                 });
             };
 
+            $scope.printMassivo = function (item) {
+                 $http({
+                    method: 'POST',
+                    url: '@(Url.Action("Massivo"))',
+                    data: item
+                }).then(function (response) {
+                    if (response.data.ack == 'KO') {
+                        show_message('Errore', response.data.messaggio);
+                    }
+
+                    //rispondere con un messagio che includa tutti i ddt o le fatture convertite
+
+                    $scope.tc.refresh_page($scope.tc.pag_corrente);
+                    console.log("ok fatto")
+                }).catch(function (error, status) {
+                    show_message('Errore', error.data);
+                });
+            }
+
 
             $scope.riseleziona_cliente = function () {
 
