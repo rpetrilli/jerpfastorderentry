@@ -164,36 +164,33 @@ namespace fastOrderEntry.Controllers
                     foreach (var x in model.Where(x => x.massivo == true))
                     {
 
-                        if (x.massivo)
+                        if (x.id_gc_cliente_id == "CLD")
                         {
-                            if (x.id_gc_cliente_id == "CLD")
-                            {
-                                values["op"] = "ordine_to_consegna";
-                            }
-                            else if (x.id_gc_cliente_id == "CL")
-                            {
-                                values["op"] = "ordine_to_fattura";
-                            }
-
-                            values["ordine"] = ordine;
-                            values["private_key"] = settings.private_key;
-
-                            try
-                            {
-                                var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
-                                var responseString = Encoding.Default.GetString(response);
-                                obj = JObject.Parse(responseString);
-                                obj.Add("ack", "OK");
-
-                            }
-                            catch (WebException e)
-                            {
-                                var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
-                                obj.Add("ack", "KO");
-                                obj.Add("messaggio", messaggio);
-                            }
+                            values["op"] = "ordine_to_consegna";
                         }
-                        
+                        else if (x.id_gc_cliente_id == "CL")
+                        {
+                            values["op"] = "ordine_to_fattura";
+                        }
+
+                        values["ordine"] = ordine;
+                        values["private_key"] = settings.private_key;
+
+                        try
+                        {
+                            var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
+                            var responseString = Encoding.Default.GetString(response);
+                            obj = JObject.Parse(responseString);
+                            obj.Add("ack", "OK");
+
+                        }
+                        catch (WebException e)
+                        {
+                            var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                            obj.Add("ack", "KO");
+                            obj.Add("messaggio", messaggio);
+                        }
+
                     }
                 }
 
