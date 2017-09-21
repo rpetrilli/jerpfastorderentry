@@ -6,7 +6,8 @@
             <button class="btn btn-primary" ng-click="tc.create()"><i class="fa fa-plus-square">&nbsp;</i>Nuovo</button>
         </div>
         <div class="pull-right">
-            <button class="btn btn-grey" ng-click="printMassivo(tc.records)"><i class="fa fa-print">&nbsp;</i>Stampa Massivo</button>
+            <button class="btn btn-info" ng-click="printMassivo(tc.records, 'ddt')"><i class="fa fa-file">&nbsp;</i>Crea DDT Massivo</button>
+            <button class="btn btn-danger" ng-click="printMassivo(tc.records, 'fat')"><i class="fa fa-file-o">&nbsp;</i>Crea FAT Massivo</button>
         </div>
     </div> <!-- page-toolbar -->
     <div class="clearfix"></div>
@@ -57,7 +58,7 @@
                                     <i class="fa fa-file-o">&nbsp;</i>FAT
                                 </button>
 
-                                <input type="checkbox" ng-model="item.massivo">
+                                <input type="checkbox" ng-model="item.massivo" ng-hide="item.ordine_chiuso">
                             </td>
                         </tr>
                     </tbody>

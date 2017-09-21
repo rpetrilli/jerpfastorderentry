@@ -157,10 +157,17 @@
                 });
             };
 
-            $scope.printMassivo = function (item) {
+            $scope.printMassivo = function (item, tipo) {
+                var url;
+                if (tipo == 'ddt') {
+                    url = '@(Url.Action("Massivo"))'
+                } else {
+                    url = '@(Url.Action("MassivoFat"))'
+                }
+
                  $http({
                     method: 'POST',
-                    url: '@(Url.Action("Massivo"))',
+                    url: url,
                     data: item
                 }).then(function (response) {
                     if (response.data.ack == 'KO') {

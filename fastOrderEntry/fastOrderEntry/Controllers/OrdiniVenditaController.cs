@@ -152,45 +152,34 @@ namespace fastOrderEntry.Controllers
             using (PetLineContext db = new PetLineContext())
             using (var client = new WebClient())
             {
-                var values = new NameValueCollection();
-                string ordine = JsonConvert.SerializeObject(model);
-                var settings = (from item in db.impostazioni
-                                select item).First();
+              
 
                 JObject obj = new JObject();
 
                 if (model.Count(x => x.massivo == true) > 0)
                 {
-                    foreach (var x in model.Where(x => x.massivo == true))
+                    var values = new NameValueCollection();
+                    string ordine = JsonConvert.SerializeObject(model.Where(x=> x.massivo == true));
+                    var settings = (from item in db.impostazioni
+                                    select item).First();
+
+                    values["op"] = "ordini_to_consegna";
+                    values["ordini"] = ordine;
+                    values["private_key"] = settings.private_key;
+
+                    try
                     {
+                        var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
+                        var responseString = Encoding.Default.GetString(response);
+                        obj = JObject.Parse(responseString);
+                        obj.Add("ack", "OK");
 
-                        if (x.id_gc_cliente_id == "CLD")
-                        {
-                            values["op"] = "ordine_to_consegna";
-                        }
-                        else if (x.id_gc_cliente_id == "CL")
-                        {
-                            values["op"] = "ordine_to_fattura";
-                        }
-
-                        values["ordine"] = ordine;
-                        values["private_key"] = settings.private_key;
-
-                        try
-                        {
-                            var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
-                            var responseString = Encoding.Default.GetString(response);
-                            obj = JObject.Parse(responseString);
-                            obj.Add("ack", "OK");
-
-                        }
-                        catch (WebException e)
-                        {
-                            var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
-                            obj.Add("ack", "KO");
-                            obj.Add("messaggio", messaggio);
-                        }
-
+                    }
+                    catch (WebException e)
+                    {
+                        var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                        obj.Add("ack", "KO");
+                        obj.Add("messaggio", messaggio);
                     }
                 }
 
@@ -200,6 +189,55 @@ namespace fastOrderEntry.Controllers
                     obj.Add("messaggio", "devi selzionare almeno un ordine");
                 }
                 
+                return Content(obj.ToString(), "application/json");
+
+            }
+        }
+
+        [HttpPost]
+        public ContentResult MassivoFat(List<OrdineVenditaModel> model)
+        {
+
+            using (PetLineContext db = new PetLineContext())
+            using (var client = new WebClient())
+            {
+
+
+                JObject obj = new JObject();
+
+                if (model.Count(x => x.massivo == true) > 0)
+                {
+                    var values = new NameValueCollection();
+                    string ordine = JsonConvert.SerializeObject(model.Where(x => x.massivo == true));
+                    var settings = (from item in db.impostazioni
+                                    select item).First();
+
+                    values["op"] = "ordini_to_fattura";
+                    values["ordini"] = ordine;
+                    values["private_key"] = settings.private_key;
+
+                    try
+                    {
+                        var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
+                        var responseString = Encoding.Default.GetString(response);
+                        obj = JObject.Parse(responseString);
+                        obj.Add("ack", "OK");
+
+                    }
+                    catch (WebException e)
+                    {
+                        var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                        obj.Add("ack", "KO");
+                        obj.Add("messaggio", messaggio);
+                    }
+                }
+
+                else
+                {
+                    obj.Add("ack", "KO");
+                    obj.Add("messaggio", "devi selzionare almeno un ordine");
+                }
+
                 return Content(obj.ToString(), "application/json");
 
             }

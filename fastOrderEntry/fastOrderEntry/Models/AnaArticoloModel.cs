@@ -71,16 +71,27 @@ namespace fastOrderEntry.Models
                 {
                     cmd.Connection = (NpgsqlConnection)  db.Database.Connection;
                     cmd.Connection.Open();
-                    cmd.CommandText = "select max(cast(id_codice_art as integer)) as id_codice_art from ma_articoli_soc where id_codice_art ~ E'^\\d+$' \r\n";
+                    //cmd.CommandText = "select max(cast(id_codice_art as integer)) as id_codice_art from ma_articoli_soc where id_codice_art ~ E'^\\d+$' \r\n";
+                    cmd.CommandText = "select * from mb_range_int_stato where id_range_int = 'ARTICOLI' \r\n";
                     cmd.ExecuteNonQuery();
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            id_codice_art = reader["id_codice_art"].ToString();
+                            id_codice_art = ""+ Convert.ToInt32( reader["ultimo_valore"]);
                         }
                     }
 
+                    cmd.Connection.Close();
+                }
+
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = (NpgsqlConnection)db.Database.Connection;
+                    cmd.Connection.Open();
+                    cmd.CommandText = "update mb_range_int_stato set ultimo_valore = ultimo_valore + 1 where id_range_int = 'ARTICOLI' \r\n";
+                    cmd.ExecuteNonQuery();
                     cmd.Connection.Close();
                 }
 
