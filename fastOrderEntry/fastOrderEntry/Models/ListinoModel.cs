@@ -36,7 +36,7 @@ namespace fastOrderEntry.Models
                 }
                 if (!string.IsNullOrEmpty(query))
                 {
-                    cmd.Parameters.AddWithValue("query", "%" + query.ToUpper() + "%");
+                    cmd.Parameters.AddWithValue("query", query.ToUpper() + "%");
                 }
                 cmd.ExecuteNonQuery();
 
@@ -77,7 +77,7 @@ namespace fastOrderEntry.Models
 
                 if (!string.IsNullOrEmpty(query))
                 {
-                    cmd.Parameters.AddWithValue("query", "%" + query.ToUpper() + "%");
+                    cmd.Parameters.AddWithValue("query", query.ToUpper() + "%");
                 }
                 cmd.ExecuteNonQuery();
 
@@ -118,7 +118,7 @@ namespace fastOrderEntry.Models
 
                 if (!string.IsNullOrEmpty(query))
                 {
-                    cmd.Parameters.AddWithValue("query", "%" + query.ToUpper() + "%");
+                    cmd.Parameters.AddWithValue("query", query.ToUpper() + "%");
                 }
                 cmd.ExecuteNonQuery();
 
