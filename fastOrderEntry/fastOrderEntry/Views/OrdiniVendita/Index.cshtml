@@ -37,6 +37,8 @@
 
             };
 
+            $scope.checked = true;
+
             $scope.selCondPag = @{Html.RenderAction("GetCondPag", "Get");};
             $scope.selVettori = @{Html.RenderAction("GetVettori", "Get");};
 
@@ -149,6 +151,7 @@
                             show_message('Info', 'Fattura ' + response.data.esercizio + ' ' + response.data.prot_iva + ' creata');
                         }
                     }
+                    $scope.tc.displayMode = "list";
                     $scope.tc.refresh_page($scope.tc.pag_corrente);
 
                     console.log("ok fatto")
@@ -160,7 +163,7 @@
             $scope.printMassivo = function (item, tipo) {
                 var url;
                 if (tipo == 'ddt') {
-                    url = '@(Url.Action("Massivo"))'
+                    url = '@(Url.Action("MassivoDdt"))'
                 } else {
                     url = '@(Url.Action("MassivoFat"))'
                 }
@@ -312,6 +315,7 @@
             scope.$apply(function () {
                 if (scope.tc.displayMode == 'list') {
                     scope.tc.create();
+                    scope.tc.id_codice_art_new = "";
                 }
             });
         });

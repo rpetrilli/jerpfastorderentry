@@ -185,6 +185,7 @@ myModule.factory('tabController', function ($http) {
         fac.edit = function (item) {
             fac.nuovo = false;
             fac.table = 'tableOrdine';
+            fac.id_codice_art_new = "";
 
             $http({
                 method: 'GET',
@@ -207,6 +208,7 @@ myModule.factory('tabController', function ($http) {
 
         fac.create = function (item) {
             fac.nuovo = true;
+            fac.id_codice_art_new = "";
 
             fac.displayMode = "edit";
             fac.current = {};

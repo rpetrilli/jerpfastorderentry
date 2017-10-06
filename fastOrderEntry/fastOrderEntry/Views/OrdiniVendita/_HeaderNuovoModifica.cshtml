@@ -1,6 +1,4 @@
-﻿{{tc.current | json}}
-<h1>Disabilita le modifiche in caso di ordine chiuso</h1>
-<div class="row">
+﻿<div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary">
             <div class="panel-body">
@@ -62,27 +60,27 @@
                             </div>
                             <div class="col-sm-2">
                                 <label><strong>Cap</strong></label>
-                                <input type="text" class="form-control" ng-model="tc.current.cap" />
+                                <input type="text" class="form-control" ng-model="tc.current.cap" ng-disabled="tc.current.ordine_chiuso" />
                             </div>
                             <div class="col-sm-3">
                                 <label><strong>Comune</strong></label>
-                                <input type="text" class="form-control" ng-model="tc.current.comune"/>
+                                <input type="text" class="form-control" ng-model="tc.current.comune" ng-disabled="tc.current.ordine_chiuso"/>
                             </div>
                             <div class="col-sm-2">
                                 <label><strong>Pr</strong></label>
-                                <input type="text" class="form-control" ng-model="tc.current.provincia" />
+                                <input type="text" class="form-control" ng-model="tc.current.provincia" ng-disabled="tc.current.ordine_chiuso" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <label><strong>Vettore</strong></label>
-                                <select ng-model="tc.current.id_vettore" class="form-control">
+                                <select ng-model="tc.current.id_vettore" class="form-control" ng-disabled="tc.current.ordine_chiuso">
                                     <option ng-repeat="item in selVettori" value="{{item.id_vettore}}">{{item.ragione_sociale}}</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
                                 <label><strong>Condizioni pagamento</strong></label>
-                                <select ng-model="tc.current.id_cond_pag" class="form-control">
+                                <select ng-model="tc.current.id_cond_pag" class="form-control" ng-disabled="tc.current.ordine_chiuso">
                                     <option ng-repeat="item in selCondPag" value="{{item.id_cond_pag}}">{{item.descrizione}}</option>
                                 </select>
                             </div>

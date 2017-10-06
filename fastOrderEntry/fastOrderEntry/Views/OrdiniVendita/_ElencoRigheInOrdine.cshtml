@@ -1,8 +1,9 @@
-﻿<div class="row" ng-show="tc.current.id_cliente.length > 0">
+﻿
+<div class="row" ng-show="tc.current.id_cliente.length > 0">
     <div class="col-sm-12">
         <div class="panel panel-primary">
             <div class="panel-body">
-                <table class="table table-hover table-condensed" id="tableOrdine" >
+                <table class="table table-hover table-condensed" id="tableOrdine">
                     <thead>
                         <tr>
                             <th>Art</th>
@@ -10,14 +11,14 @@
                             <th>Prezzo Acq</th>
                             <th>Q.tà Ordinata</th>
                             <th>Q.tà In Consegna</th>
-                            <th>Prezzo</th>
+                            <th>Prezzo <input type="checkbox" ng-model="checked" /></th>
                             <th>Sc 1</th>
                             <th>Sc 2</th>
                             <th>Sc 3</th>
                             <th>Sc Ag</th>
                             <th>Cod.IVA</th>
                             <th>Imponibile</th>
-                            <th></th>
+                            <th ng-hide="tc.current.ordine_chiuso"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,39 +27,47 @@
                             <td>{{item.descrizione}}</td>
                             <td>{{item.prezzo_acquisto}}</td>
                             <td>
-                                <input type="number" class="form-control form-control-custom text-right"
+                                <input type="number" class="form-control form-control-custom text-right request-focus"
                                        ng-model="item.qta_ordinata" style="width:80px;"
-                                       ng-focus="linefocused($index);" />
+                                       ng-focus="linefocused($index);"
+                                       ng-disabled="tc.current.ordine_chiuso" />
                             </td>
                             <td>
                                 <input type="number" class="form-control form-control-custom text-right"
                                        ng-model="item.qta_in_consegna" style="width:80px;"
-                                       ng-focus="linefocused($index);" />
+                                       ng-focus="linefocused($index);"
+                                       ng-disabled="tc.current.ordine_chiuso" />
                             </td>
                             <td>
-                                <input type="number" class="form-control form-control-custom text-right request-focus"
+
+                                <input type="number" class="form-control form-control-custom text-right"
                                        ng-model="item.prezzo_vendita" style="width:80px;"
-                                       ng-focus="linefocused($index);" />
+                                       ng-focus="linefocused($index);"
+                                       ng-disabled="tc.current.ordine_chiuso || checked" />
                             </td>
                             <td>
                                 <input type="number" class="form-control form-control-custom text-right"
                                        ng-model="item.sconto_1" style="width:80px;"
-                                       ng-focus="linefocused($index);" />
+                                       ng-focus="linefocused($index);"
+                                       ng-disabled="tc.current.ordine_chiuso" />
                             </td>
                             <td>
                                 <input type="number" class="form-control form-control-custom text-right"
                                        ng-model="item.sconto_2" style="width:80px;"
-                                       ng-focus="linefocused($index);" />
+                                       ng-focus="linefocused($index);"
+                                       ng-disabled="tc.current.ordine_chiuso" />
                             </td>
                             <td>
                                 <input type="number" class="form-control form-control-custom text-right"
                                        ng-model="item.sconto_3" style="width:80px;"
-                                       ng-focus="linefocused($index);" />
+                                       ng-focus="linefocused($index);"
+                                       ng-disabled="tc.current.ordine_chiuso" />
                             </td>
                             <td>
-                                <input type="number" class="form-control form-control-custom text-right"                                       
+                                <input type="number" class="form-control form-control-custom text-right"
                                        ng-model="item.sconto_agente" style="width:80px; background-color: #fff79d !important;"
-                                       ng-focus="linefocused($index);" />
+                                       ng-focus="linefocused($index);"
+                                       ng-disabled="tc.current.ordine_chiuso" />
                             </td>
                             <td>
                                 {{item.id_iva}}
@@ -66,7 +75,7 @@
                             <td>
                                 {{item | imponibile | number:2}}
                             </td>
-                            <td>
+                            <td ng-hide="tc.current.ordine_chiuso">
                                 <button class="btn btn-grey btn-xs" ng-click="eminina_riga(item)"><i class="glyphicon glyphicon-trash"></i></button>
                             </td>
                         </tr>

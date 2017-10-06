@@ -1,6 +1,6 @@
-﻿<div class="row" ng-show="tc.current.id_cliente.length > 0">
+﻿<div class="row" ng-show="tc.current.id_cliente.length > 0" ng-hide="tc.current.ordine_chiuso">
     <div class="col-sm-12">
-        <button class="btn btn-primary" ng-click="showAdd()"><i class="fa fa-plus"></i></button>
+        <button class="btn btn-primary" ng-click="showAdd()" ng-hide="!tc.current.id_cliente"><i class="fa fa-plus"></i></button>
         <div class="margin-b-10"></div>
         <div class="well well-sm" ng-show="tc.shAdd" >
             <label><strong>Aggiunta Articoli</strong></label>
