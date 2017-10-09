@@ -63,7 +63,9 @@ namespace fastOrderEntry.Controllers
                     "       (select ragione_sociale from va_clienti where id_cliente = vo_ordini.id_cliente ) as ragione_sociale, \r\n" +
                     "       (select id_gc_cliente_id from va_clienti where id_cliente = vo_ordini.id_cliente ) as id_gc_cliente_id, \r\n" +
                     "       vo_ordini_provv_testata.id_agente, \r\n" + 
-                    "       (select ragione_sociale from va_agenti where id_agente = vo_ordini_provv_testata.id_agente ) as ragione_sociale_agente \r\n" +
+                    "       (select ragione_sociale from va_agenti where id_agente = vo_ordini_provv_testata.id_agente ) as ragione_sociale_agente, \r\n" +
+                    "       (select 'esercizio=' || esercizio || '&id_consegna=' || id_consegna from vo_consegne_righe where esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1) as link_consegna, \r\n" +
+                    "       (select 'esercizio=' || esercizio || '&id_fattura=' || id_fattura from vo_fatture_righe where esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1)  as link_fattura \r\n" +
                     "from vo_ordini \r\n" +
                     "left join vo_ordini_provv_testata \r\n" +
                     "   on  vo_ordini_provv_testata.id_divisione = vo_ordini.id_divisione \r\n" +
@@ -90,6 +92,8 @@ namespace fastOrderEntry.Controllers
                         item.totale_doc = Convert.ToDecimal(reader["totale_doc"]);
                         item.ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
                         item.id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
+                        item.link_consegna = Convert.ToString(reader["link_consegna"]);
+                        item.link_fattura = Convert.ToString(reader["link_fattura"]);
                         list.Add(item);
                     }
                 }
@@ -246,6 +250,8 @@ namespace fastOrderEntry.Controllers
         public decimal totale_doc { get; set; }
         public bool ordine_chiuso { get; set; }
         public string id_gc_cliente_id { get; set; }
+        public string link_consegna { get; set; }
+        public string link_fattura { get; set; }
 
     }
 }

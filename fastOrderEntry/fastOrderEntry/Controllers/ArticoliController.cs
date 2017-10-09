@@ -84,7 +84,7 @@ namespace fastOrderEntry.Controllers
                 {
                     cmd.CommandText += " and id_categoria_merc like ('" + cod_cat_merc + "')";
                 }
-                cmd.Parameters.AddWithValue("query", "%" + query + "%");
+                cmd.Parameters.AddWithValue("query",  query + "%");
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())
