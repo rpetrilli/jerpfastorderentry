@@ -24,7 +24,8 @@ namespace fastOrderEntry.Models
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT * \r\n" +
+                    cmd.CommandText = "SELECT *, \r\n" +
+                        "   (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
                         "from ma_articoli_soc \r\n" +
                         "where (upper(id_codice_art) like (@query) or upper(descrizione)  like (@query) ) \r\n" +
                         "order by id_codice_art asc \r\n" +
@@ -42,7 +43,8 @@ namespace fastOrderEntry.Models
                             r.id_codice_art = reader["id_codice_art"].ToString();
                             r.descrizione = reader["descrizione"].ToString();
                             r.id_iva = reader["id_iva"].ToString();
-                            r.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]);
+                            r.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]);                            
+                            r.giacenza = !string.IsNullOrEmpty(reader["giacenza"].ToString()) ?  Convert.ToDecimal(reader["giacenza"]) : 0;
 
                             CodiceIva codiceIva = db.codiceIva.FirstOrDefault(x => x.id_iva == r.id_iva);
                             r.aliquota = codiceIva.aliquota;
@@ -101,6 +103,7 @@ namespace fastOrderEntry.Models
         public string data_ordine { get; set; }
         public decimal prezzo_unitario { get; set; }
         public string str_sconto { get; set; }
+        public decimal giacenza { get; set; }
 
         internal void leggiUltimoOrdine(NpgsqlConnection con)
         {

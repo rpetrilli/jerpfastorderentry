@@ -1,6 +1,8 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -41,11 +43,13 @@ namespace fastOrderEntry.Models
             }
         }
     }
-      
 
+    [Table("va_agenti", Schema = "public")]
     public class Agenti
     {
+        [Key, Column("id_agente")]
         public string id { get; set; }
+        [Column("ragione_sociale")]
         public string name { get; set; }
     }
 

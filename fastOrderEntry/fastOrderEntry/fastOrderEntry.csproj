@@ -231,6 +231,7 @@
     <Compile Include="Models\ClientiStrutturaModel.cs" />
     <Compile Include="Models\CondizionePag.cs" />
     <Compile Include="Models\ImpostazioniModel.cs" />
+    <Compile Include="Models\keyAttribute.cs" />
     <Compile Include="Models\ListinoCliente.cs" />
     <Compile Include="Models\ListinoModel.cs" />
     <Compile Include="Models\LoginModel.cs" />

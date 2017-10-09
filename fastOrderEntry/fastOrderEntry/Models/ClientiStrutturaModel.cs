@@ -17,7 +17,8 @@ namespace fastOrderEntry.Models
             using (var cmd = new NpgsqlCommand())
             {
                 cmd.Connection = conn;
-                cmd.CommandText = "SELECT * \r\n" +
+                cmd.CommandText = "SELECT *, \r\n" +
+                    "(select id_agente from va_clienti_agenti where id_cliente = va_clienti.id_cliente limit 1) as id_agente \r\n" +
                     "from va_clienti \r\n" +
                     "inner join va_clienti_soc " +
                     "   on va_clienti_soc.id_societa = '1' " +
@@ -48,6 +49,7 @@ namespace fastOrderEntry.Models
                         r.note = reader["note"].ToString();
                         r.id_cond_pag = reader["id_cond_pag"].ToString();
                         r.id_vettore = reader["id_vettore"].ToString();
+                        r.id_agente = reader["id_agente"].ToString();
                         rs.Add(r);
                     }
                 }
@@ -68,5 +70,6 @@ namespace fastOrderEntry.Models
         public string id_cond_pag { get; set; }
         public string id_vettore { get; set; }
         public string note { get; set; }
+        public string id_agente { get; set; }
     }
 }

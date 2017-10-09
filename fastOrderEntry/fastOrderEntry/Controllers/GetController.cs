@@ -89,5 +89,19 @@ namespace fastOrderEntry.Controllers
 
         }
 
+
+        public ActionResult GetAgentiOrdine()
+        {
+            List<Agenti> model = new List<Agenti>();
+            using (PetLineContext db = new PetLineContext())
+            {
+                model = db.agenti.ToList();
+            }
+
+            string output = JsonConvert.SerializeObject(model);
+            return Content(output);
+
+        }
+
     }
 }

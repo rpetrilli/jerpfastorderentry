@@ -33,6 +33,9 @@ namespace fastOrderEntry.Models
         public string id_gc_cliente_id { get; set; }
         public bool massivo { get; set; }
         public bool ordine_chiuso { get; set; }
+        public string id_agente { get; set; }
+        public string note_magazzino { get; set; }
+        public int colli { get; set; }
 
         public override void delete(NpgsqlConnection con)
         {
@@ -123,6 +126,9 @@ namespace fastOrderEntry.Models
                         id_cond_pag = Convert.ToString(reader["id_cond_pag"]);
                         id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
                         ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
+                        id_agente = Convert.ToString(reader["zpet_id_agente"]);
+                        note_magazzino = Convert.ToString(reader["zpet_note_magazzino"]);
+                        colli = Convert.ToInt32(reader["zpet_colli"]);
                     }
                 }
             }

@@ -10,6 +10,7 @@
                     <tr>                        
                         <th>Art</th>
                         <th>Descrizione</th>
+                        <th>Giacenza</th>
                         <th>Ultimo Ordine</th>
                         <th>Qta Ord</th>
                         <th>Prezzo Acq</th>
@@ -26,6 +27,7 @@
                     <tr ng-repeat="item in tc.articoliaggiunta">                       
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
+                        <td>{{item.giacenza}}</td>
                         <td>{{item.data_ordine}} {{item.prezzo_unitario | number}} {{item.str_sconto}}</td>
                         <td>
                             <input type="number"
