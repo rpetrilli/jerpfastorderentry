@@ -13,6 +13,9 @@ namespace fastOrderEntry.Models
         public decimal sconto_1 { get; set; }
         public decimal sconto_2 { get; set; }
         public decimal sconto_3 { get; set; }
+        public decimal sconto_a_1 { get; set; }
+        public decimal sconto_a_2 { get; set; }
+        public decimal sconto_a_3 { get; set; }
         public decimal sconto_agente { get; set; }
 
         internal void leggiPrezzi(NpgsqlConnection conn)
@@ -23,6 +26,10 @@ namespace fastOrderEntry.Models
             sconto_1 = leggiSconto(conn, "SC01");
             sconto_2 = leggiSconto(conn, "SC02");
             sconto_3 = leggiSconto(conn, "SC03");
+
+            sconto_a_1 = leggiSconto(conn, "SA01");
+            sconto_a_2 = leggiSconto(conn, "SA02");
+            sconto_a_3 = leggiSconto(conn, "SA03");
         }
 
 
@@ -154,6 +161,16 @@ namespace fastOrderEntry.Models
             updateSconto(conn, sconto_1, "SC01");
             updateSconto(conn, sconto_2, "SC02");
             updateSconto(conn, sconto_3, "SC03");
+            
+        }
+
+        internal void scriviPrezziAcq(NpgsqlConnection conn)
+        {
+            updatePrezzo(conn, prezzo_acquisto, "AC01");
+
+            updateSconto(conn, sconto_a_1, "SA01");
+            updateSconto(conn, sconto_a_2, "SA02");
+            updateSconto(conn, sconto_a_3, "SA03");
         }
 
 

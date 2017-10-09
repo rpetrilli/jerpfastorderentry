@@ -1,4 +1,7 @@
-﻿<div ng-show="tc.displayMode == 'list'">
+﻿@{ 
+    string urljerp = "http://80.211.233.101:8080/petline/";
+}
+<div ng-show="tc.displayMode == 'list'">
     <!--Elenco inizio -->
     <div class="page-toolbar">
         <div class="pull-left">
@@ -49,7 +52,7 @@
                             <td>
 
                                 <a class="badge badge-success" ng-show="item.ordine_chiuso && item.link_fattura"
-                                   ng-href="http://localhost:8080/petline/vendite/fattura_stampa_download.jsp?formato=vendite_StFattura&{{item.link_fattura}}">
+                                   ng-href="http://80.211.233.101:8080/petline/vendite/fattura_stampa_download.jsp?formato=vendite_StFattura&{{item.link_fattura}}">
                                     St.Fattura
                                 </a>
                                 <a class="badge" ng-show="item.ordine_chiuso && item.link_consegna"

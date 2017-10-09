@@ -1,0 +1,408 @@
+﻿
+@{
+    ViewBag.Title = "Listini Acquisto";
+}
+@section header {
+    <script>
+        function show_message(errore, messaggio) {
+            alert(messaggio);
+        };
+        app.controller('ctrl', ['$scope', '$http', 'listiniService', function ($scope, $http, listiniService) {
+            $scope.cod_cat_merc_sel = '';
+            $scope.filtro = "Tutti gli articoli";
+            $scope.records = [];
+            $scope.categorie = [];
+            $scope.massivo = { prezzo_vendita: 0, sconto_1: 0, sconto_2: 0, sconto_3: 0 }
+
+            listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
+                $scope.categorie = result.data;
+            }, function (error) {
+                show_message(error);
+                });
+
+            $scope.refresh = function () {
+                $http({
+                method: 'GET',
+                url: '@(Url.Action("getPaginatore"))',
+                params: { query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel }
+            }).then(function successCallback(response) {
+                    $scope.rec_x_pagina = response.data.rec_x_pagina;
+                    $scope.rec_number = response.data.rec_number;
+                    $scope.pag_number = response.data.pag_number;
+                    $scope.refresh_page(0);
+                    }, function errorCallback(response) {
+                        show_message('Errore', error.data);
+             });
+            };
+            $scope.refresh_page = function (page_number) {
+                $http({
+                    method: 'GET',
+                    url: '@(Url.Action("getConenutoPagina"))',
+                    params: {
+                        query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, page_number: page_number
+                    }
+                }).then(function (response) {
+                        $scope.records = response.data;
+                        $scope.pag_corrente = page_number;
+                        $scope.rec_pagina = -1;
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+            };
+            $scope.refresh();
+            $scope.next_record = function () {
+                $scope.rec_pagina++;
+                if ($scope.rec_pagina >= $scope.records.length ) {
+                    $scope.rec_pagina = 0;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) + ') input.request-focus').focus().select();
+            };
+            $scope.previous_record = function () {
+                $scope.rec_pagina--;
+                if ($scope.rec_pagina < 0 ) {
+                    $scope.rec_pagina = $scope.records.length - 1;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) + ') input.request-focus').focus().select();
+            };
+            $scope.linefocused = function (line) {
+                $scope.rec_pagina = line;
+            };
+            $scope.selezionaCategoria = function (item_sel) {
+                if ("undefined" === typeof item_sel) {
+                    $scope.filtro = "Tutti gli articoli";
+                    $scope.cod_cat_merc_sel = '';
+                    for (var j = 0; j < $scope.categorie.length; j++) {
+                        item = $scope.categorie[j];
+                        if (item.livello == 2) {
+                            item.visibile = false;
+                        }
+                    }
+                } else {
+                    $scope.filtro = item_sel.descrizione;
+                    $scope.cod_cat_merc_sel = item_sel.id_cat_merc;
+                    if (item_sel.livello == 1) {
+                        for (var j = 0; j < $scope.categorie.length; j++) {
+                            item = $scope.categorie[j];
+                            if (item.livello == 2) {
+                                if (item.id_cat_merc.substring(0, item_sel.id_cat_merc.length) == item_sel.id_cat_merc) {
+                                    item.visibile = !item.visibile;
+                                } else {
+                                    item.visibile = false;
+                                }
+                            }
+                        }
+                    }
+                };
+                $scope.refresh();
+            };
+            /* Gestione paginatore*/
+            $scope.nr_pagine_display = 4;
+            $scope.nr_pagina_paginatore = function (indice) {
+                if (indice + 1 > $scope.pag_number) {
+                    return -1;
+                } else if ($scope.pag_corrente + 1 < $scope.nr_pagine_display) {
+                    return indice;
+                } else {
+                    return $scope.pag_corrente + indice - $scope.nr_pagine_display;
+                }
+            };
+            $scope.save = function (item) {
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("saveListino"))',
+                    data: item
+                }).then(function (response) {
+                        //gestire ACK
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+            };
+            $scope.save_current_record = function () {
+                if ($scope.rec_pagina >= 0 && $scope.rec_pagina < $scope.records.length) {
+                    $scope.save($scope.records[$scope.rec_pagina]);
+                } else {
+                    show_message('Errore', "Nessun record selezionato");
+                }
+            };
+            $scope.aggiornaMassimoPrezziAcquisto = function () {
+                for (var j = 0; j < $scope.records.length; j++) {
+                    $scope.records[j].prezzo_acquisto = $scope.prezzo_acquisto;
+                }
+            }
+
+
+            $scope.copia_prezzo = function () {
+
+                var r = confirm("Confermi la copia massiva prezzo");
+                if (r == true) {
+                    $http({
+                        method: 'POST',
+                        url: '@(Url.Action("copia_prezzo"))',
+                        data: {
+                            prezzo_massivo: $scope.prezzo_vendita_massivo,
+                            query: $scope.query,
+                            cod_cat_merc: $scope.cod_cat_merc_sel
+                        }
+                    }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                }
+
+            };
+
+            $scope.copia_sconto1 = function () {
+                var r = confirm("Confermi la copia massiva dello sconto 1");
+                if (r == true) {
+                    $http({
+                        method: 'POST',
+                        url: '@(Url.Action("copia_sconto1"))',
+                        data: {
+                            sconto_massivo: $scope.sconto_1_massivo,
+                            query: $scope.query,
+                            cod_cat_merc: $scope.cod_cat_merc_sel
+                        }
+                    }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                }
+
+            };
+
+            $scope.copia_sconto2 = function () {
+                var r = confirm("Confermi la copia massiva dello sconto 2");
+                if (r == true) {
+                    $http({
+                        method: 'POST',
+                        url: '@(Url.Action("copia_sconto2"))',
+                        data: {
+                            sconto_massivo: $scope.sconto_2_massivo,
+                            query: $scope.query,
+                            cod_cat_merc: $scope.cod_cat_merc_sel
+                        }
+                    }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                }
+
+            };
+
+            $scope.copia_sconto3 = function () {
+                var r = confirm("Confermi la copia massiva dello sconto 3");
+                if (r == true) {
+                    $http({
+                        method: 'POST',
+                        url: '@(Url.Action("copia_sconto3"))',
+                        data: {
+                            sconto_massivo: $scope.sconto_3_massivo,
+                            query: $scope.query,
+                            cod_cat_merc: $scope.cod_cat_merc_sel
+                        }
+                    }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                        //gestire ACK
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                }
+
+            };
+
+        }]);
+    </script>
+}
+@section scripts{
+    <script>
+        shortcut.add("Home", function () {
+            $('#query').focus();
+        });
+        shortcut.add("Up", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.previous_record();
+            });
+        });
+        shortcut.add("Down", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.next_record();
+            });
+        });
+        shortcut.add("Ctrl+S", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.save_current_record();
+            });
+        });
+        shortcut.add("pd", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.pag_corrente < scope.pag_number - 1) {
+                    scope.refresh_page(scope.pag_corrente + 1);
+                }
+            });
+        });
+        shortcut.add("pu", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.pag_corrente > 0) {
+                    scope.refresh_page(scope.pag_corrente - 1);
+                }
+            });
+        });
+    </script>
+}
+<div class="main-content" ng-controller="ctrl" ng-cloak>
+    <div class="row">
+        <div class="col-md-2 col-lg-2">
+            <h4><i class="fa fa-bars"></i> Menu</h4>
+            <ul class="nav nav-stacked nav-pills">
+                <li>
+                    <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
+                </li>
+                <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_merc == cod_cat_merc_sel}">
+                    <a class="livello{{item.livello}}"
+                       ng-click="selezionaCategoria(item)"
+                       ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">
+                        <span class="fa fa-caret-right"></span>&nbsp;
+                        {{item.descrizione}}
+                    </a>
+
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 col-lg-10">
+            <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
+            <div class="input-group">
+                <input id="query" capitalize
+                       type="text" class="form-control"
+                       ng-model="query" placeholder="cerca per codice articolo o descrizione..."
+                       ng-on-enter="refresh()" autofocus />
+                <span class="input-group-btn">
+                    <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;Cerca</button>
+                </span>
+            </div>
+            <h4><i class="fa fa-list-ul"></i> Elenco</h4>
+            <table class="table table-hover table-striped" id="table">
+                <thead>
+                    <tr>
+                        <th>Art</th>
+                        <th>Descrizione</th>
+                        <th>
+                            Pr Acq
+                        </th>
+                        <th>
+                            Pr Ven                                                        
+                        </th>
+                        <th>
+                            Sc 1
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="copia_sconto1()">
+                                <span class="fa fa-clone" />
+                            </button>
+                            <br />
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="sconto_1_massivo" style="width:80px;" />
+                        </th>
+                        <th>
+                            Sc 2
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="copia_sconto2()">
+                                <span class="fa fa-clone" />
+                            </button>
+                            <br />
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="sconto_2_massivo" style="width:80px;" />
+                        </th>
+                        <th>
+                            Sc 3
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="copia_sconto3()">
+                                <span class="fa fa-clone" />
+                            </button>
+                            <br />
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="sconto_3_massivo" style="width:80px;" />
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in records">
+                        <td>{{item.id_codice_art}}</td>
+                        <td>{{item.descrizione}}</td>
+                        <td>
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="item.prezzo_acquisto" style="width:80px;"
+                                   ng-focus="linefocused($index);"  />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control form-control-custom text-right request-focus"
+                                   ng-model="item.prezzo_vendita" style="width:80px;"
+                                   ng-focus="linefocused($index);" disabled="disabled"/>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="item.sconto_a_1" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="item.sconto_a_2" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="item.sconto_a_3" style="width:80px;"
+                                   ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="save(item);">
+                                <span class="fa fa-save" />
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div ng-show="pag_number > 1">
+                <ul class="pagination" style="text-align: center;">
+                    <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
+                    <li>
+                        <a ng-click="refresh_page(0)"
+                           ng-class="{disabled: pag_corrente == 0}"
+                           href="#nav">&lt;&lt;</a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_corrente-1)"
+                           ng-class="{disabled: pag_corrente == 0}"
+                           href="#nav">&lt;</a>
+                    </li>
+                    <li ng-repeat="p_nr in [0,1,2,3]">
+                        <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
+                           ng-bind="nr_pagina_paginatore(p_nr) + 1"
+                           ng-hide="nr_pagina_paginatore(p_nr)==-1"
+                           ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
+                           href="#nav">
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_corrente+1)"
+                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                           href="#nav">&gt;</a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_number-1)"
+                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                           href="#nav">&gt;&gt;</a>
+                    </li>
+                </ul>
+            </div> <!--Fine paginatore -->
+        </div> <!--Dettaglio-->
+    </div>
+</div>

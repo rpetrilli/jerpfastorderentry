@@ -99,6 +99,45 @@ namespace fastOrderEntry.Models
             }
         }
 
+        public void update_massivo_prezzo_acquisto(NpgsqlConnection con, decimal prezzo_massivo, string query, string cod_cat_merc)
+        {
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT * from ma_articoli_soc \r\n" +
+                    "where id_societa = '1' \r\n";
+                if (!string.IsNullOrEmpty(query))
+                {
+                    cmd.CommandText += "  and (upper(id_codice_art) LIKE( @query) or upper(descrizione) like( @query ) ) \r\n";
+                }
+                if (!string.IsNullOrEmpty(cod_cat_merc))
+                {
+                    cmd.CommandText += " and id_categoria_merc like ('" + cod_cat_merc + "')";
+                }
+
+                if (!string.IsNullOrEmpty(query))
+                {
+                    cmd.Parameters.AddWithValue("query", query.ToUpper() + "%");
+                }
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        RecordListinoModel r = new RecordListinoModel();
+                        r.id_codice_art = reader.GetString(reader.GetOrdinal("id_codice_art"));
+                        r.descrizione = reader.GetString(reader.GetOrdinal("descrizione"));
+                        recordlistino.Add(r);
+                    }
+                }
+
+                foreach (RecordListinoModel r in recordlistino)
+                {
+                    r.updatePrezzo(con, prezzo_massivo, "AC01");
+                }
+            }
+        }
 
         public void update_massivo_prezzo_vendita_cliente(NpgsqlConnection con, decimal prezzo_massivo, string query, string cod_cat_merc, String id_cliente)
         {
@@ -141,8 +180,6 @@ namespace fastOrderEntry.Models
             }
         }
 
-
-
         public void update_massivo_sconto(NpgsqlConnection con, String id_condizione,  decimal sconto_massivo, string query, string cod_cat_merc)
         {
             using (var cmd = new NpgsqlCommand())
@@ -182,7 +219,6 @@ namespace fastOrderEntry.Models
                 }
             }
         }
-
 
         public void update_massivo_sconto_cliente(NpgsqlConnection con, String id_condizione, decimal sconto_massivo, string query, string cod_cat_merc, String id_cliente)
         {

@@ -217,6 +217,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\GetController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ListiniArticoloAcqController.cs" />
     <Compile Include="Controllers\ListiniArticoloController.cs" />
     <Compile Include="Controllers\ListiniClienteController.cs" />
     <Compile Include="Controllers\OrdiniVenditaController.cs" />
@@ -350,6 +351,7 @@
     <Content Include="Views\Articoli\_ElencoArticoli.cshtml" />
     <Content Include="Views\Articoli\_CopiaArticolo.cshtml" />
     <Content Include="Views\OrdiniVendita\_ModalCercaCliente.cshtml" />
+    <Content Include="Views\ListiniArticoloAcq\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
