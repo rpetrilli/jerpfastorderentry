@@ -29,6 +29,7 @@
                             <th>Data Ordine</th>
                             <th>Imponibile</th>
                             <th>Ord.Chiuso</th>
+                            <th>Sel</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -41,18 +42,20 @@
                             <td>{{item.data_ordine | date: short}}</td>
                             <td>{{item.totale_doc | number:2}}</td>
                             <td class="text-center"><i class="fa {{item.ordine_chiuso?'fa-lock text-danger':'fa-unlock text-success'}}"></i></td>                            
+                           
                             <td>
-                                <a ng-show="item.ordine_chiuso && item.link_fattura"
+                                <input type="checkbox" ng-model="item.massivo" ng-hide="item.ordine_chiuso">    
+                            </td>
+                            <td>
+
+                                <a class="badge badge-success" ng-show="item.ordine_chiuso && item.link_fattura"
                                    ng-href="http://localhost:8080/petline/vendite/fattura_stampa_download.jsp?formato=vendite_StFattura&{{item.link_fattura}}">
                                     St.Fattura
                                 </a>
-                                <a ng-show="item.ordine_chiuso && item.link_consegna"
+                                <a class="badge" ng-show="item.ordine_chiuso && item.link_consegna"
                                    ng-href="http://localhost:8080/petline/vendite/consegna_stampa_download.jsp?formato=vendite_StConsegna&{{item.link_consegna}}">
                                     St.Consegna
                                 </a>
-                                <button class="btn btn-grey btn-xs" ng-click="tc.deleteItem(item)" ng-hide="item.ordine_chiuso"><i class="glyphicon glyphicon-trash"></i></button>
-                                <button class="btn btn-grey btn-xs" ng-click="tc.edit(item)"><i class="fa fa-pencil-square-o"></i></button>
-
                                 <button ng-hide="item.ordine_chiuso"
                                         class="btn btn-xs"
                                         ng-class="{'btn-warning': item.id_gc_cliente_id == 'CLD', 'btn-info': item.id_gc_cliente_id == 'CL' }"
@@ -65,8 +68,9 @@
                                         ng-click="ddtfattura(item, 'fat')">
                                     <i class="fa fa-file-o">&nbsp;</i>FAT
                                 </button>
+                                <button class="btn btn-grey btn-xs" ng-click="tc.edit(item)"><i class="fa fa-pencil-square-o"></i></button>
+                                <button class="btn btn-grey btn-xs btn-danger" ng-click="tc.deleteItem(item)" ng-hide="item.ordine_chiuso"><i class="glyphicon glyphicon-trash"></i></button>
 
-                                <input type="checkbox" ng-model="item.massivo" ng-hide="item.ordine_chiuso">
                             </td>
                         </tr>
                     </tbody>
