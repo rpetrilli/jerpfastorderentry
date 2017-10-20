@@ -127,7 +127,11 @@ namespace fastOrderEntry.Models
                         id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
                         ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
                         id_agente = Convert.ToString(reader["zpet_id_agente"]);
-                        note_magazzino = Convert.ToString(reader["zpet_note_magazzino"]);
+                        if(reader["zpet_note_magazzino"] == null) {
+                            note_magazzino = "";
+                        } else {
+                            note_magazzino = Convert.ToString(reader["zpet_note_magazzino"]);
+                        }
                         colli = Convert.ToInt32(reader["zpet_colli"]);
                     }
                 }
