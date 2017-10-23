@@ -29,7 +29,7 @@ namespace fastOrderEntry.Models
                         "from ma_articoli_soc \r\n" +
                         "where (upper(id_codice_art) like (@query) or upper(descrizione)  like (@query) ) \r\n" +
                         "order by id_codice_art asc \r\n" +
-                        "limit 5";
+                        "limit 15";
                     
                     cmd.Parameters.AddWithValue("query",  query.ToUpper() + "%");
                     cmd.ExecuteNonQuery();

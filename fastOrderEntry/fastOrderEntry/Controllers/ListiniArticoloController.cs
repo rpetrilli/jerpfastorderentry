@@ -56,13 +56,36 @@ namespace fastOrderEntry.Controllers
             CategorieStrutturaModel categorie = new CategorieStrutturaModel();
             categorie.select(con);
 
-            var jsonResult = Json( categorie.categorie , JsonRequestBehavior.AllowGet);
+            //var model = categorie
+            //    .categorie
+            //    .Select(x=> 
+            //    {
+            //        return new Categoria()
+            //        {
+            //          id_cat_merc = x.id_cat_merc,
+            //          livello = x.livello,
+            //          descrizione = x.descrizione,
+            //          id_cat_padre = x.id_cat_padre,
+            //          ordinamento = getOrdinamento(x.id_cat_merc)
+            //        };
+            //    })
+            //    .OrderBy(x => x.ordinamento)
+            //    .ThenBy(x=> x.livello)
+            //    .ThenBy(x=> x.descrizione)
+            //    .ToList();
+
+            var jsonResult = Json( categorie.categorie, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();
             return jsonResult;
         }
 
+        private string getOrdinamento(string id_cat_merc)
+        {
+            int indice = id_cat_merc.IndexOf('-');
+            return indice > 0 ? id_cat_merc.Substring(0, indice) : id_cat_merc;
+        }
 
         [HttpGet]
         public JsonResult GetPaginatore(string query, string cod_cat_merc)

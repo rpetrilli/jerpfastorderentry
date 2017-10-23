@@ -35,7 +35,8 @@ namespace fastOrderEntry.Models
         public bool ordine_chiuso { get; set; }
         public string id_agente { get; set; }
         public string note_magazzino { get; set; }
-        public int colli { get; set; } = 1;
+        public int colli { get; set; }
+        public string username { get; set; }
 
         public override void delete(NpgsqlConnection con)
         {
@@ -50,6 +51,7 @@ namespace fastOrderEntry.Models
                     values["esercizio"] = esercizio.ToString();
                     values["id_ordine"] = id_ordine;
                     values["private_key"] = settings.private_key;
+                    values["username"] = username;
 
                     var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
 
@@ -77,6 +79,7 @@ namespace fastOrderEntry.Models
 
                     values["op"] = "insert_order";
                     values["ordine"] = ordine;
+                    values["username"] = username;
                     values["private_key"] = settings.private_key;
 
                     try
@@ -128,7 +131,7 @@ namespace fastOrderEntry.Models
                         ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
                         id_agente = Convert.ToString(reader["zpet_id_agente"]);
                         note_magazzino = Convert.ToString(reader["zpet_note_magazzino"]);
-                        colli = reader["zpet_colli"] != DBNull.Value ? Convert.ToInt32(reader["zpet_colli"]) : 1;
+                        colli = !string.IsNullOrEmpty(Convert.ToString(reader["zpet_colli"])) ? Convert.ToInt32(reader["zpet_colli"]) : 1;
                     }
                 }
             }
@@ -203,7 +206,9 @@ namespace fastOrderEntry.Models
 
                     values["op"] = "update_order";
                     values["ordine"] = ordine;
+                    //values["username"] = username;
                     values["private_key"] = settings.private_key;
+                    
 
                     var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
 

@@ -27,6 +27,7 @@ namespace fastOrderEntry.Models
                     "       * \r\n" +
                     "from va_agenti \r\n" +
                     "where upper(ragione_sociale) like ('" + query.ToUpper() + "%') \r\n" +
+                    "and id_tipo_agente = 'AG' \r\n" +
                     "limit 10 \r\n";
                 cmd.ExecuteNonQuery();
 
@@ -51,6 +52,7 @@ namespace fastOrderEntry.Models
         public string id { get; set; }
         [Column("ragione_sociale")]
         public string name { get; set; }
+        public string id_tipo_agente { get; set; }
     }
 
     

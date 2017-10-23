@@ -27,7 +27,7 @@ namespace fastOrderEntry.Models
                 }
                 if (!string.IsNullOrEmpty(cod_cat_merc))
                 {
-                    cmd.CommandText += " and id_categoria_merc like ('" + cod_cat_merc + "')";
+                    cmd.CommandText += " and id_categoria_merc like ('" + cod_cat_merc + "%')";
                 }
 
                     if (REC_X_PAGINA > 0)

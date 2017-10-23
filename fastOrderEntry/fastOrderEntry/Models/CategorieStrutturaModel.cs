@@ -19,13 +19,27 @@ namespace fastOrderEntry.Models
             using (var cmd = new NpgsqlCommand())
             {
                 cmd.Connection = conn;
-                cmd.CommandText = "SELECT \r\n" +
-                    "       coalesce(id_cat_padre, '') as id_cat_padre,  \r\n" +
-                    "       array_length(regexp_split_to_array(coalesce(id_cat_merc,''), '[-]'),1) as livello, \r\n" +
-                    "       * \r\n" +
-                    "from mc_cat_merc where id_societa = '1' and  \r\n " +
-                    "   array_length(regexp_split_to_array(coalesce(id_cat_merc,''), '[-]'),1) <= 2";
+                //cmd.CommandText = "SELECT \r\n" +
+                //    "       coalesce(id_cat_padre, '') as id_cat_padre,  \r\n" +
+                //    "       array_length(regexp_split_to_array(coalesce(id_cat_merc,''), '[-]'),1) as livello, \r\n" +
+                //    "       * \r\n" +
+                //    "from mc_cat_merc where id_societa = '1' and  \r\n " +
+                //    "   array_length(regexp_split_to_array(coalesce(id_cat_merc,''), '[-]'),1) <= 2";
+                //cmd.ExecuteNonQuery();
+
+                cmd.CommandText = @"SELECT 
+                               coalesce(id_cat_padre, '') as id_cat_padre,  
+                               array_length(regexp_split_to_array(coalesce(id_cat_merc,''), '[-]'),1) as livello, 
+                               (case
+		                        when position('-' in id_cat_merc) = 0 then id_cat_merc
+		                        when position('-' in id_cat_merc) > 0 then substring(id_cat_merc from 1 for position('-' in id_cat_merc)-1)
+	                            end) as ordinamento,
+                                * 
+                                from mc_cat_merc where id_societa = '1' and  
+                                array_length(regexp_split_to_array(coalesce(id_cat_merc,''), '[-]'),1) <= 3 order by ordinamento, id_cat_merc, livello";
                 cmd.ExecuteNonQuery();
+
+                // ricorda deve essere 3
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -41,7 +55,6 @@ namespace fastOrderEntry.Models
                 }
             }
 
-
         }
 
     }
@@ -52,6 +65,7 @@ namespace fastOrderEntry.Models
         public string descrizione { get; set; }
         public string id_cat_padre { get; set; }
         public int livello { get; set; }
+        public string ordinamento { get; set; }
     }
 
 }

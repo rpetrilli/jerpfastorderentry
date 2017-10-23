@@ -21,6 +21,26 @@ namespace fastOrderEntry.Controllers
         // GET: OrdiniVendita
         public ActionResult Index()
         {
+            string username;
+            string first_name;
+            string last_name;
+
+            using (PetLineContext db = new PetLineContext())
+            {
+                var array = User.Identity.Name.Split(new[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
+                first_name = array[0];
+                if (array.Count() > 1)
+                {
+                    last_name = array.Count() > 1 ? array[1] : null;
+                    username = db.utenti.FirstOrDefault(x => x.first_name == first_name & x.last_name == last_name).user_name;
+                }
+                else
+                {
+                    username = db.utenti.FirstOrDefault(x => x.first_name == first_name).user_name;
+                }
+            }
+
+            ViewBag.username = username;
             return View();
         }
 
@@ -62,8 +82,9 @@ namespace fastOrderEntry.Controllers
                     "      vo_ordini.*, \r\n" +
                     "       (select ragione_sociale from va_clienti where id_cliente = vo_ordini.id_cliente ) as ragione_sociale, \r\n" +
                     "       (select id_gc_cliente_id from va_clienti where id_cliente = vo_ordini.id_cliente ) as id_gc_cliente_id, \r\n" +
-                    "       vo_ordini_provv_testata.id_agente, \r\n" + 
-                    "       (select ragione_sociale from va_agenti where id_agente = vo_ordini_provv_testata.id_agente ) as ragione_sociale_agente, \r\n" +
+                    "       vo_ordini_provv_testata.id_agente, \r\n" +
+                    "       va_agenti.ragione_sociale as ragione_sociale_agente, \r\n" +
+                    "       va_agenti.id_tipo_agente as id_tipo_agente, \r\n" +
                     "       (select 'esercizio=' || esercizio || '&id_consegna=' || id_consegna from vo_consegne_righe where esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1) as link_consegna, \r\n" +
                     "       (select 'esercizio=' || esercizio || '&id_fattura=' || id_fattura from vo_fatture_righe where esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1)  as link_fattura \r\n" +
                     "from vo_ordini \r\n" +
@@ -71,6 +92,8 @@ namespace fastOrderEntry.Controllers
                     "   on  vo_ordini_provv_testata.id_divisione = vo_ordini.id_divisione \r\n" +
                     "   and  vo_ordini_provv_testata.esercizio = vo_ordini.esercizio \r\n" +
                     "   and  vo_ordini_provv_testata.id_ordine = vo_ordini.id_ordine \r\n" +
+                    "left join va_agenti on \r\n" +
+                    "   va_agenti.id_agente = vo_ordini_provv_testata.id_agente \r\n" +
                     filters.toWhereConditions() +
                     "order by esercizio desc, id_ordine desc \r\n"+
                     this.getLimStr(first, pageSize);
@@ -91,6 +114,7 @@ namespace fastOrderEntry.Controllers
                         item.esercizio = Convert.ToInt32(reader["esercizio"]);
                         item.totale_doc = Convert.ToDecimal(reader["totale_doc"]);
                         item.ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
+                        item.id_tipo_agente = Convert.ToString(reader["id_tipo_agente"]);
                         item.id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
                         item.link_consegna = Convert.ToString(reader["link_consegna"]);
                         item.link_fattura = Convert.ToString(reader["link_fattura"]);
@@ -99,7 +123,7 @@ namespace fastOrderEntry.Controllers
                 }
             }
 
-            return list;
+            return list.Where(x=> x.id_tipo_agente == "AG").ToList();
         }
 
         [HttpPost]
@@ -245,6 +269,7 @@ namespace fastOrderEntry.Controllers
         public string id_cliente { get; set; }
         public string ragione_sociale { get; set; }
         public string id_agente { get; set; }
+        public string id_tipo_agente { get; set; }
         public string ragione_sociale_agente { get; set; }
         public string data_ordine { get; set; }
         public decimal totale_doc { get; set; }

@@ -52,11 +52,11 @@
                             <td>
 
                                 <a class="badge badge-success" ng-show="item.ordine_chiuso && item.link_fattura" target="_blank"
-                                   ng-href="http://80.211.233.101:8080/petline/vendite/fattura_stampa_download.jsp?formato=vendite_StFattura&{{item.link_fattura}}">
+                                   ng-href="http://80.211.233.101:8080/petline/vendite/fattura_stampa_download.jsp?formato=vendite_StFatturaAcc&{{item.link_fattura}}">
                                     St.Fattura
                                 </a>
                                 <a class="badge" ng-show="item.ordine_chiuso && item.link_consegna" target="_blank"
-                                   ng-href="http://localhost:8080/petline/vendite/consegna_stampa_download.jsp?formato=vendite_StConsegna&{{item.link_consegna}}">
+                                   ng-href="http://80.211.233.101:8080/petline/vendite/consegna_stampa_download.jsp?formato=vendite_StConsegna&{{item.link_consegna}}">
                                     St.Consegna
                                 </a>
                                 <button ng-hide="item.ordine_chiuso"

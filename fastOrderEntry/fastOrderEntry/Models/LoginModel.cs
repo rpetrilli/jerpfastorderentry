@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
 using Npgsql;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fastOrderEntry.Models
 {
@@ -19,8 +20,10 @@ namespace fastOrderEntry.Models
         public string ReturnUrl { get; set; }
     }
 
+    [Table("sy_users", Schema = "public")]
     public class UtenteModel
     {
+        [Key]
         public string user_name { get; set; }
 
         public string first_name { get; set; }
@@ -43,7 +46,8 @@ namespace fastOrderEntry.Models
                     while (reader.Read())
                     {
                         first_name = Convert.ToString(reader["first_name"]);
-                        last_name = Convert.ToString(reader["last_name"]);                        
+                        last_name = Convert.ToString(reader["last_name"]);
+                        user_name = Convert.ToString(reader["user_name"]);
                         logged = true;
                     }
                 }

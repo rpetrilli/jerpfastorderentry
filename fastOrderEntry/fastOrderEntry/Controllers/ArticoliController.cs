@@ -82,7 +82,7 @@ namespace fastOrderEntry.Controllers
                     "and (upper(id_codice_art) LIKE( @query) or upper(descrizione) like( @query ) ) \r\n";
                 if (!string.IsNullOrEmpty(cod_cat_merc))
                 {
-                    cmd.CommandText += " and id_categoria_merc like ('" + cod_cat_merc + "')";
+                    cmd.CommandText += " and id_categoria_merc like ('" + cod_cat_merc + "%')";
                 }
                 cmd.Parameters.AddWithValue("query",  query + "%");
                 cmd.ExecuteNonQuery();

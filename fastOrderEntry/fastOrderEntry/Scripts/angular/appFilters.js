@@ -7,6 +7,12 @@ app.filter('imponibile', function () {
     }
 });
 
+app.filter('prezzo', function () {
+    return function (value) {
+        return value.prezzo_vendita * (100 - value.sconto_1) / 100 * (100 - value.sconto_2) / 100 * (100 - value.sconto_3) / 100 * (100 - value.sconto_agente) / 100;
+    }
+});
+
 app.filter('iva', function ($filter) {
     return function (value) {
         var imponibile = $filter('imponibile')(value);

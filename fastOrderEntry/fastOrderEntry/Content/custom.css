@@ -339,18 +339,36 @@
 
 .nav-livello > a {    
     padding: 5px 10px !important;
+    text-transform: uppercase;
 }
 
 .nav-livello a.livello1 {
+    text-transform: uppercase;
 }
 
 .nav-livello a.livello2 {
     display: none;
+    text-transform: uppercase;
+    background-color: rgba(193, 188, 188, 0.3)
 }
     .nav-livello a.livello2.visibile {
         display: block;
-        margin-left:10px;
+        text-transform: uppercase;
+        margin-left: 10px;
     }
+
+.nav-livello a.livello3 {
+    text-transform: uppercase;
+    display: none;
+    background-color: rgba(193, 188, 188, 0.1)
+}
+
+    .nav-livello a.livello3.visibile {
+        display: block;
+        text-transform: uppercase;
+        margin-left: 20px;
+    }
+
 
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {

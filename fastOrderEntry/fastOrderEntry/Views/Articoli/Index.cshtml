@@ -18,6 +18,7 @@
 
             listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
                 $scope.categorie = result.data;
+                
             }, function (error) {
                 show_message(error);
                 });
@@ -86,7 +87,22 @@
                         for (var j = 0; j < $scope.categorie.length; j++) {
                             item = $scope.categorie[j];
                             if (item.livello == 2) {
-                                if (item.id_cat_merc.substring(0, item_sel.id_cat_merc.length) == item_sel.id_cat_merc) {
+                                if (item.id_cat_padre == item_sel.id_cat_merc) {
+                                    //if (item.id_cat_merc.substring(0, item_sel.id_cat_merc.length) == item_sel.id_cat_merc) {
+                                    item.visibile = !item.visibile;
+                                } else {
+                                    item.visibile = false;
+                                }
+                            }
+                            if (item.livello == 3) {
+                                item.visibile = false;
+                            }
+                        }
+                    } else if (item_sel.livello == 2) {
+                        for (var j = 0; j < $scope.categorie.length; j++) {
+                            item = $scope.categorie[j];
+                            if (item.livello == 3) {
+                                if (item.id_cat_padre == item_sel.id_cat_merc) {
                                     item.visibile = !item.visibile;
                                 } else {
                                     item.visibile = false;

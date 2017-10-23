@@ -18,7 +18,7 @@ namespace WebCore.fw
         where F: Filters, new()
         where O: DBObject, new()
     {
-        private const int REC_X_PAGINA = 15;
+        private const int REC_X_PAGINA = 25;
         private NpgsqlConnection con = null;
 
         protected abstract NpgsqlConnection getConnection();

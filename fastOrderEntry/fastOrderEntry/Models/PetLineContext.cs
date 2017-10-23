@@ -24,8 +24,9 @@ namespace fastOrderEntry.Models
         public virtual DbSet<da_listini_cliente> da_listini_cliente { get; set; }
         public virtual DbSet<da_sconti_cliente_articolo> da_sconti_cliente_articolo { get; set; }
         public virtual DbSet<Agenti> agenti { get; set; }
+        public virtual DbSet<UtenteModel> utenti { get; set; }
 
-        
+
 
 
         protected override void OnModelCreating(DbModelBuilder modelBulider)

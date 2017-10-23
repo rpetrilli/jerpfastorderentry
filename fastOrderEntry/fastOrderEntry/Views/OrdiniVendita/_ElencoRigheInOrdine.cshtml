@@ -17,6 +17,7 @@
                             <th>Sc 3</th>
                             <th>Sc Ag</th>
                             <th>Cod.IVA</th>
+                            <th>Prezzo</th>
                             <th>Imponibile</th>
                             <th ng-hide="tc.current.ordine_chiuso"></th>
                         </tr>
@@ -72,6 +73,7 @@
                             <td>
                                 {{item.id_iva}}
                             </td>
+                            <td>{{item | prezzo | number:2}}</td>
                             <td>
                                 {{item | imponibile | number:2}}
                             </td>

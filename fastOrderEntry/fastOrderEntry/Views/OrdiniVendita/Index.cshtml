@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Ordini di Vendita";
     string currentUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/" + ViewContext.RouteData.GetRequiredString("controller");
+    string username = ViewBag.username;
 }
 @section header {
     <script>
@@ -44,7 +45,7 @@
             $scope.selAgenti = @{Html.RenderAction("GetAgentiOrdine", "Get");};
 
 
-            $scope.test = 'test';
+            //$scope.test = 'test';
 
             $scope.select_cliente_filtri = function (item) {
                 $scope.tc.filtri.id_cliente = item?item.id:'';
@@ -79,7 +80,6 @@
 
             $scope.tc.refresh();
 
-
             $scope.select_cliente = function (item) {
                 Object.assign($scope.tc.current, item);
                 $scope.tc.current.ragione_sociale = item.name;
@@ -110,6 +110,8 @@
                 $scope.tc.shAdd = !$scope.tc.shAdd
                 $scope.tc.table = 'tableOrdine';
                 $scope.tc.rec_pagina = -1;
+                scope.tc.id_codice_art_new = "";
+
             }
 
             $scope.riseleziona_articoli = function () {
@@ -206,6 +208,7 @@
 
             $scope.select_cliente = function (item) {
                 Object.assign($scope.tc.current, item);
+                $scope.tc.current.username = '@(username)';
             };
 
             $scope.print = function (item) {
@@ -346,12 +349,14 @@
                 if (scope.tc.displayMode == 'edit' && scope.tc.current.id_cliente.length > 0) {
                     scope.tc.shAdd = !scope.tc.shAdd;
                     scope.tc.table = 'tableOrdine';
+                    scope.tc.id_codice_art_new = "";
                 }
             });
         });
     </script>
 }
 <div class="main-content" ng-controller="ctrl" ng-cloak>
+    {{tc.current | json}}
     @Html.Partial("_ElencoOrdini")
     @Html.Partial("_NuovoModificaOrdine")
     @Html.Partial("_ModalCercaCliente")
