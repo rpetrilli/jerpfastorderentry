@@ -206,7 +206,7 @@ namespace fastOrderEntry.Models
 
                     values["op"] = "update_order";
                     values["ordine"] = ordine;
-                    //values["username"] = username;
+                    values["username"] = username;
                     values["private_key"] = settings.private_key;
                     
 
