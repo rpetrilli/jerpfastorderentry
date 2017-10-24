@@ -90,7 +90,7 @@ namespace fastOrderEntry.Controllers
                         item.data_ordine = Convert.ToDateTime(reader["data_ordine"]).ToString("yyyy-MM-dd");
                         item.esercizio = Convert.ToInt32(reader["esercizio"]);
                         item.totale_doc = Convert.ToDecimal(reader["totale_doc"]);
-                        item.ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
+                        item.ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]) || Convert.ToBoolean(reader["chiudi_forzatamente"]);
                         item.id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
                         item.link_consegna = Convert.ToString(reader["link_consegna"]);
                         item.link_fattura = Convert.ToString(reader["link_fattura"]);
