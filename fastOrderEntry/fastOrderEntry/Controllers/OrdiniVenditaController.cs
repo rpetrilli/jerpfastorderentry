@@ -82,18 +82,14 @@ namespace fastOrderEntry.Controllers
                     "      vo_ordini.*, \r\n" +
                     "       (select ragione_sociale from va_clienti where id_cliente = vo_ordini.id_cliente ) as ragione_sociale, \r\n" +
                     "       (select id_gc_cliente_id from va_clienti where id_cliente = vo_ordini.id_cliente ) as id_gc_cliente_id, \r\n" +
-                    "       vo_ordini_provv_testata.id_agente, \r\n" +
+                    "       vo_ordini.zpet_id_agente as id_agente, \r\n" +
                     "       va_agenti.ragione_sociale as ragione_sociale_agente, \r\n" +
                     "       va_agenti.id_tipo_agente as id_tipo_agente, \r\n" +
                     "       (select 'esercizio=' || esercizio || '&id_consegna=' || id_consegna from vo_consegne_righe where esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1) as link_consegna, \r\n" +
                     "       (select 'esercizio=' || esercizio || '&id_fattura=' || id_fattura from vo_fatture_righe where esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1)  as link_fattura \r\n" +
                     "from vo_ordini \r\n" +
-                    "left join vo_ordini_provv_testata \r\n" +
-                    "   on  vo_ordini_provv_testata.id_divisione = vo_ordini.id_divisione \r\n" +
-                    "   and  vo_ordini_provv_testata.esercizio = vo_ordini.esercizio \r\n" +
-                    "   and  vo_ordini_provv_testata.id_ordine = vo_ordini.id_ordine \r\n" +
                     "left join va_agenti on \r\n" +
-                    "   va_agenti.id_agente = vo_ordini_provv_testata.id_agente \r\n" +
+                    "   va_agenti.id_agente = vo_ordini.zpet_id_agente \r\n" +
                     filters.toWhereConditions() +
                     "order by esercizio desc, id_ordine desc \r\n"+
                     this.getLimStr(first, pageSize);
@@ -113,7 +109,7 @@ namespace fastOrderEntry.Controllers
                         item.data_ordine = Convert.ToDateTime(reader["data_ordine"]).ToString("yyyy-MM-dd");
                         item.esercizio = Convert.ToInt32(reader["esercizio"]);
                         item.totale_doc = Convert.ToDecimal(reader["totale_doc"]);
-                        item.ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
+                        item.ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]) || Convert.ToBoolean(reader["chiudi_forzatamente"]); ;
                         item.id_tipo_agente = Convert.ToString(reader["id_tipo_agente"]);
                         item.id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
                         item.link_consegna = Convert.ToString(reader["link_consegna"]);
@@ -123,7 +119,7 @@ namespace fastOrderEntry.Controllers
                 }
             }
 
-            return list.Where(x=> x.id_tipo_agente == "AG").ToList();
+            return list;
         }
 
         [HttpPost]
@@ -231,8 +227,8 @@ namespace fastOrderEntry.Controllers
             }
 
             return obj;
-        }
-      
+        }        
+
 
         protected override NpgsqlConnection getConnection()
         {

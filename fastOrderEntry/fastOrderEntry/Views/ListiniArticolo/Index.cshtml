@@ -307,9 +307,7 @@
                 <thead>
                     <tr>
                         <th>Art</th>
-                        <th>Descrizione</th>
-                        <th>Pr Acq 
-                        </th>
+                        <th>Descrizione</th>                        
                         <th>
                             Pr Ven 
                             <button class="btn btn-primary btn-xs"
@@ -321,6 +319,7 @@
                                    ng-model="prezzo_vendita_massivo" style="width:80px;" />
     
                         </th>
+                        <th>Giac</th>
                         <th>
                              Sc 1
                             <button class="btn btn-primary btn-xs"
@@ -349,23 +348,22 @@
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="sconto_3_massivo" style="width:80px;" /></th>
+                        <th>Prezzo</th>
+                        <th>Iva</th>
+                        <th>Pr Acq</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="item in records">
                         <td>{{item.id_codice_art}}</td>
-                        <td>{{item.descrizione}}</td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.prezzo_acquisto" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
+                        <td>{{item.descrizione}}</td>                        
                         <td>
                             <input type="number" class="form-control form-control-custom text-right request-focus"
                                    ng-model="item.prezzo_vendita" style="width:80px;"
                                    ng-focus="linefocused($index);" />
                         </td>
+                        <td>{{item.giacenza}}</td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_1" style="width:80px;"
@@ -380,6 +378,14 @@
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_3" style="width:80px;"
                                    ng-focus="linefocused($index);" />
+                        </td>
+                        <td>{{ item | prezzo | number:2}}</td>
+                        <td>{{item.id_iva}}</td>
+                        <td>
+                            {{item.prezzo_acquisto}}
+                            @*<input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="item.prezzo_acquisto" style="width:80px;"
+                                   ng-focus="linefocused($index);" />*@
                         </td>
                         <td>
                             <button class="btn btn-primary btn-xs"

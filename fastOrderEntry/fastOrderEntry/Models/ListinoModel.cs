@@ -20,7 +20,9 @@ namespace fastOrderEntry.Models
             using (var cmd = new NpgsqlCommand())
             {
                 cmd.Connection = conn;
-                cmd.CommandText = "SELECT * from ma_articoli_soc \r\n" +
+                cmd.CommandText = "SELECT *, \r\n" +
+                    "   (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
+                    " from ma_articoli_soc \r\n" +                     
                     "where id_societa = '1' \r\n";
                 if (!string.IsNullOrEmpty(query)) {
                     cmd.CommandText += "  and (upper(id_codice_art) LIKE( @query) or upper(descrizione) like( @query ) ) \r\n";
@@ -47,6 +49,8 @@ namespace fastOrderEntry.Models
                         RecordListinoModel r = new RecordListinoModel();
                         r.id_codice_art = reader.GetString(reader.GetOrdinal("id_codice_art"));
                         r.descrizione = reader.GetString(reader.GetOrdinal("descrizione"));
+                        r.giacenza = !string.IsNullOrEmpty(reader["giacenza"].ToString()) ? Convert.ToDecimal(reader["giacenza"]) : 0;
+                        r.id_iva = reader["id_iva"].ToString();
                         recordlistino.Add(r);
                     }
                 }

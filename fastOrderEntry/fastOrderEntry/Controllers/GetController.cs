@@ -101,7 +101,7 @@ namespace fastOrderEntry.Controllers
             string output = JsonConvert.SerializeObject(model);
             return Content(output);
 
-        }
+        }        
 
     }
 }

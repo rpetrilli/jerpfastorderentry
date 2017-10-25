@@ -48,7 +48,7 @@
                             <div class="col-md-2">
                                 <label><strong>Fatturare a</strong></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control disabled" ng-model="tc.current.id_cliente" lead-zeros ng-disabled="!tc.nuovo" />
+                                    <input id="current-id-cliente" type="text" class="form-control disabled" ng-model="tc.current.id_cliente" lead-zeros ng-disabled="!tc.nuovo" />
                                     <span class="input-group-btn">
                                         <button class="btn btn-primary" ng-click="cerca_cliente()" ng-disabled="!tc.nuovo"><i class="fa fa-search"></i></button>
                                     </span>
@@ -56,11 +56,11 @@
                             </div>
                             <div class="col-md-7">
                                 <label><strong>Cliente</strong></label>
-                                <input type="text" class="form-control disabled" ng-model="tc.current.name" disabled="disabled" />
+                                <input id="current-name" type="text" class="form-control disabled" ng-model="tc.current.name" disabled="disabled" />
                             </div>
                             <div class="col-md-3">
                                 <label><strong>Agente</strong></label>
-                                <select ng-model="tc.current.id_agente" class="form-control">
+                                <select id="current-id-agente" ng-model="tc.current.id_agente" class="form-control">
                                     <option value="">Non assegnato</option>
                                     <option ng-repeat="item in selAgenti" value="{{item.id}}">{{item.name}}</option>
                                 </select>
@@ -69,32 +69,32 @@
                         <div class="row">
                             <div class="col-sm-5">
                                 <label><strong>Indirizzo</strong></label>
-                                <input type="text" class="form-control" ng-model="tc.current.indirizzo" ng-disabled="tc.current.ordine_chiuso" />
+                                <input id="current-indirizzo" type="text" class="form-control" ng-model="tc.current.indirizzo" ng-disabled="tc.current.ordine_chiuso" />
                             </div>
                             <div class="col-sm-2">
                                 <label><strong>Cap</strong></label>
-                                <input type="text" class="form-control" ng-model="tc.current.cap" />
+                                <input id="current-cap" type="text" class="form-control" ng-model="tc.current.cap" />
                             </div>
                             <div class="col-sm-3">
                                 <label><strong>Comune</strong></label>
-                                <input type="text" class="form-control" ng-model="tc.current.comune"/>
+                                <input id="current-comune" type="text" class="form-control" ng-model="tc.current.comune"/>
                             </div>
                             <div class="col-sm-2">
                                 <label><strong>Pr</strong></label>
-                                <input type="text" class="form-control" ng-model="tc.current.provincia" />
+                                <input id="current-pr" type="text" class="form-control" ng-model="tc.current.provincia" />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-6">
                                 <label><strong>Vettore</strong></label>
-                                <select ng-model="tc.current.id_vettore" class="form-control">
+                                <select id="currernt-vettore" ng-model="tc.current.id_vettore" class="form-control">
                                     <option ng-repeat="item in selVettori" value="{{item.id_vettore}}">{{item.ragione_sociale}}</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
                                 <label><strong>Condizioni pagamento</strong></label>
-                                <select ng-model="tc.current.id_cond_pag" class="form-control">
+                                <select id="current-pagamento" ng-model="tc.current.id_cond_pag" class="form-control">
                                     <option ng-repeat="item in selCondPag" value="{{item.id_cond_pag}}">{{item.descrizione}}</option>
                                 </select>
                             </div>
@@ -102,7 +102,7 @@
                         <div class="row">
                             <div class="col-sm-2">
                                 <label><strong>N. colli</strong></label>
-                                <input class="form-control text-right" type="number" ng-model="tc.current.colli" style="background-color: #fff79d !important;" />
+                                <input id="current-colli" class="form-control text-right" type="number" ng-model="tc.current.colli" style="background-color: #fff79d !important;" />
                             </div>
                         </div>
                     </div>

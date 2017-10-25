@@ -36,7 +36,7 @@ namespace fastOrderEntry.Models
 	                            end) as ordinamento,
                                 * 
                                 from mc_cat_merc where id_societa = '1' and  
-                                array_length(regexp_split_to_array(coalesce(id_cat_merc,''), '[-]'),1) <= 3 order by ordinamento, id_cat_merc, livello";
+                                array_length(regexp_split_to_array(coalesce(id_cat_merc,''), '[-]'),1) <= 1 order by ordinamento, id_cat_merc, livello";
                 cmd.ExecuteNonQuery();
 
                 // ricorda deve essere 3

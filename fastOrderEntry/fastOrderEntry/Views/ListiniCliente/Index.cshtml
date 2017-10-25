@@ -325,7 +325,7 @@
             <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
             <div class="form-inline">
                 <div class="form-group col-md-4 col-lg-4">
-                    <input type="text" class="form-control" placeholder="seleziona il cliente.."
+                    <input id="sel-cliente" type="text" class="form-control" placeholder="seleziona il cliente.."
                            typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" autofocus />
                 </div>
                 <div class="input-group">

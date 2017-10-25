@@ -17,6 +17,8 @@ namespace fastOrderEntry.Models
         public decimal sconto_a_2 { get; set; }
         public decimal sconto_a_3 { get; set; }
         public decimal sconto_agente { get; set; }
+        public decimal giacenza { get; set; }
+        public string id_iva { get; set; }
 
         internal void leggiPrezzi(NpgsqlConnection conn)
         {
