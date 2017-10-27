@@ -114,6 +114,11 @@
 
             }
 
+            $scope.saveEdit = function () {
+                $scope.tc.current.username = '@(username)';
+                $scope.tc.saveEdit($scope.tc.current);
+            };
+
             $scope.riseleziona_articoli = function () {
 
                 $http({

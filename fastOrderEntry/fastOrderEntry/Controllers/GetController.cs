@@ -95,7 +95,7 @@ namespace fastOrderEntry.Controllers
             List<Agenti> model = new List<Agenti>();
             using (PetLineContext db = new PetLineContext())
             {
-                model = db.agenti.ToList();
+                model = db.agenti.Where(x=> x.id_tipo_agente == "AG").ToList();
             }
 
             string output = JsonConvert.SerializeObject(model);
