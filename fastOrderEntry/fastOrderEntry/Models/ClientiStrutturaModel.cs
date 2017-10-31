@@ -18,7 +18,8 @@ namespace fastOrderEntry.Models
             {
                 cmd.Connection = conn;
                 cmd.CommandText = "SELECT *, \r\n" +
-                    "(select id_agente from va_clienti_agenti where id_cliente = va_clienti.id_cliente limit 1) as id_agente \r\n" +
+                    "(select va_clienti_agenti.id_agente from va_clienti_agenti inner join va_agenti on va_agenti.id_agente = va_clienti_agenti.id_agente where va_clienti_agenti.id_cliente = va_clienti.id_cliente and va_agenti.id_tipo_agente = 'AG'  limit 1)  as id_agente \r\n" +
+                    //"(select id_agente from va_clienti_agenti where id_cliente = va_clienti.id_cliente limit 1) as id_agente \r\n" +
                     "from va_clienti \r\n" +
                     "inner join va_clienti_soc " +
                     "   on va_clienti_soc.id_societa = '1' " +
