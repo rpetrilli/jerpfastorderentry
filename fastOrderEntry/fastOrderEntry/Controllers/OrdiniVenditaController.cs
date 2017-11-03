@@ -251,7 +251,7 @@ namespace fastOrderEntry.Controllers
         protected override void buildWhere()
         {
             addStringExactValue("vo_ordini.id_cliente", id_cliente);
-            addStringExactValue("vo_ordini_provv_testata.id_agente", id_agente);
+            addStringExactValue("vo_ordini.zpet_id_agente", id_agente);
             addDateRange("vo_ordini.data_ordine", strToDateTime(da_data), strToDateTime(al_data));
             addStringRange("vo_ordini.id_ordine", strWithZeros(id_ordine_da), strWithZeros(id_ordine_al));
             

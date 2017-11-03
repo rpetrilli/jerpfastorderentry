@@ -16,6 +16,7 @@ namespace fastOrderEntry.Models
         public String descrizione { get; set; }
         public String id_um { get; set; }
         public decimal peso_lordo { get; set; }
+        public decimal peso_netto { get; set; }
         public decimal prezzo_acquisto { get; set; }
         public decimal prezzo_vendita { get; set; }
         public decimal sconto_1 { get; set; }
@@ -37,7 +38,7 @@ namespace fastOrderEntry.Models
 
                 descrizione = articoli_soc.descrizione;
                 id_um = articoli_soc.id_um;
-                peso_lordo = articoli_soc.peso_lordo;
+                peso_lordo = articoli_soc.peso_netto;
 
                 prezzo_acquisto = getValoreCond(db, "AC01", this.id_codice_art_rif);
                 prezzo_vendita = getValoreCond(db, "VA01", this.id_codice_art_rif);
@@ -214,6 +215,7 @@ namespace fastOrderEntry.Models
         public String descrizione { get; set; }
         public String id_um { get; set; }
         public decimal peso_lordo { get; set; }
+        public decimal peso_netto { get; set; }
 
 
     }

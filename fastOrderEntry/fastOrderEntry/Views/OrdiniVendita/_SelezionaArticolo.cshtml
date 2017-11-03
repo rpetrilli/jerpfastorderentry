@@ -4,7 +4,11 @@
         <div class="margin-b-10"></div>
         <div class="well well-sm" ng-show="tc.shAdd" >
             <label><strong>Aggiunta Articoli</strong></label>
-            <input type="text" class="form-control" placeholder="seleziona l'articolo .." ng-change="riseleziona_articoli()" ng-model="tc.id_codice_art_new" id="selectArticoloAdd" />
+            <input type="text" class="form-control" 
+                   placeholder="seleziona l'articolo .."
+                   ng-on-enter="riseleziona_articoli()"
+                   ng-model="tc.id_codice_art_new" 
+                   id="selectArticoloAdd" />
             <table class="table table-condensed" ng-show="tc.articoliaggiunta" id="tableArticoli">
                 <thead>
                     <tr>                        
@@ -34,7 +38,7 @@
                                    ng-model="item.qta_ordinata"
                                    style="width:50px;"
                                    class="form-control form-control-custom text-right request-focus"
-                                   ng-on-enter="select_articolo(item)" />
+                                   ng-on-enter="select_articolo($index,item)" />
                         </td>
                         <td>{{item.prezzo_acquisto | number}}</td>
                         <td>{{item.prezzo_vendita | number}}</td>
@@ -43,7 +47,7 @@
                         <td>{{item.sconto_3 | number}}</td>
                        
                         <td>{{item.id_iva}}</td>
-                        <td><button class="btn btn-grey btn-xs" ng-click="select_articolo(item)"><i class="glyphicon glyphicon-check"></i></button></td>
+                        <td><button class="btn btn-grey btn-xs" ng-click="select_articolo($index,item)"><i class="glyphicon glyphicon-check"></i></button></td>
                     </tr>
                 </tbody>
             </table>

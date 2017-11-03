@@ -332,9 +332,14 @@ myModule.directive('typehead', function () {
 
                     return $.post(attrs['typehead'], params , function (data) {
                         $.each(data, function (i, rs) {
-         
-                            mapObj[rs.name] = rs;
-                            rss.push(rs.name);
+
+                            var provincia = '';
+                            if (typeof (rs.provincia) != 'undefined') {
+                                provincia = ' (' + rs.provincia + ')'; 
+                            }
+
+                            mapObj[rs.id.replace(/^0+/, '') + ' ' + rs.name] = rs;
+                            rss.push(rs.id.replace(/^0+/, '') + ' ' + rs.name);
                         });
                         process(rss);
                     });

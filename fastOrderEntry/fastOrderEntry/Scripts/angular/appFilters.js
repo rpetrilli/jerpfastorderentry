@@ -20,6 +20,20 @@ app.filter('iva', function ($filter) {
     }
 });
 
+app.filter('totpz', function ($filter) {
+    return function (ordine) {
+        var tot = 0;
+        if (!ordine.righe) {
+            return 0;
+        }
+        for (var i = 0; i < ordine.righe.length; i++) {
+            tot += ordine.righe[i].qta_ordinata;
+        }
+        return tot;
+    }
+});
+
+
 app.filter('totpeso', function ($filter) {
     return function (ordine) {
         var tot = 0;

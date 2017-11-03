@@ -35,8 +35,10 @@ namespace fastOrderEntry.Models
         public bool ordine_chiuso { get; set; }
         public string id_agente { get; set; }
         public string note_magazzino { get; set; }
+        public string noteordine { get; set; }
         public int colli { get; set; }
         public string username { get; set; }
+        public decimal sconto_cassa { get; set; }
 
         public override void delete(NpgsqlConnection con)
         {
@@ -131,6 +133,7 @@ namespace fastOrderEntry.Models
                         ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
                         id_agente = Convert.ToString(reader["zpet_id_agente"]);
                         note_magazzino = Convert.ToString(reader["zpet_note_magazzino"]);
+                        noteordine = Convert.ToString(reader["nota"]);
                         colli = !string.IsNullOrEmpty(Convert.ToString(reader["zpet_colli"])) ? Convert.ToInt32(reader["zpet_colli"]) : 1;
                     }
                 }

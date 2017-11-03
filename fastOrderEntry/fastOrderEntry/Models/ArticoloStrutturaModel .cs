@@ -28,7 +28,7 @@ namespace fastOrderEntry.Models
                         "   (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
                         "from ma_articoli_soc \r\n" +
                         "where (upper(id_codice_art) like (@query) or upper(descrizione)  like (@query) ) \r\n" +
-                        "order by id_codice_art asc \r\n" +
+                        "order by descrizione  \r\n" +
                         "limit 15";
                     
                     cmd.Parameters.AddWithValue("query",  query.ToUpper() + "%");
