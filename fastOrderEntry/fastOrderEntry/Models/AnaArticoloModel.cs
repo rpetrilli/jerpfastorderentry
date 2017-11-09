@@ -25,6 +25,7 @@ namespace fastOrderEntry.Models
         public string codice_ean { get; set; }
         public string id_fornitore { get; set; }
         public string cod_fornitore { get; set; }
+        public string id_iva { get; set; }
         public List<CondizioneCliente> condizioni_cliente { get; set; }
 
         public void select()
@@ -36,9 +37,27 @@ namespace fastOrderEntry.Models
                             select art;
                 var articoli_soc = query.FirstOrDefault<ma_articoli_soc>();
 
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = (NpgsqlConnection)db.Database.Connection;
+                    cmd.Connection.Open();
+                    cmd.CommandText = "select * from aa_source_list where id_cod_articolo = '" + articoli_soc.id_codice_art+ "' and preferenziale = true limit 1 \r\n";                    
+                    cmd.ExecuteNonQuery();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            id_fornitore = reader.IsDBNull(reader.GetOrdinal("id_fornitore")) == true ? "" : reader.GetString(reader.GetOrdinal("id_fornitore"));
+                            cod_fornitore = reader.IsDBNull(reader.GetOrdinal("codice_fornitore")) == true ? "" : reader.GetString(reader.GetOrdinal("codice_fornitore"));
+                        }
+                    }
+                    cmd.Connection.Close();
+                }
+
                 descrizione = articoli_soc.descrizione;
                 id_um = articoli_soc.id_um;
-                peso_lordo = articoli_soc.peso_netto;
+                peso_netto = articoli_soc.peso_netto;
+                id_iva = articoli_soc.id_iva;
 
                 prezzo_acquisto = getValoreCond(db, "AC01", this.id_codice_art_rif);
                 prezzo_vendita = getValoreCond(db, "VA01", this.id_codice_art_rif);
@@ -79,7 +98,7 @@ namespace fastOrderEntry.Models
                     {
                         while (reader.Read())
                         {
-                            id_codice_art = ""+ Convert.ToInt32( reader["ultimo_valore"]);
+                            id_codice_art = ""+ (Convert.ToInt32( reader["ultimo_valore"]) + 1);
                         }
                     }
 
@@ -96,14 +115,6 @@ namespace fastOrderEntry.Models
                     cmd.Connection.Close();
                 }
 
-                try
-                {
-                    id_codice_art = "" + int.Parse(id_codice_art) + 1;
-                }
-                catch
-                {
-                    id_codice_art = "1";
-                }
 
 
                 //Leggi codice a barre
@@ -216,9 +227,9 @@ namespace fastOrderEntry.Models
         public String id_um { get; set; }
         public decimal peso_lordo { get; set; }
         public decimal peso_netto { get; set; }
-
-
+        public string id_iva { get; set; }
     }
+    
 
     [Table("da_listini_articolo", Schema = "public")]
     public class da_listini_articolo

@@ -1,9 +1,12 @@
 ﻿<div ng-show="page_status == 'copia'">
+
+    {{ articolo_corrente | json}}
+
     <div class="page-toolbar">
         <button class="btn btn-default" ng-click="annulla()">Annulla</button>
         <button class="btn btn-success" ng-click="save()"><i class="fa fa-copy"></i>&nbsp;Copia</button>
     </div>
-    <div class="margin-b-10"></div>    
+    <div class="margin-b-10"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-primary">
@@ -16,32 +19,40 @@
                                         <label for="id_codice_art">Codice Articolo:</label>
                                         <input type="text" class="form-control" id="id_codice_art" ng-model="articolo_corrente.id_codice_art" placeholder="Codice articolo">
                                     </div>
-
                                     <div class="form-group">
                                         <label for="descrizione">Descrizione Articolo:</label>
                                         <input type="text" class="form-control" id="descrizione" ng-model="articolo_corrente.descrizione" placeholder="Descrizione Articolo">
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="codice_ean">Codice EAN:</label>
-                                        <input type="text" class="form-control" id="codice_ean" ng-model="articolo_corrente.codice_ean" placeholder="Codice EAN">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label for="codice_ean">Codice EAN:</label>
+                                            <input type="text" class="form-control" id="codice_ean" ng-model="articolo_corrente.codice_ean" placeholder="Codice EAN">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="codice_ean">Codice Fornitore:</label>
+                                            <input type="text" class="form-control" id="cod_fornitore" ng-model="articolo_corrente.cod_fornitore" placeholder="Codice Fornitore">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="row">
-                                <div class="col-sm-5">
+                                <div class="col-sm-4">
                                     <label for="prezzo_acquisto">Prezzo Acquisto:</label>
                                     <input type="number" class="form-control" id="prezzo_acquisto" ng-model="articolo_corrente.prezzo_acquisto" placeholder="Prezzo Acq.">
                                 </div>
-                                <div class="col-sm-5">
+                                <div class="col-sm-4">
                                     <label for="prezzo_vendita">Prezzo Vendita:</label>
                                     <input type="number" class="form-control" id="prezzo_vendita" ng-model="articolo_corrente.prezzo_vendita" placeholder="Prezzo Vend.">
                                 </div>
                                 <div class="col-sm-2">
+                                    <label for="peso_lordo">Iva:</label>
+                                    <input type="text" class="form-control" id="id_iva" ng-model="articolo_corrente.id_iva" placeholder="Iva">
+                                </div>
+                                <div class="col-sm-2">
                                     <label for="peso_lordo">Peso:</label>
-                                    <input type="number" class="form-control" id="peso_lordo" ng-model="articolo_corrente.peso_lordo" placeholder="Peso">
+                                    <input type="number" class="form-control" id="peso_lordo" ng-model="articolo_corrente.peso_netto" placeholder="Peso">
                                 </div>
                             </div>
                             <div class="row">
@@ -96,6 +107,3 @@
         </div>
     </div>
 </div> <!-- Fine scheda di copia -->
-
-
-
