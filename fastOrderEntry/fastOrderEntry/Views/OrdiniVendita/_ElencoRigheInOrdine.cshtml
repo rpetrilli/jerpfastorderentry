@@ -1,8 +1,17 @@
-﻿
-<div class="row" ng-show="tc.current.id_cliente.length > 0">
+﻿<div class="row" ng-show="tc.current.id_cliente.length > 0">
     <div class="col-sm-12">
         <div class="panel panel-primary">
             <div class="panel-body">
+                <label>
+                    <input type="radio" ng-model="ordinamento" value="nr_riga">
+                    Riga
+                </label>
+                <label>
+                    <input type="radio" ng-model="ordinamento" value="id_fornitore">
+                    Fornitore
+                </label>
+                <div class="margin-b-20"></div>
+
                 <table class="table table-hover table-condensed" id="tableOrdine">
                     <thead>
                         <tr>
@@ -23,7 +32,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr dir-paginate="item in tc.current.righe | itemsPerPage: 10 track by $index">
+                        <tr dir-paginate="item in tc.current.righe | orderBy:ordinamento | itemsPerPage: 10 track by $index">
                             <td>{{item.id_codice_art}}</td>
                             <td>{{item.descrizione}}</td>
                             <td>{{item.prezzo_acquisto}}</td>

@@ -114,7 +114,6 @@ myModule.factory('tabController', function ($http) {
             fac.prop.select_row_call_back(fac.rec_pagina + 1);
         };
 
-
         fac.previous_record = function () {
 
             switch (fac.table) {
@@ -158,7 +157,6 @@ myModule.factory('tabController', function ($http) {
             }
         };
 
-
         fac.deleteItem = function (item) {
             bootbox.confirm("Intendi procedere?", function (result) {
                 if (result) {
@@ -178,9 +176,7 @@ myModule.factory('tabController', function ($http) {
                     });
                 }
             });
-        };
-
-        
+        };        
 
         fac.edit = function (item) {
             fac.nuovo = false;
@@ -204,7 +200,6 @@ myModule.factory('tabController', function ($http) {
             });
 
         };
-
 
         fac.create = function (item) {
             fac.nuovo = true;
@@ -231,7 +226,6 @@ myModule.factory('tabController', function ($http) {
                 fac.update(item, callback);
             }
         };
-
 
         fac.insert = function (item, callback) {
             $http({
@@ -272,7 +266,6 @@ myModule.factory('tabController', function ($http) {
                 fac.prop.message_function('Errore', error.data);
             });
         };
-
 
         fac.cancelEdit = function () {
             fac.shAdd = false;

@@ -145,7 +145,7 @@ namespace fastOrderEntry.Models
             {
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
-                    "      * \r\n" +
+                    "      vo_ordini_righe.*, aa_source_list.id_fornitore \r\n" +
                     "from vo_ordini_righe \r\n" +
                     "left join ma_articoli_soc " +
                     "   on ma_articoli_soc.id_societa = '1' " +
@@ -153,7 +153,13 @@ namespace fastOrderEntry.Models
                     "left join ca_iva \r\n" +
                     "   on ca_iva.id_societa = '1' \r\n" +
                     "   and ca_iva.id_iva = ma_articoli_soc.id_iva \r\n" +
-                    "where vo_ordini_righe.id_societa = '1' \r\n" +
+                    
+                    "left join aa_source_list \r\n" +
+                    "   on aa_source_list.preferenziale = true \r\n" +
+                    "   and aa_source_list.id_divisione = '1' \r\n" +
+                    "   and aa_source_list.id_cod_articolo = ma_articoli_soc.id_codice_art \r\n" +
+
+                     "where vo_ordini_righe.id_societa = '1' \r\n" +
                     "  and vo_ordini_righe.esercizio = @esercizio \r\n" +
                     "  and vo_ordini_righe.id_ordine = @id_ordine \r\n" +
                     "order by nr_riga";
@@ -174,6 +180,8 @@ namespace fastOrderEntry.Models
                         item.descrizione = Convert.ToString(reader["descrizione"]);
                         item.id_um = Convert.ToString(reader["id_um"]);
                         item.quantita = Convert.ToDecimal(reader["quantita"]);
+
+                        item.id_fornitore = Convert.ToString(reader["id_fornitore"]);
 
                         item.prezzo_vendita = Convert.ToDecimal(reader["prezzo_unitario"]);
                         try { item.sconto_1 = Convert.ToDecimal(reader["zpet_sconto_1"]); } catch { }
@@ -241,7 +249,8 @@ namespace fastOrderEntry.Models
         public decimal sconto_agente { get; set; } = 0;
         public decimal peso_lordo { get; set; } = 0;
         public decimal aliquota { get; set; } = 0;
-        
+        public string id_fornitore { get; set; }
+
     }
 
 }
