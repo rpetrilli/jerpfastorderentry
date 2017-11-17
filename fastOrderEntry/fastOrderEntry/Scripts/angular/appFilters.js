@@ -13,6 +13,12 @@ app.filter('prezzo', function () {
     }
 });
 
+app.filter('prezzoacq', function () {
+    return function (value) {
+        return value.prezzo_acquisto * (100 - value.sconto_a_1) / 100 * (100 - value.sconto_a_2) / 100 * (100 - value.sconto_a_3) / 100;
+    }
+});
+
 app.filter('iva', function ($filter) {
     return function (value) {
         var imponibile = $filter('imponibile')(value);
@@ -41,7 +47,7 @@ app.filter('totpeso', function ($filter) {
             return 0;
         }
         for (var i = 0; i < ordine.righe.length; i++) {
-            tot += ordine.righe[i].peso_lordo;
+            tot += (ordine.righe[i].peso_netto /1000);
         }
         return tot;
     }

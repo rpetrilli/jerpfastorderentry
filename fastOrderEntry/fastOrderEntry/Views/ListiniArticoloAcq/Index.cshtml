@@ -309,7 +309,7 @@
                         <th>Art</th>
                         <th>Descrizione</th>
                         <th>
-                            Pr Acq
+                            Pr Lis
                         </th>
                         <th>
                             Pr Ven                                                        
@@ -344,6 +344,9 @@
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="sconto_3_massivo" style="width:80px;" />
                         </th>
+                        <th>
+                            Prz Acq
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -375,6 +378,9 @@
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_a_3" style="width:80px;"
                                    ng-focus="linefocused($index);" />
+                        </td>
+                        <td>
+                            <span class="badge badge-success">{{item | prezzoacq | number:2}}</span>
                         </td>
                         <td>
                             <button class="btn btn-primary btn-xs"

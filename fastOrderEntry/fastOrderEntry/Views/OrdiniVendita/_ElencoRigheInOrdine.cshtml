@@ -17,7 +17,6 @@
                         <tr>
                             <th>Art</th>
                             <th>Descrizione</th>
-                            <th>Prezzo Acq</th>
                             <th>Q.tà Ordinata</th>
                             <th>Q.tà In Consegna</th>
                             <th>Prezzo <input type="checkbox" ng-model="checked" /></th>
@@ -26,8 +25,9 @@
                             <th>Sc 3</th>
                             <th>Sc Ag</th>
                             <th>Cod.IVA</th>
-                            <th>Prezzo</th>
-                            <th>Imponibile</th>
+                            <th class="text-right">Prezzo</th>
+                            <th class="text-right">Imponibile</th>
+                            <th class="text-right">Prezzo Acq</th>
                             <th ng-hide="tc.current.ordine_chiuso"></th>
                         </tr>
                     </thead>
@@ -35,7 +35,6 @@
                         <tr dir-paginate="item in tc.current.righe | orderBy:ordinamento | itemsPerPage: 10 track by $index">
                             <td>{{item.id_codice_art}}</td>
                             <td>{{item.descrizione}}</td>
-                            <td>{{item.prezzo_acquisto}}</td>
                             <td>
                                 <input type="number" class="form-control form-control-custom text-right request-focus"
                                        ng-model="item.qta_ordinata" style="width:80px;"
@@ -79,13 +78,14 @@
                                        ng-focus="linefocused($index);"
                                        ng-disabled="tc.current.ordine_chiuso" />
                             </td>
-                            <td>
+                            <td class="text-right">
                                 {{item.id_iva}}
                             </td>
-                            <td>{{item | prezzo | number:2}}</td>
-                            <td>
-                                {{item | imponibile | number:2}}
+                            <td class="text-right"><span class="badge badge-success">{{item | prezzo | number:2}}</span></td>
+                            <td class="text-right">
+                                <span class="badge badge-warning">{{item | imponibile | number:2}}</span>
                             </td>
+                            <td class="text-right"><span class="badge badge-danger">{{item | prezzoacq | number:2}}</span></td>
                             <td ng-hide="tc.current.ordine_chiuso">
                                 <button class="btn btn-grey btn-xs" ng-click="eminina_riga(item)"><i class="glyphicon glyphicon-trash"></i></button>
                             </td>

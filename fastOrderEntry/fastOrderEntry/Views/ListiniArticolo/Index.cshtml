@@ -379,10 +379,10 @@
                                    ng-model="item.sconto_3" style="width:80px;"
                                    ng-focus="linefocused($index);" />
                         </td>
-                        <td>{{ item | prezzo | number:2}}</td>
+                        <td><span class="badge badge-success"> {{ item | prezzo | number:2}}</span></td>
                         <td>{{item.id_iva}}</td>
                         <td>
-                            {{item.prezzo_acquisto}}
+                            <span class="badge badge-danger">{{item | prezzoacq | number:2}}</span>
                             @*<input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.prezzo_acquisto" style="width:80px;"
                                    ng-focus="linefocused($index);" />*@

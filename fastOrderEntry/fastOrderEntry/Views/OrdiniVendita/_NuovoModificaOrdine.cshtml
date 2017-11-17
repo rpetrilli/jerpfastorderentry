@@ -25,7 +25,7 @@
                     ng-hide="tc.nuovo || tc.current.ordine_chiuso">
                 <i class="fa fa-file-o">&nbsp;</i>FAT
             </button>
-            <button class="btn btn-grey" ng-click="print(tc.current)"><i class="fa fa-print">&nbsp;</i>Stampa</button>
+            <button class="btn btn-grey" ng-click="print(tc.current)"  ng-hide="!tc.current.id_ordine"><i class="fa fa-print">&nbsp;</i>Stampa</button>
         </div>
     </div>
     <div class="clearfix"></div>

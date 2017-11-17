@@ -40,8 +40,8 @@
                                    class="form-control form-control-custom text-right request-focus"
                                    ng-on-enter="select_articolo($index,item)" />
                         </td>
-                        <td>{{item.prezzo_acquisto | number}}</td>
-                        <td>{{item.prezzo_vendita | number}}</td>
+                        <td><span class="badge badge-danger">{{item | prezzoacq | number: 2}}</span></td>
+                        <td><span class="badge badge-success">{{item.prezzo_vendita | number:2}}</span></td>
                         <td>{{item.sconto_1 | number}}</td>
                         <td>{{item.sconto_2 | number}}</td>
                         <td>{{item.sconto_3 | number}}</td>

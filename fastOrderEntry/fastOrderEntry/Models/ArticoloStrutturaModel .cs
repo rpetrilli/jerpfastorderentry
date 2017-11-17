@@ -43,7 +43,8 @@ namespace fastOrderEntry.Models
                             r.id_codice_art = reader["id_codice_art"].ToString();
                             r.descrizione = reader["descrizione"].ToString();
                             r.id_iva = reader["id_iva"].ToString();
-                            r.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]);                            
+                            r.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]);
+                            r.peso_netto = Convert.ToDecimal(reader["peso_netto"]);
                             r.giacenza = !string.IsNullOrEmpty(reader["giacenza"].ToString()) ?  Convert.ToDecimal(reader["giacenza"]) : 0;
 
                             CodiceIva codiceIva = db.codiceIva.FirstOrDefault(x => x.id_iva == r.id_iva);
@@ -65,12 +66,17 @@ namespace fastOrderEntry.Models
                     RecordListinoModel listinoArticolo = new RecordListinoModel();
                     listinoArticolo.id_codice_art = r.id_codice_art;
                     listinoArticolo.leggiPrezzi(con);
+                    
 
                     r.prezzo_acquisto = listinoArticolo.prezzo_acquisto;
                     r.prezzo_vendita = listinoCliente.prezzo_vendita > 0 ? listinoCliente.prezzo_vendita : listinoArticolo.prezzo_vendita;
                     r.sconto_1 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_1 : listinoArticolo.sconto_1;
                     r.sconto_2 = listinoCliente.sconto_2 > 0 ? listinoCliente.sconto_2 : listinoArticolo.sconto_2;
                     r.sconto_3 = listinoCliente.sconto_3 > 0 ? listinoCliente.sconto_3 : listinoArticolo.sconto_3;
+                    r.sconto_a_1 = listinoArticolo.sconto_a_1;
+                    r.sconto_a_2 = listinoArticolo.sconto_a_2;
+                    r.sconto_a_3 = listinoArticolo.sconto_a_3;
+
                     r.sconto_agente = 0;
                     r.leggiUltimoOrdine(con);
 
@@ -93,12 +99,17 @@ namespace fastOrderEntry.Models
         public decimal sconto_1 { get; set; }
         public decimal sconto_2 { get; set; }
         public decimal sconto_3 { get; set; }
+        public decimal sconto_a_1 { get; set; }
+        public decimal sconto_a_2 { get; set; }
+        public decimal sconto_a_3 { get; set; }
         public decimal sconto_agente { get; set; }
         public string id_iva { get; set; }
         public decimal aliquota { get; set; }
         public decimal qta_ordinata { get; set; } = 1;
         public decimal qta_in_consegna { get; set; } = 0;
         public decimal peso_lordo { get; set; }
+        public decimal peso_netto { get; set; }
+
 
         public string data_ordine { get; set; }
         public decimal prezzo_unitario { get; set; }

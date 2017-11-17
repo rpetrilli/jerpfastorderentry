@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using System.Text;
 using Newtonsoft.Json;
 using System.IO;
+using fastOrderEntry.Helpers;
 
 namespace fastOrderEntry.Models
 {
@@ -35,6 +36,7 @@ namespace fastOrderEntry.Models
         public bool ordine_chiuso { get; set; }
         public string id_agente { get; set; }
         public string note_magazzino { get; set; }
+        public string note { get; set; }
         public string noteordine { get; set; }
         public int colli { get; set; }
         public string username { get; set; }
@@ -106,9 +108,12 @@ namespace fastOrderEntry.Models
             {
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
-                    "      vo_ordini.*, \r\n" +
-                    "       (select id_gc_cliente_id from va_clienti where id_cliente = vo_ordini.id_cliente ) as id_gc_cliente_id \r\n" +
+                    "      vo_ordini.*,  \r\n" +
+                    "      va_clienti.id_gc_cliente_id, \r\n" +
+                    "      va_clienti.note as note_cliente \r\n" +
                     "from vo_ordini \r\n" +
+                    "left join va_clienti on "+
+                    "va_clienti.id_cliente = vo_ordini.id_cliente "+
                     "where id_societa = '1' and esercizio = @esercizio and id_ordine = @id_ordine";
 
                 cmd.Parameters.AddWithValue("esercizio", esercizio);
@@ -133,6 +138,7 @@ namespace fastOrderEntry.Models
                         ordine_chiuso = Convert.ToBoolean(reader["ordine_chiuso"]);
                         id_agente = Convert.ToString(reader["zpet_id_agente"]);
                         note_magazzino = Convert.ToString(reader["zpet_note_magazzino"]);
+                        note = Convert.ToString(reader["note_cliente"]);
                         noteordine = Convert.ToString(reader["nota"]);
                         colli = !string.IsNullOrEmpty(Convert.ToString(reader["zpet_colli"])) ? Convert.ToInt32(reader["zpet_colli"]) : 1;
                     }
@@ -145,7 +151,7 @@ namespace fastOrderEntry.Models
             {
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
-                    "      vo_ordini_righe.*, aa_source_list.id_fornitore \r\n" +
+                    "      vo_ordini_righe.*, aa_source_list.id_fornitore, ca_iva.* \r\n" +
                     "from vo_ordini_righe \r\n" +
                     "left join ma_articoli_soc " +
                     "   on ma_articoli_soc.id_societa = '1' " +
@@ -191,7 +197,12 @@ namespace fastOrderEntry.Models
                         try { item.qta_ordinata = Convert.ToDecimal(reader["zpet_qta_ordinata"]); } catch { }
                         try{ item.qta_in_consegna = Convert.ToDecimal(reader["zpet_qta_in_consegna"]); } catch { }
                         try { item.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]); } catch { }
+                        try { item.peso_netto = Convert.ToDecimal(reader["peso_netto"]); } catch { }
                         try { item.aliquota = Convert.ToDecimal(reader["aliquota"]); } catch { }
+                        try { item.sconto_a_1 = leggiSconto(Convert.ToString(reader["id_codice_art"]), "SA01"); } catch { }
+                        try { item.sconto_a_2 = leggiSconto(Convert.ToString(reader["id_codice_art"]), "SA02"); } catch { }
+                        try { item.sconto_a_3 = leggiSconto(Convert.ToString(reader["id_codice_art"]), "SA03"); } catch { }
+                        try { item.prezzo_acquisto = leggiPrezzoAcquisto(Convert.ToString(reader["id_codice_art"]), "AC01"); } catch { }
 
                         righe.Add(item);
 
@@ -200,6 +211,56 @@ namespace fastOrderEntry.Models
                 }
             }
 
+        }
+
+        private decimal leggiPrezzoAcquisto(string id_codice_art, string id_cond_prezzo)
+        {
+            NpgsqlConnection con = DbUtils.GetDefaultConnection();
+            con.Open();
+            decimal prz = 0;
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT * from da_listini_articolo where id_cond_prezzo = @id_cond_prezzo and id_codice_art = @id_codice_art limit 1";
+                cmd.Parameters.AddWithValue("id_cond_prezzo", id_cond_prezzo);
+                cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        prz = reader.GetDecimal(reader.GetOrdinal("val_condizione"));
+                    }
+                }
+            }
+            con.Close();
+            return prz;
+        }
+
+        private decimal leggiSconto(string id_codice_art, string id_cond_prezzo)
+        {
+            NpgsqlConnection con = DbUtils.GetDefaultConnection();
+            con.Open();
+            decimal sconto = 0;
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT * from da_sconti_articolo where id_cond_prezzo = @id_cond_prezzo and id_codice_art = @id_codice_art limit 1";
+                cmd.Parameters.AddWithValue("id_cond_prezzo", id_cond_prezzo);
+                cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        sconto = reader.GetDecimal(reader.GetOrdinal("val_condizione"));
+                    }
+                }
+            }
+            con.Close();
+            return sconto;
         }
 
         public override void update(NpgsqlConnection con)
@@ -239,6 +300,7 @@ namespace fastOrderEntry.Models
         public string id_um { get; set; }
         public decimal quantita { get; set; }
         public decimal prezzo_vendita { get; set; }
+        public decimal prezzo_acquisto { get; set; }
         public string str_sconto { get; set; }
 
         public decimal qta_ordinata { get; set; } = 0;
@@ -246,8 +308,12 @@ namespace fastOrderEntry.Models
         public decimal sconto_1 { get; set; } = 0;
         public decimal sconto_2 { get; set; } = 0;
         public decimal sconto_3 { get; set; } = 0;
+        public decimal sconto_a_1 { get; set; }
+        public decimal sconto_a_2 { get; set; }
+        public decimal sconto_a_3 { get; set; }
         public decimal sconto_agente { get; set; } = 0;
         public decimal peso_lordo { get; set; } = 0;
+        public decimal peso_netto { get; set; } = 0;
         public decimal aliquota { get; set; } = 0;
         public string id_fornitore { get; set; }
 

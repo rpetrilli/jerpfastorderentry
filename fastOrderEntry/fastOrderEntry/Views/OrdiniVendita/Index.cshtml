@@ -234,8 +234,9 @@
             };
 
             $scope.print = function () {
-                $scope.tc.current.username = '@(username)';
-                $scope.tc.saveEdit( $scope.tc.current, openstampa);
+                @*$scope.tc.current.username = '@(username)';
+                $scope.tc.saveEdit( $scope.tc.current, openstampa);*@
+                openstampa($scope.tc.current);
             };
 
         }]);
