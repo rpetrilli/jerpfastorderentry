@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Listini Cliente";
+    ViewBag.Title = "Provvigioni Agente";
 }
 @section header {
 
@@ -22,8 +22,8 @@
             $scope.cod_cat_merc_sel = '';
             $scope.massivo = { prezzo_vendita: 0, sconto_1: 0, sconto_2: 0, sconto_3: 0 }
 
-            $scope.select_cliente_filtri = function (item) {
-                $scope.id_cliente = item ? item.id : '';
+            $scope.select_agente_filtri = function (item) {
+                $scope.id_agente = item ? item.id : '';
                 $scope.refresh_page($scope.pag_corrente);
             };
 
@@ -98,7 +98,7 @@
                     method: 'GET',
                     url: '@(Url.Action("getConenutoPagina"))',
                     params: {
-                        query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, id_cliente: $scope.id_cliente, page_number: page_number
+                        query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, id_agente: $scope.id_agente, page_number: page_number
                     }
                 }).then(function (response) {
                         $scope.records = response.data;
@@ -146,7 +146,7 @@
             };
 
             $scope.save = function (item) {
-                item.id_cliente = $scope.id_cliente;
+                item.id_agente = $scope.id_agente;
                 $http({
                     method: 'POST',
                     url: '@(Url.Action("saveListino"))',
@@ -184,7 +184,7 @@
                             prezzo_massivo: $scope.prezzo_vendita_massivo,
                             query: $scope.query,
                             cod_cat_merc: $scope.cod_cat_merc_sel,
-                            id_cliente: $scope.id_cliente
+                            id_agente: $scope.id_agente
                         }
                     }).then(function (response) {
                         $scope.refresh_page($scope.pag_corrente);
@@ -205,7 +205,7 @@
                             sconto_massivo: $scope.sconto_1_massivo,
                             query: $scope.query,
                             cod_cat_merc: $scope.cod_cat_merc_sel,
-                            id_cliente: $scope.id_cliente
+                            id_agente: $scope.id_agente
                         }
                     }).then(function (response) {
                         $scope.refresh_page($scope.pag_corrente);
@@ -226,7 +226,7 @@
                             sconto_massivo: $scope.sconto_2_massivo,
                             query: $scope.query,
                             cod_cat_merc: $scope.cod_cat_merc_sel,
-                            id_cliente: $scope.id_cliente
+                            id_agente: $scope.id_agente
                         }
                     }).then(function (response) {
                         $scope.refresh_page($scope.pag_corrente);
@@ -247,7 +247,7 @@
                             sconto_massivo: $scope.sconto_3_massivo,
                             query: $scope.query,
                             cod_cat_merc: $scope.cod_cat_merc_sel,
-                            id_cliente: $scope.id_cliente
+                            id_agente: $scope.id_agente
                         }
                     }).then(function (response) {
                         $scope.refresh_page($scope.pag_corrente);
@@ -310,7 +310,7 @@
                 <li>
                     <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
                 </li>
-                <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_meselect_cliente_filtrirc == cod_cat_merc_sel}">
+                <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_merc == cod_cat_merc_sel}">
                     <a class="livello{{item.livello}}"
                        ng-click="selezionaCategoria(item)"
                        ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">
@@ -325,15 +325,15 @@
             <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
             <div class="form-inline">
                 <div class="form-group col-md-4 col-lg-4">
-                    <input id="sel-cliente" type="text" class="form-control" placeholder="seleziona il cliente.."
-                           typehead="@(Url.Action("GetClienti", "Get"))" on-select="select_cliente_filtri" autofocus />
+                    <input id="sel-cliente" type="text" class="form-control" placeholder="seleziona agente.."
+                           typehead="@(Url.Action("GetAgenti", "Get"))" on-select="select_agente_filtri" autofocus />
                 </div>
                 <div class="input-group">
                     <input id="query" capitalize
-                           type="text" 
-                           class="form-control" 
-                           placeholder="cerca per codice articolo o descrizione..." 
-                           ng-model="query" 
+                           type="text"
+                           class="form-control"
+                           placeholder="cerca per codice articolo o descrizione..."
+                           ng-model="query"
                            ng-on-enter="refresh()" />
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="refresh()"><i class="fa fa-search"></i>&nbsp;Cerca</button>
@@ -351,13 +351,13 @@
                         <th>
                             Pr Ven
                             @*<br />
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_prezzo()">
-                                <span class="fa fa-clone" />
-                            </button>
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="prezzo_vendita_massivo" style="width:80px;" />*@
+                                <button class="btn btn-primary btn-xs"
+                                        ng-click="copia_prezzo()">
+                                    <span class="fa fa-clone" />
+                                </button>
+                                <br />
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="prezzo_vendita_massivo" style="width:80px;" />*@
                         </th>
                         <th>
                             Sc 1
@@ -399,25 +399,25 @@
                         <td>
                             <input type="number" class="form-control form-control-custom text-right request-focus"
                                    ng-model="item.prezzo_vendita" style="width:80px;"
-                                   ng-disabled="!id_cliente"
+                                   ng-disabled="!id_agente"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_1" style="width:80px;"
-                                   ng-disabled="!id_cliente"
+                                   ng-disabled="!id_agente"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_2" style="width:80px;"
-                                   ng-disabled="!id_cliente"
+                                   ng-disabled="!id_agente"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.sconto_3" style="width:80px;"
-                                   ng-disabled="!id_cliente"
+                                   ng-disabled="!id_agente"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>

@@ -151,7 +151,7 @@ namespace fastOrderEntry.Models
             {
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
-                    "      vo_ordini_righe.*, aa_source_list.id_fornitore, ca_iva.* \r\n" +
+                    "      vo_ordini_righe.*, aa_source_list.id_fornitore, ca_iva.*, ma_articoli_soc.peso_netto, ma_articoli_soc.peso_lordo \r\n" +
                     "from vo_ordini_righe \r\n" +
                     "left join ma_articoli_soc " +
                     "   on ma_articoli_soc.id_societa = '1' " +

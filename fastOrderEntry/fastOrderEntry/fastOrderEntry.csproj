@@ -221,6 +221,7 @@
     <Compile Include="Controllers\ListiniArticoloController.cs" />
     <Compile Include="Controllers\ListiniClienteController.cs" />
     <Compile Include="Controllers\OrdiniVenditaController.cs" />
+    <Compile Include="Controllers\ProvvigioniController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -238,6 +239,7 @@
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\OrdineVenditaModel.cs" />
     <Compile Include="Models\PetLineContext.cs" />
+    <Compile Include="Models\ProvvigioniModel.cs" />
     <Compile Include="Models\RecordListinoModel.cs" />
     <Compile Include="Models\ArticoloStrutturaModel .cs" />
     <Compile Include="Models\VettoreStrutturaModel.cs" />
@@ -352,6 +354,7 @@
     <Content Include="Views\Articoli\_CopiaArticolo.cshtml" />
     <Content Include="Views\OrdiniVendita\_ModalCercaCliente.cshtml" />
     <Content Include="Views\ListiniArticoloAcq\Index.cshtml" />
+    <Content Include="Views\Provvigioni\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
