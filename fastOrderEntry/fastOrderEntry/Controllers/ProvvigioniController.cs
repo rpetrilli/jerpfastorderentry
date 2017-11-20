@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using static fastOrderEntry.Models.ProvvigioniModel;
 
 namespace fastOrderEntry.Controllers
 {
@@ -27,7 +28,6 @@ namespace fastOrderEntry.Controllers
             return View();
         }
 
-        [HttpGet]
         public JsonResult GetPaginatore(string query, string cod_cat_merc)
         {
             query = string.IsNullOrEmpty(query) ? string.Empty : query.ToUpper();
@@ -65,22 +65,44 @@ namespace fastOrderEntry.Controllers
             return jsonResult;
         }
 
-
-        [HttpGet]
-        public JsonResult GetConenutoPagina(string query, string cod_cat_merc, int page_number)
+        public JsonResult GetConenutoPagina(string query, string cod_cat_merc, string id_agente, int page_number)
         {
             con.Open();
 
-            ListinoModel listino = new ListinoModel();
-            listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA);
+            ProvvigioniModel proviggioni = new ProvvigioniModel();
+            proviggioni.select(con, query, cod_cat_merc, id_agente, page_number, REC_X_PAGINA);
 
 
 
-            var jsonResult = Json(listino.recordlistino, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(proviggioni.recordprovvigione, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();
             return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult saveProvvigione(RecordProvvigioneModel item)
+        {
+            con.Open();
+            item.ScriviProvvigione(con);
+            con.Close();
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult copia_provvigione(decimal valore_massivo, string query, string cod_cat_merc, string id_agente)        {
+            
+            con.Open();
+
+            ProvvigioniModel provvigioni = new ProvvigioniModel();
+            provvigioni.update_massivo_provvigione(con, valore_massivo, query, cod_cat_merc, id_agente);
+
+            //TODO: copia listino
+
+            con.Close();
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

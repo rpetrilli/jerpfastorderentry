@@ -340,6 +340,39 @@
                     </span>
                 </div>
             </div>
+            <div ng-show="pag_number > 1">
+                <ul class="pagination" style="text-align: center;">
+                    <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
+                    <li>
+                        <a ng-click="refresh_page(0)"
+                           ng-class="{disabled: pag_corrente == 0}"
+                           href="#nav">&lt;&lt;</a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_corrente-1)"
+                           ng-class="{disabled: pag_corrente == 0}"
+                           href="#nav">&lt;</a>
+                    </li>
+                    <li ng-repeat="p_nr in [0,1,2,3]">
+                        <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
+                           ng-bind="nr_pagina_paginatore(p_nr) + 1"
+                           ng-hide="nr_pagina_paginatore(p_nr)==-1"
+                           ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
+                           href="#nav">
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_corrente+1)"
+                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                           href="#nav">&gt;</a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_number-1)"
+                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                           href="#nav">&gt;&gt;</a>
+                    </li>
+                </ul>
+            </div>
             <h4><i class="fa fa-list-ul"></i> Listino {{cliente.name}} </h4>
             <!--{{cliente}}-->
 
@@ -362,32 +395,32 @@
                         <th>
                             Sc 1
                             <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto1()">
+                                    ng-click="copia_sconto1()" ng-disabled="!id_cliente">
                                 <span class="fa fa-clone" />
                             </button>
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_1_massivo" style="width:80px;" />
+                                   ng-model="sconto_1_massivo" style="width:80px;" ng-disabled="!id_cliente" />
                         </th>
                         <th>
                             Sc 2
                             <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto2()">
+                                    ng-click="copia_sconto2()" ng-disabled="!id_cliente">
                                 <span class="fa fa-clone" />
                             </button>
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_2_massivo" style="width:80px;" />
+                                   ng-model="sconto_2_massivo" style="width:80px;" ng-disabled="!id_cliente" />
                         </th>
                         <th>
                             Sc 3
                             <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto3()">
+                                    ng-click="copia_sconto3()" ng-disabled="!id_cliente">
                                 <span class="fa fa-clone" />
                             </button>
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_3_massivo" style="width:80px;" />
+                                   ng-model="sconto_3_massivo" style="width:80px;" ng-disabled="!id_cliente" />
                         </th>
                         <th></th>
                     </tr>

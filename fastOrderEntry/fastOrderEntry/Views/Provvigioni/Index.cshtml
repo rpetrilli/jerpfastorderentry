@@ -149,7 +149,7 @@
                 item.id_agente = $scope.id_agente;
                 $http({
                     method: 'POST',
-                    url: '@(Url.Action("saveListino"))',
+                    url: '@(Url.Action("saveProvvigione"))',
                     data: item
                 }).then(function (response) {
                         //gestire ACK
@@ -173,85 +173,21 @@
             };
 
 
-            $scope.copia_prezzo = function () {
+            $scope.copia_provvigione = function () {
 
                 var r = confirm("Confermi la copia massiva prezzo");
                 if (r == true) {
                     $http({
                         method: 'POST',
-                        url: '@(Url.Action("copia_prezzo"))',
+                        url: '@(Url.Action("copia_provvigione"))',
                         data: {
-                            prezzo_massivo: $scope.prezzo_vendita_massivo,
+                            valore_massivo: $scope.prezzo_massivo,
                             query: $scope.query,
                             cod_cat_merc: $scope.cod_cat_merc_sel,
                             id_agente: $scope.id_agente
                         }
                     }).then(function (response) {
                         $scope.refresh_page($scope.pag_corrente);
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });
-                }
-
-            };
-
-            $scope.copia_sconto1 = function () {
-                var r = confirm("Confermi la copia massiva dello sconto 1");
-                if (r == true) {
-                    $http({
-                        method: 'POST',
-                        url: '@(Url.Action("copia_sconto1"))',
-                        data: {
-                            sconto_massivo: $scope.sconto_1_massivo,
-                            query: $scope.query,
-                            cod_cat_merc: $scope.cod_cat_merc_sel,
-                            id_agente: $scope.id_agente
-                        }
-                    }).then(function (response) {
-                        $scope.refresh_page($scope.pag_corrente);
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });
-                }
-
-            };
-
-            $scope.copia_sconto2 = function () {
-                var r = confirm("Confermi la copia massiva dello sconto 2");
-                if (r == true) {
-                    $http({
-                        method: 'POST',
-                        url: '@(Url.Action("copia_sconto2"))',
-                        data: {
-                            sconto_massivo: $scope.sconto_2_massivo,
-                            query: $scope.query,
-                            cod_cat_merc: $scope.cod_cat_merc_sel,
-                            id_agente: $scope.id_agente
-                        }
-                    }).then(function (response) {
-                        $scope.refresh_page($scope.pag_corrente);
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });
-                }
-
-            };
-
-            $scope.copia_sconto3 = function () {
-                var r = confirm("Confermi la copia massiva dello sconto 3");
-                if (r == true) {
-                    $http({
-                        method: 'POST',
-                        url: '@(Url.Action("copia_sconto3"))',
-                        data: {
-                            sconto_massivo: $scope.sconto_3_massivo,
-                            query: $scope.query,
-                            cod_cat_merc: $scope.cod_cat_merc_sel,
-                            id_agente: $scope.id_agente
-                        }
-                    }).then(function (response) {
-                        $scope.refresh_page($scope.pag_corrente);
-                        //gestire ACK
                     }).catch(function (error, status) {
                         show_message('Errore', error.data);
                     });
@@ -340,8 +276,40 @@
                     </span>
                 </div>
             </div>
-            <h4><i class="fa fa-list-ul"></i> Listino {{cliente.name}} </h4>
-            <!--{{cliente}}-->
+            <div ng-show="pag_number > 1">
+                <ul class="pagination" style="text-align: center;">
+                    <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
+                    <li>
+                        <a ng-click="refresh_page(0)"
+                           ng-class="{disabled: pag_corrente == 0}"
+                           href="#nav">&lt;&lt;</a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_corrente-1)"
+                           ng-class="{disabled: pag_corrente == 0}"
+                           href="#nav">&lt;</a>
+                    </li>
+                    <li ng-repeat="p_nr in [0,1,2,3]">
+                        <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
+                           ng-bind="nr_pagina_paginatore(p_nr) + 1"
+                           ng-hide="nr_pagina_paginatore(p_nr)==-1"
+                           ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
+                           href="#nav">
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_corrente+1)"
+                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                           href="#nav">&gt;</a>
+                    </li>
+                    <li>
+                        <a ng-click="refresh_page(pag_number-1)"
+                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
+                           href="#nav">&gt;&gt;</a>
+                    </li>
+                </ul>
+            </div>
+            <h4><i class="fa fa-list-ul"></i> Provvigione</h4>
 
             <table class="table table-hover table-striped" id="table">
                 <thead>
@@ -349,45 +317,14 @@
                         <th>Art</th>
                         <th>Descrizione</th>
                         <th>
-                            Pr Ven
-                            @*<br />
-                                <button class="btn btn-primary btn-xs"
-                                        ng-click="copia_prezzo()">
-                                    <span class="fa fa-clone" />
-                                </button>
-                                <br />
-                                <input type="number" class="form-control form-control-custom text-right"
-                                       ng-model="prezzo_vendita_massivo" style="width:80px;" />*@
-                        </th>
-                        <th>
-                            Sc 1
+                            Provv
                             <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto1()">
+                                    ng-click="copia_provvigione()" ng-disabled="!id_agente">
                                 <span class="fa fa-clone" />
                             </button>
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_1_massivo" style="width:80px;" />
-                        </th>
-                        <th>
-                            Sc 2
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto2()">
-                                <span class="fa fa-clone" />
-                            </button>
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_2_massivo" style="width:80px;" />
-                        </th>
-                        <th>
-                            Sc 3
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto3()">
-                                <span class="fa fa-clone" />
-                            </button>
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_3_massivo" style="width:80px;" />
+                                   ng-model="prezzo_massivo" style="width:80px;"ng-disabled="!id_agente" />
                         </th>
                         <th></th>
                     </tr>
@@ -398,25 +335,7 @@
                         <td>{{item.descrizione}}</td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right request-focus"
-                                   ng-model="item.prezzo_vendita" style="width:80px;"
-                                   ng-disabled="!id_agente"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_1" style="width:80px;"
-                                   ng-disabled="!id_agente"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_2" style="width:80px;"
-                                   ng-disabled="!id_agente"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_3" style="width:80px;"
+                                   ng-model="item.val_provvigione" style="width:80px;"
                                    ng-disabled="!id_agente"
                                    ng-focus="linefocused($index);" />
                         </td>
