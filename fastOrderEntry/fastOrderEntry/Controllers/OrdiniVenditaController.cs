@@ -45,7 +45,7 @@ namespace fastOrderEntry.Controllers
         }
 
         public override int getCount(NpgsqlConnection con, OrdiniFilters filters)
-        {
+        {    
             int count = 0;
             using (var cmd = new NpgsqlCommand())
             {

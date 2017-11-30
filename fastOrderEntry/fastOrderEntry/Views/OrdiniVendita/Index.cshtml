@@ -3,6 +3,7 @@
     ViewBag.Title = "Ordini di Vendita";
     string currentUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/" + ViewContext.RouteData.GetRequiredString("controller");
     string username = ViewBag.username;
+    string oggi = DateTime.Now.AddDays(-7).ToShortDateString();
 }
 @section header {
     <script>
@@ -10,6 +11,9 @@
         show_message = function (errore, messaggio) {
             alert(messaggio);
         }
+
+        var date = new Date();
+        date.setDate(date.getDate() - 7);
 
         app.controller('ctrl', ['$scope', '$http', '$window', 'tabController', function ($scope, $http, $window, tabController) {
             $scope.select_row = function (index) {
@@ -79,6 +83,8 @@
                 exit_edit: exit_edit,
                 exit_new: exit_new
             });
+
+            $scope.tc.filtri.da_data = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
             $scope.tc.refresh();
 
@@ -273,6 +279,10 @@
             });
         });
 
+        if (!$('#da-data').val().length > 0) {
+            $('#da-data').val('@oggi');            
+        }
+
         shortcut.add("Home", function () {
             $('#query').focus();
         });
@@ -320,7 +330,7 @@
             });
         });
 
-        shortcut.add("F11", function () {            
+        shortcut.add("F11", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.tc.displayMode == 'edit' && scope.tc.nuovo == true ) {
@@ -362,7 +372,7 @@
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
                 if (scope.tc.displayMode == 'edit' && scope.current.length > 0) {
-                    scope.tc.saveEdit(scope.current);                    
+                    scope.tc.saveEdit(scope.current);
                 }
             });
         });
@@ -379,7 +389,8 @@
         });
     </script>
 }
-<div class="main-content" ng-controller="ctrl" ng-cloak>    
+<div class="main-content" ng-controller="ctrl" ng-cloak> 
+    {{tc.current | json}}
     @Html.Partial("_ElencoOrdini")
     @Html.Partial("_NuovoModificaOrdine")
     @Html.Partial("_ModalCercaCliente")

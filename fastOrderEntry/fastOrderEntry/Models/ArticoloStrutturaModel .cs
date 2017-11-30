@@ -48,7 +48,7 @@ namespace fastOrderEntry.Models
                             r.giacenza = !string.IsNullOrEmpty(reader["giacenza"].ToString()) ?  Convert.ToDecimal(reader["giacenza"]) : 0;
 
                             CodiceIva codiceIva = db.codiceIva.FirstOrDefault(x => x.id_iva == r.id_iva);
-                            r.aliquota = codiceIva.aliquota;
+                            r.aliquota = codiceIva != null ? codiceIva.aliquota : 22; //previene errore codice iva
 
                             r.name = r.id_codice_art + " - " + r.descrizione;
 

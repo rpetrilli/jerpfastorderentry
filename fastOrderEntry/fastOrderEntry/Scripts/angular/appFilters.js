@@ -47,7 +47,7 @@ app.filter('totpeso', function ($filter) {
             return 0;
         }
         for (var i = 0; i < ordine.righe.length; i++) {
-            tot += (ordine.righe[i].peso_netto /1000);
+            tot += ((ordine.righe[i].peso_netto / 1000) * ordine.righe[i].qta_ordinata);
         }
         return tot;
     }
