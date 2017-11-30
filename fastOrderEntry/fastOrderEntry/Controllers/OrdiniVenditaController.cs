@@ -53,10 +53,10 @@ namespace fastOrderEntry.Controllers
                 cmd.CommandText = "SELECT \r\n" +
                     "      count(*) as cnt \r\n" +
                     "from vo_ordini " +
-                    "left join vo_ordini_provv_testata \r\n" +
+                    /*"left join vo_ordini_provv_testata \r\n";
                     "   on  vo_ordini_provv_testata.id_divisione = vo_ordini.id_divisione \r\n" +
                     "   and  vo_ordini_provv_testata.esercizio = vo_ordini.esercizio \r\n" +
-                    "   and  vo_ordini_provv_testata.id_ordine = vo_ordini.id_ordine \r\n" +
+                    "   and  vo_ordini_provv_testata.id_ordine = vo_ordini.id_ordine \r\n" +*/
                     filters.toWhereConditions();
                 cmd.ExecuteNonQuery();
 
@@ -85,8 +85,8 @@ namespace fastOrderEntry.Controllers
                     "       vo_ordini.zpet_id_agente as id_agente, \r\n" +
                     "       va_agenti.ragione_sociale as ragione_sociale_agente, \r\n" +
                     "       va_agenti.id_tipo_agente as id_tipo_agente, \r\n" +
-                    "       (select 'esercizio=' || esercizio || '&id_consegna=' || id_consegna from vo_consegne_righe where esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1) as link_consegna, \r\n" +
-                    "       (select 'esercizio=' || esercizio || '&id_fattura=' || id_fattura from vo_fatture_righe where esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1)  as link_fattura \r\n" +
+                    "       (select 'esercizio=' || esercizio || '&id_consegna=' || id_consegna from vo_consegne_righe where id_divisione= '1' and esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1) as link_consegna, \r\n" +
+                    "       (select 'esercizio=' || esercizio || '&id_fattura=' || id_fattura from vo_fatture_righe where id_societa='1' and esercizio_ordine = vo_ordini.esercizio and id_ordine_vend = vo_ordini.id_ordine limit 1)  as link_fattura \r\n" +
                     "from vo_ordini \r\n" +
                     "left join va_agenti on \r\n" +
                     "   va_agenti.id_agente = vo_ordini.zpet_id_agente \r\n" +
