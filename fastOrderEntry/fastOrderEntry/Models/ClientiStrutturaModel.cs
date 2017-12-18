@@ -27,7 +27,7 @@ namespace fastOrderEntry.Models
                     "inner join va_clienti_div " +
                     "   on va_clienti_div.id_divisione = '1' " +
                     "   and va_clienti_div.id_cliente = va_clienti.id_cliente " +
-                    "where upper(ragione_sociale) LIKE( @query) " +
+                    "where (upper(ragione_sociale) LIKE( @query) or  va_clienti.id_cliente LIKE( @query))" +
                     "limit 10";
 
                 cmd.Parameters.AddWithValue("query", "%" + query.ToUpper() + "%" );

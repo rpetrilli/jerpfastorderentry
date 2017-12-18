@@ -131,6 +131,8 @@ namespace fastOrderEntry.Models
                         name = Convert.ToString(reader["ragione_sociale"]);
                         indirizzo = Convert.ToString(reader["indirizzo"]);
                         cap = Convert.ToString(reader["cap"]);
+                        comune = Convert.ToString(reader["comune"]);
+                        provincia = Convert.ToString(reader["provincia"]);
                         nazioni = Convert.ToString(reader["nazioni"]);
                         id_vettore = Convert.ToString(reader["zpet_id_vettore"]);
                         id_cond_pag = Convert.ToString(reader["id_cond_pag"]);

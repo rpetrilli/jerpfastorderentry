@@ -1,4 +1,5 @@
-﻿<div class="row" ng-show="tc.current.id_cliente.length > 0">
+﻿{{tc.current.righe | json}}
+<div class="row" ng-show="tc.current.id_cliente.length > 0">
     <div class="col-sm-12">
         <div class="panel panel-primary">
             <div class="panel-body">
@@ -32,7 +33,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr dir-paginate="item in tc.current.righe | orderBy:ordinamento | itemsPerPage: 10 track by $index">
+                        <tr dir-paginate="item in tc.current.righe | orderBy:ordinamento | itemsPerPage: 20 track by $index">
                             <td>{{item.id_codice_art}}</td>
                             <td>{{item.descrizione}}</td>
                             <td>

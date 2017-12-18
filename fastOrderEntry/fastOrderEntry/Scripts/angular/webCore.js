@@ -326,13 +326,13 @@ myModule.directive('typehead', function () {
                     return $.post(attrs['typehead'], params , function (data) {
                         $.each(data, function (i, rs) {
 
-                            var provincia = '';
-                            if (typeof (rs.provincia) != 'undefined') {
-                                provincia = ' (' + rs.provincia + ')'; 
+                            var comune = '';
+                            if (typeof (rs.comune) != 'undefined') {
+                                comune = ' (' + rs.comune + ')'; 
                             }
 
-                            mapObj[rs.id.replace(/^0+/, '') + ' ' + rs.name] = rs;
-                            rss.push(rs.id.replace(/^0+/, '') + ' ' + rs.name);
+                            mapObj[rs.id.replace(/^0+/, '') + ' ' + rs.name + ' ' + rs.comune] = rs;
+                            rss.push(rs.id.replace(/^0+/, '') + ' ' + rs.name + ' ' + rs.comune);
                         });
                         process(rss);
                     });
