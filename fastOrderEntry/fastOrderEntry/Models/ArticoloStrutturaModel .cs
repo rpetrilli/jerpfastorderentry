@@ -17,6 +17,12 @@ namespace fastOrderEntry.Models
 
         public virtual IList<Articolo> rs { get; set; }
 
+        /// <summary>
+        /// implementata logica obsoleti ritorna elenco articoli
+        /// </summary>
+        /// <param name="con"></param>
+        /// <param name="id_cliente"></param>
+        /// <param name="query"></param>
         internal void select(NpgsqlConnection con, string id_cliente = "", string query = "" )
         {
             using (PetLineContext db = new PetLineContext())
@@ -25,9 +31,9 @@ namespace fastOrderEntry.Models
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT *, \r\n" +
-                        "   (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
+                        " (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
                         "from ma_articoli_soc \r\n" +
-                        "where (upper(id_codice_art) like (@query) or upper(descrizione)  like (@query) ) \r\n" +
+                        "where (obsoleto = false | obsoleto is null) and (upper(id_codice_art) like (@query) or upper(descrizione)  like (@query) ) \r\n" +
                         "order by descrizione  \r\n" +
                         "limit 30";
                     
@@ -70,9 +76,25 @@ namespace fastOrderEntry.Models
 
                     r.prezzo_acquisto = listinoArticolo.prezzo_acquisto;
                     r.prezzo_vendita = listinoCliente.prezzo_vendita > 0 ? listinoCliente.prezzo_vendita : listinoArticolo.prezzo_vendita;
-                    r.sconto_1 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_1 : listinoArticolo.sconto_1;
-                    r.sconto_2 = listinoCliente.sconto_2 > 0 ? listinoCliente.sconto_2 : listinoArticolo.sconto_2;
-                    r.sconto_3 = listinoCliente.sconto_3 > 0 ? listinoCliente.sconto_3 : listinoArticolo.sconto_3;
+
+                    // logica sconto
+                    if (listinoCliente.sconto_1 >= 0)
+                    {
+                        r.sconto_1 = listinoCliente.sconto_1;
+                        r.sconto_2 = listinoCliente.sconto_2;
+                        r.sconto_3 = listinoCliente.sconto_3;
+                    }
+                    else
+                    {
+                        r.sconto_1 = listinoArticolo.sconto_1;
+                        r.sconto_2 = listinoArticolo.sconto_2;
+                        r.sconto_3 = listinoArticolo.sconto_3;
+                    }
+
+                    //r.sconto_1 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_1 : listinoArticolo.sconto_1;
+                    //r.sconto_2 = listinoCliente.sconto_2 > 0 ? listinoCliente.sconto_2 : listinoArticolo.sconto_2;
+                    //r.sconto_3 = listinoCliente.sconto_3 > 0 ? listinoCliente.sconto_3 : listinoArticolo.sconto_3;
+
                     r.sconto_a_1 = listinoArticolo.sconto_a_1;
                     r.sconto_a_2 = listinoArticolo.sconto_a_2;
                     r.sconto_a_3 = listinoArticolo.sconto_a_3;
@@ -81,10 +103,7 @@ namespace fastOrderEntry.Models
                     r.leggiUltimoOrdine(con);
 
                 }
-
-
-            }
-                       
+            }    
         }
     }
 

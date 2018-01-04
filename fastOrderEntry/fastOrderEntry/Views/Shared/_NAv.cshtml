@@ -52,12 +52,13 @@
                 <li>@Html.ActionLink("Ordini", "Index", "OrdiniVendita", new { area = "" }, new { id = "mnu_ordini_vend" })</li>
             </ul>
         </li>        
-        @*<li class="dropdown ">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-shopping-bag fa-fw"></i><span>Acquisti <i class="caret"></i></span></a>
+        <li class="dropdown ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-arrows-h fa-fw"></i><span>Movimenti <i class="caret"></i></span></a>
             <ul class="dropdown-menu">
-                <li>@Html.ActionLink("OrdiniAcquisto", "Index", "Home", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("Mov x Articolo", "Index", "MovArticolo", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("Mov x Cliente", "Index", "MovCliente", new { area = "" }, null)</li>
             </ul>
-        </li>*@        
+        </li>        
     </ul>
 </div><!--Action Nav-->
 
