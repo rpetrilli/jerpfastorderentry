@@ -51,25 +51,27 @@ namespace WebCore.fw
 
         protected abstract void buildWhere();
 
-        public string toWhereConditions()
+        public string toWhereConditions(string ordine_chiuso)
         {
-
             buildWhere();
             string sql = "where 1=1 \r\n";
+            if (!string.IsNullOrEmpty(ordine_chiuso))
+            {
+                sql += " and vo_ordini.ordine_chiuso =" + Convert.ToBoolean(ordine_chiuso) + "\r\n";
+            }
             foreach (ICondWhere cond  in m_filtri_sql)
             {
                 if (cond.isApplicable()) {
                     sql += " and " + cond.toSQL() + "\r\n";
                 }
             }
-
             return sql;
         }
 
         public void addUncontraint(string sql)
         {
             m_filtri_sql.Add(new Uncontraint(sql));
-        }
+        }       
 
         public void addStringExactValue(string field_name, string value, Boolean no_case = false)
         {
@@ -146,7 +148,7 @@ namespace WebCore.fw
         StartWith,
         Contains
     }
-
+    
     public class StringValue: ICondWhere
     {
         string name;

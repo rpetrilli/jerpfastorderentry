@@ -46,17 +46,17 @@
                 <li><a href="@Url.Action("Index", "Provvigioni")"><i class="fa fa-address-book"></i> Provvigioni</a></li>
             </ul>
         </li>        
-        <li class="dropdown ">
+        <li id="vendite" class="dropdown ">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-table fa-fw"></i><span>Vendite <i class="caret"></i></span></a>
             <ul class="dropdown-menu">
-                <li>@Html.ActionLink("Ordini", "Index", "OrdiniVendita", new { area = "" }, new { id = "mnu_ordini_vend" })</li>
+                <li><a href="@Url.Action("Index", "OrdiniVendita")"><i class="fa fa-shopping-basket"></i> Ordini</a></li>                
             </ul>
         </li>        
-        <li class="dropdown ">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-arrows-h fa-fw"></i><span>Movimenti <i class="caret"></i></span></a>
+        <li id="movimenti" class="dropdown ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket fa-fw"></i><span>Movimenti <i class="caret"></i></span></a>
             <ul class="dropdown-menu">
-                <li>@Html.ActionLink("Mov x Articolo", "Index", "MovArticolo", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("Mov x Cliente", "Index", "MovCliente", new { area = "" }, null)</li>
+                <li><a href="@Url.Action("Index", "MovArticolo")"><i class="fa fa-leaf"></i> Mov x Articolo</a></li>
+                <li><a href="@Url.Action("Index", "MovCliente")"><i class="fa fa-group"></i> Mov x Cliente</a></li>                
             </ul>
         </li>        
     </ul>

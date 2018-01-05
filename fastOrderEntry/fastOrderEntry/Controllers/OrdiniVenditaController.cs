@@ -21,6 +21,8 @@ namespace fastOrderEntry.Controllers
         // GET: OrdiniVendita
         public ActionResult Index()
         {
+            ViewBag.page = "vendite";
+
             string username;
             string first_name;
             string last_name;
@@ -51,13 +53,14 @@ namespace fastOrderEntry.Controllers
             {
                 cmd.Connection = con;
                 cmd.CommandText = "SELECT \r\n" +
-                    "      count(*) as cnt \r\n" +
-                    "from vo_ordini " +
-                    /*"left join vo_ordini_provv_testata \r\n";
-                    "   on  vo_ordini_provv_testata.id_divisione = vo_ordini.id_divisione \r\n" +
-                    "   and  vo_ordini_provv_testata.esercizio = vo_ordini.esercizio \r\n" +
-                    "   and  vo_ordini_provv_testata.id_ordine = vo_ordini.id_ordine \r\n" +*/
-                    filters.toWhereConditions();
+                "      count(*) as cnt \r\n" +
+                "from vo_ordini " +
+                /*"left join vo_ordini_provv_testata \r\n";
+                "   on  vo_ordini_provv_testata.id_divisione = vo_ordini.id_divisione \r\n" +
+                "   and  vo_ordini_provv_testata.esercizio = vo_ordini.esercizio \r\n" +
+                "   and  vo_ordini_provv_testata.id_ordine = vo_ordini.id_ordine \r\n" +*/
+                filters.toWhereConditions(filters.ordine_chiuso);
+
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())
@@ -90,7 +93,7 @@ namespace fastOrderEntry.Controllers
                     "from vo_ordini \r\n" +
                     "left join va_agenti on \r\n" +
                     "   va_agenti.id_agente = vo_ordini.zpet_id_agente \r\n" +
-                    filters.toWhereConditions() +
+                    filters.toWhereConditions(filters.ordine_chiuso) +
                     "order by esercizio desc, id_ordine desc \r\n"+
                     this.getLimStr(first, pageSize);
 
@@ -248,8 +251,10 @@ namespace fastOrderEntry.Controllers
         public string id_ordine_da { get; set; }
         public string id_ordine_al { get; set; }
 
+        public string ordine_chiuso { get; set; }
+
         protected override void buildWhere()
-        {
+        {   
             addStringExactValue("vo_ordini.id_cliente", id_cliente);
             addStringExactValue("vo_ordini.zpet_id_agente", id_agente);
             addDateRange("vo_ordini.data_ordine", strToDateTime(da_data), strToDateTime(al_data));

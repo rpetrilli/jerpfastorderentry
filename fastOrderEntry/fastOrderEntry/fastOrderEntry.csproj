@@ -220,6 +220,8 @@
     <Compile Include="Controllers\ListiniArticoloAcqController.cs" />
     <Compile Include="Controllers\ListiniArticoloController.cs" />
     <Compile Include="Controllers\ListiniClienteController.cs" />
+    <Compile Include="Controllers\MovArticoloController.cs" />
+    <Compile Include="Controllers\MovClienteController.cs" />
     <Compile Include="Controllers\OrdiniVenditaController.cs" />
     <Compile Include="Controllers\ProvvigioniController.cs" />
     <Compile Include="Global.asax.cs">
@@ -237,6 +239,7 @@
     <Compile Include="Models\ListinoCliente.cs" />
     <Compile Include="Models\ListinoModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\MovArticoloModel.cs" />
     <Compile Include="Models\OrdineVenditaModel.cs" />
     <Compile Include="Models\PetLineContext.cs" />
     <Compile Include="Models\ProvvigioniModel.cs" />
@@ -355,6 +358,10 @@
     <Content Include="Views\OrdiniVendita\_ModalCercaCliente.cshtml" />
     <Content Include="Views\ListiniArticoloAcq\Index.cshtml" />
     <Content Include="Views\Provvigioni\Index.cshtml" />
+    <Content Include="Views\MovCliente\Index.cshtml" />
+    <Content Include="Views\MovArticolo\Index.cshtml" />
+    <Content Include="Views\MovArticolo\_ElencoArticoli.cshtml" />
+    <Content Include="Views\MovArticolo\_LeggiMovimenti.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

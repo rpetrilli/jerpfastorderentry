@@ -33,7 +33,7 @@ namespace fastOrderEntry.Models
                     cmd.CommandText = "SELECT *, \r\n" +
                         " (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
                         "from ma_articoli_soc \r\n" +
-                        "where (obsoleto = false | obsoleto is null) and (upper(id_codice_art) like (@query) or upper(descrizione)  like (@query) ) \r\n" +
+                        "where (obsoleto = false or obsoleto is null) and (upper(id_codice_art) like (@query) or upper(descrizione)  like (@query) ) \r\n" +
                         "order by descrizione  \r\n" +
                         "limit 30";
                     
@@ -72,28 +72,28 @@ namespace fastOrderEntry.Models
                     RecordListinoModel listinoArticolo = new RecordListinoModel();
                     listinoArticolo.id_codice_art = r.id_codice_art;
                     listinoArticolo.leggiPrezzi(con);
-                    
 
-                    r.prezzo_acquisto = listinoArticolo.prezzo_acquisto;
+                    //r.prezzo_acquisto = listinoArticolo.prezzo_acquisto;
+                    r.prezzo_acquisto = GetPrezzoAcquisto(listinoArticolo.prezzo_acquisto, con, r.id_codice_art);
                     r.prezzo_vendita = listinoCliente.prezzo_vendita > 0 ? listinoCliente.prezzo_vendita : listinoArticolo.prezzo_vendita;
 
                     // logica sconto
-                    if (listinoCliente.sconto_1 >= 0)
-                    {
-                        r.sconto_1 = listinoCliente.sconto_1;
-                        r.sconto_2 = listinoCliente.sconto_2;
-                        r.sconto_3 = listinoCliente.sconto_3;
-                    }
-                    else
-                    {
-                        r.sconto_1 = listinoArticolo.sconto_1;
-                        r.sconto_2 = listinoArticolo.sconto_2;
-                        r.sconto_3 = listinoArticolo.sconto_3;
-                    }
+                    //if (listinoCliente.sconto_1 >= 0)
+                    //{
+                    //    r.sconto_1 = listinoCliente.sconto_1;
+                    //    r.sconto_2 = listinoCliente.sconto_2;
+                    //    r.sconto_3 = listinoCliente.sconto_3;
+                    //}
+                    //else
+                    //{
+                    //    r.sconto_1 = listinoArticolo.sconto_1;
+                    //    r.sconto_2 = listinoArticolo.sconto_2;
+                    //    r.sconto_3 = listinoArticolo.sconto_3;
+                    //}
 
-                    //r.sconto_1 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_1 : listinoArticolo.sconto_1;
-                    //r.sconto_2 = listinoCliente.sconto_2 > 0 ? listinoCliente.sconto_2 : listinoArticolo.sconto_2;
-                    //r.sconto_3 = listinoCliente.sconto_3 > 0 ? listinoCliente.sconto_3 : listinoArticolo.sconto_3;
+                    r.sconto_1 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_1 : listinoArticolo.sconto_1;
+                    r.sconto_2 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_2 : listinoArticolo.sconto_2;
+                    r.sconto_3 = listinoCliente.sconto_1 > 0 ? listinoCliente.sconto_3 : listinoArticolo.sconto_3;
 
                     r.sconto_a_1 = listinoArticolo.sconto_a_1;
                     r.sconto_a_2 = listinoArticolo.sconto_a_2;
@@ -104,6 +104,37 @@ namespace fastOrderEntry.Models
 
                 }
             }    
+        }
+
+        private decimal GetPrezzoAcquisto(decimal prezzo_acquisto, NpgsqlConnection con, string id_codice_art)
+        {
+            using (PetLineContext db = new PetLineContext())
+            {
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = @"select 
+                        case when ao_accettazione_righe.quantita<>0 then 
+                        ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
+                        ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
+                        from ao_accettazione_righe
+                        where ao_accettazione_righe.id_codice_art=(@query)
+                        order by ao_accettazione_righe.esercizio desc,
+                        ao_accettazione_righe.id_accettazione desc limit 1";
+
+                    cmd.Parameters.AddWithValue("query", id_codice_art.ToUpper());
+                    cmd.ExecuteNonQuery();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {                        
+                        while (reader.Read())
+                        {
+                            prezzo_acquisto = Convert.ToDecimal(reader["ult_prezzo_acq"].ToString());
+                        }
+                    }
+                }
+            }
+            return prezzo_acquisto;
         }
     }
 

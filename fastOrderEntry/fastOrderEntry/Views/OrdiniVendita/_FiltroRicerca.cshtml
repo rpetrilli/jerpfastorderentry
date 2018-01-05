@@ -27,6 +27,14 @@
                 <p><strong>a ordine</strong></p>
                 <input id="a-ordine" type="text" class="form-control" ng-model="tc.filtri.id_ordine_al" ng-change="tc.refresh()" />
             </div>
+            <div class="col-md-2">
+                <p><strong>Stato Or</strong></p>
+                <select id="o-stato" class="form-control" ng-model="tc.filtri.ordine_chiuso" ng-change="tc.refresh()">
+                    <option value="">Tutti</option>                    
+                    <option value="false">Aperti</option>
+                    <option value="true">Chiusi</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>

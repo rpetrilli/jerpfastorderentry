@@ -1,0 +1,56 @@
+﻿<div ng-show="page_status == 'leggi'">    
+    <div class="page-toolbar">
+        <button class="btn btn-default" ng-click="annulla()">Annulla</button>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="margin-b-10"></div>
+            <div class="panel panel-primary" style="margin-bottom: 0px;padding: 10px 5px 5px 10px;">
+                <table class="table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Es</th>
+                            <th>Id Doc</th>
+                            <th>Id For</th>
+                            <th>Id Cli</th>
+                            <th>Tipo</th>
+                            <th>Data</th>
+                            <th>Prot</th>
+                            @*<th>Tot Doc</th>
+                            <th>Imp Doc</th>
+                            <th>Iva Doc</th>
+                            <th>Nr Doc Mer</th>*@
+                            <th>Nr Riga</th>
+                            <th>Qta</th>
+                            <th>Pr Unt</th>
+                            <th>Sconto</th>
+                            <th>Imp</th>
+                            <th>Iva</th>
+                            <th>Tot</th>
+                            <th>Segno</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in articolo_corrente.lista">
+                            <td>{{item.esercizio}}</td>
+                            <td>{{item.id_documento}}</td>
+                            <td>{{item.id_fornitore}}</td>
+                            <td>{{item.id_cliente}}</td>
+                            <td>{{item.tipo_documento}}</td>
+                            <td>{{item.data_documento}}</td>
+                            <td>{{item.protocollo_iva}}</td>                            
+                            <td>{{item.nr_riga}}</td>
+                            <td>{{item.quantita}}</td>
+                            <td>{{item.prezzo_unitario | number:2}}</td>
+                            <td>{{item.str_sconto}}</td>
+                            <td>{{item.imponibile | number:2}}</td>
+                            <td>{{item.imposta | number:2}}</td>
+                            <td>{{item.totale_riga | number:2}}</td>
+                            <td>{{item.segno}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
