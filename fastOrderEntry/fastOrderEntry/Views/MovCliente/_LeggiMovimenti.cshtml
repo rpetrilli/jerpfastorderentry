@@ -7,10 +7,10 @@
         <div class="col-md-12">
             <div class="panel panel-primary">
                 <div class="panel-body">
-                    <h4>Articolo selezionato</h4>
+                    <h4>Cliente selezionato</h4>
                     <p>
-                        Cod <strong>{{selezionato.id_codice_art}}</strong><br />
-                        Articolo <strong>{{selezionato.descrizione}}</strong>
+                        Cod <strong>{{selezionato.cliente.id_cliente}}</strong><br />
+                        Cliente <strong>{{selezionato.cliente.name}}</strong>
                     </p>
                 </div>
             </div>
@@ -33,11 +33,10 @@
                         </form>
                     </div>
                 </div>
-
                 <table class="table table-hover table-condensed">
                     <thead>
                         <tr>
-                            <th class="text-right">
+                            <th>
                                 <a href="#" ng-click="sortType = 'esercizio'; sortReverse = !sortReverse">
                                     Es
                                     <span ng-show="sortType == 'esercizio' && !sortReverse" class="fa fa-caret-down"></span>
@@ -49,20 +48,6 @@
                                     Id Doc
                                     <span ng-show="sortType == 'id_documento' && !sortReverse" class="fa fa-caret-down"></span>
                                     <span ng-show="sortType == 'id_documento' && sortReverse" class="fa fa-caret-up"></span>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="#" ng-click="sortType = 'rag_soc_fornitore'; sortReverse = !sortReverse">
-                                    Fornitore
-                                    <span ng-show="sortType == 'rag_soc_fornitore' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'rag_soc_fornitore' && sortReverse" class="fa fa-caret-up"></span>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="#" ng-click="sortType = 'rag_soc_cliente'; sortReverse = !sortReverse">
-                                    Cliente
-                                    <span ng-show="sortType == 'rag_soc_cliente' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'rag_soc_cliente' && sortReverse" class="fa fa-caret-up"></span>
                                 </a>
                             </th>
                             <th>
@@ -86,44 +71,27 @@
                                     <span ng-show="sortType == 'protocollo_iva' && sortReverse" class="fa fa-caret-up"></span>
                                 </a>
                             </th>
-                            @*<th>Tot Doc</th>
-                                <th>Imp Doc</th>
-                                <th>Iva Doc</th>
-                                <th>Nr Doc Mer</th>*@
-                            <th class="text-right">Nr Riga</th>
-                            <th class="text-right">Qta</th>
-                            <th class="text-right">Pr Unt</th>
-                            <th>Sconto</th>
-                            <th class="text-right">Imp</th>
-                            <th class="text-right">Iva</th>
-                            <th class="text-right">Tot</th>
-                            <th>
-                                <a href="#" ng-click="sortType = 'segno'; sortReverse = !sortReverse">
-                                    Segno
-                                    <span ng-show="sortType == 'segno' && !sortReverse" class="fa fa-caret-down"></span>
-                                    <span ng-show="sortType == 'segno' && sortReverse" class="fa fa-caret-up"></span>
-                                </a>
-                            </th>
+                            <th>Imp</th>
+                            <th>Iva</th>
+                            <th>Tot</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="item in articolo_corrente.lista | orderBy:sortType:sortReverse | filter:searchField">
-                            <td class="text-right">{{item.esercizio}}</td>
-                            <td>{{item.id_documento}}</td>
-                            <td>{{item.rag_soc_fornitore}}</td>
-                            <td>{{item.rag_soc_cliente}}</td>
+                            <td>{{item.esercizio}}</td>
+                            <td>{{item.id_documento}}</td>                            
                             <td>{{item.tipo_documento}}</td>
                             <td>{{item.data_documento}}</td>
                             <td>{{item.protocollo_iva}}</td>
-                            <td class="text-right">{{item.nr_riga}}</td>
-                            <td class="text-right">{{item.quantita}}</td>
-                            <td class="text-right">{{item.imponibile / item.quantita | number:2}}</td>
-                            <td>{{item.str_sconto}}</td>
-                            <td class="text-right">{{item.imponibile | number:2}}</td>
-                            <td class="text-right">{{item.imposta | number:2}}</td>
-                            <td class="text-right">{{item.totale_riga | number:2}}</td>
-                            <td><span ng-class="{'badge badge-danger' : item.segno == '-',  'badge badge-success' : item.segno == '+'}">{{item.segno}}</span></td>
+                            <td>{{item.imponibile | number:2}}</td>
+                            <td>{{item.imposta | number:2}}</td>
+                            <td>{{item.totale_doc | number:2}}</td>
+                            <td>
+                                <button class="btn btn-xs" ng-click="mostra_dettaglio(item)"><i ng-class="{'fa fa-plus': item.show, 'fa fa-minus': !item.show }"></i></button>
+                            </td>
                         </tr>
+
                     </tbody>
                 </table>
             </div>

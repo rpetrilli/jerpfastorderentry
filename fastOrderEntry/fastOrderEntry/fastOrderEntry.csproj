@@ -240,6 +240,8 @@
     <Compile Include="Models\ListinoModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\MovArticoloModel.cs" />
+    <Compile Include="Models\MovClienteModel.cs" />
+    <Compile Include="Models\MovimentoModel.cs" />
     <Compile Include="Models\OrdineVenditaModel.cs" />
     <Compile Include="Models\PetLineContext.cs" />
     <Compile Include="Models\ProvvigioniModel.cs" />
@@ -362,6 +364,9 @@
     <Content Include="Views\MovArticolo\Index.cshtml" />
     <Content Include="Views\MovArticolo\_ElencoArticoli.cshtml" />
     <Content Include="Views\MovArticolo\_LeggiMovimenti.cshtml" />
+    <Content Include="Views\MovCliente\_LeggiMovimenti.cshtml" />
+    <Content Include="Views\MovCliente\_ElencoClienti.cshtml" />
+    <Content Include="Views\MovCliente\_Dettaglio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -404,7 +409,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56414</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

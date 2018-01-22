@@ -112,11 +112,24 @@ namespace fastOrderEntry.Controllers
         }
 
         [HttpPost]
-        public JsonResult leggi_movimenti(RecordListinoModel item)
+        public JsonResult leggi_movimenti(RecordListinoModel item, string da_data, string a_data)
         {
+            DateTime data_da = new DateTime(DateTime.Now.Year - 1, 1, 1);
+            DateTime data_a = new DateTime(DateTime.Now.Year, 12, 31);
+
+            if (!string.IsNullOrEmpty(da_data))
+                data_da = Convert.ToDateTime(da_data);
+
+            if (!string.IsNullOrEmpty(a_data))
+            {
+                data_a = Convert.ToDateTime(a_data);
+                data_a = data_a.AddMonths(1).AddDays(-1);
+            }
+                
+
             ListaMovArticoloModel mov_articolo = new ListaMovArticoloModel();
             mov_articolo.id_codice_art = item.id_codice_art;
-            mov_articolo.select(con);
+            mov_articolo.select(con, data_da,data_a);
 
             return Json(mov_articolo, JsonRequestBehavior.AllowGet);
         }

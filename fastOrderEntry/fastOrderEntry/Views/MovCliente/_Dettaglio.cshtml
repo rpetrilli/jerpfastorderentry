@@ -1,0 +1,104 @@
+﻿<div ng-show="page_status == 'dettaglio'">
+    <div class="page-toolbar">
+        <button class="btn btn-default" ng-click="annulla_dettaglio()"><i class="fa fa-arrow-left"></i> Indietro</button>
+    </div>
+    <div class="margin-b-10"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <h4>Cliente selezionato</h4>
+                    <p>
+                        Cod <strong>{{selezionato.cliente.id_cliente}}</strong><br />
+                        Cliente <strong>{{selezionato.cliente.name}}</strong><br />
+                        Tipo Movimento <strong>{{selezionato.movimento.tipo_documento}}</strong>
+                    </p>
+                    <table class="table table-responsive">
+                        <tr>
+                            <th class="text-right">Es</th>
+                            <th>Documento</th>
+                            <th class="text-right">Imponibile</th>
+                            <th class="text-right">Imposta</th>
+                            <th class="text-right">Totale</th>
+                        </tr>
+                        <tr class="warning">
+                            <td class="text-right">{{selezionato.movimento.esercizio}}</td>
+                            <td>{{selezionato.movimento.protocollo_iva}}</td>
+                            <td class="text-right">{{selezionato.movimento.imponibile}}</td>
+                            <td class="text-right">{{selezionato.movimento.imposta}}</td>
+                            <td class="text-right">{{selezionato.movimento.totale_doc}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="margin-b-10"></div>
+            <div class="panel panel-primary" style="margin-bottom: 0px;padding: 10px 5px 5px 10px;">
+                <div class="row">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-4">
+                        <form>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Filtra" ng-model="searchField">
+                                    <div class="input-group-addon"><i class="fa fa-filter"></i></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <table class="table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="text-right">Nr Riga</th>
+                            <th class="text-right">
+                                <a href="#" ng-click="sortType = 'esercizio'; sortReverse = !sortReverse">
+                                    Es
+                                    <span ng-show="sortType == 'esercizio' && !sortReverse" class="fa fa-caret-down"></span>
+                                    <span ng-show="sortType == 'esercizio' && sortReverse" class="fa fa-caret-up"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" ng-click="sortType = 'id_codice_art'; sortReverse = !sortReverse">
+                                    Articolo
+                                    <span ng-show="sortType == 'id_codice_art' && !sortReverse" class="fa fa-caret-down"></span>
+                                    <span ng-show="sortType == 'id_codice_art' && sortReverse" class="fa fa-caret-up"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" ng-click="sortType = 'descrizione'; sortReverse = !sortReverse">
+                                    Descrizione
+                                    <span ng-show="sortType == 'descrizione' && !sortReverse" class="fa fa-caret-down"></span>
+                                    <span ng-show="sortType == 'descrizione' && sortReverse" class="fa fa-caret-up"></span>
+                                </a>
+                            </th>
+                            <th class="text-right">Pr</th>
+                            <th class="text-right">Qta</th>
+                            <th class="text-right">Imp</th>
+                            <th>Sc</th>
+                            <th class="text-right">Iva</th>
+                            <th class="text-right">Tot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in dettaglio.lista | orderBy:sortType:sortReverse | filter:searchField">
+                            <td class="text-right">{{item.nr_riga}}</td>
+                            <td class="text-right">{{item.esercizio}}</td>
+                            <td>{{item.id_codice_art}}</td>
+                            <td>{{item.descrizione}}</td>
+                            <td class="text-right">{{item.imponibile / item.quantita | number:2}}</td>
+                            <td class="text-right">{{item.quantita | number:2}}</td>
+                            <td class="text-right">{{item.imponibile | number:2}}</td>
+                            <td>{{item.str_sconto}}</td>
+                            <td class="text-right">{{item.imposta | number:2}}</td>
+                            <td class="text-right">{{item.totale_riga | number:2}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

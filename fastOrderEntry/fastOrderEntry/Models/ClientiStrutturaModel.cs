@@ -12,7 +12,7 @@ namespace fastOrderEntry.Models
 
         public virtual IList<Cliente> rs { get; set; }
 
-        internal void select (NpgsqlConnection conn, string query = "")
+        internal void select (NpgsqlConnection conn, string query = "", int pagina = 0, int REC_X_PAGINA = 0, bool scegli = false)
         {
             using (var cmd = new NpgsqlCommand())
             {
@@ -27,10 +27,21 @@ namespace fastOrderEntry.Models
                     "inner join va_clienti_div " +
                     "   on va_clienti_div.id_divisione = '1' " +
                     "   and va_clienti_div.id_cliente = va_clienti.id_cliente " +
-                    "where (upper(ragione_sociale) LIKE( @query) or  va_clienti.id_cliente LIKE( @query))" +
-                    "limit 10";
+                    "where (upper(ragione_sociale) LIKE( @query) or  va_clienti.id_cliente LIKE( @query)) and va_clienti.obsoleto=false ";
 
-                cmd.Parameters.AddWithValue("query", "%" + query.ToUpper() + "%" );
+                if (REC_X_PAGINA > 0)
+                {
+                    cmd.CommandText += "limit " + REC_X_PAGINA + " offset " + (pagina * REC_X_PAGINA);
+                }
+
+                if(scegli)
+                {
+                    cmd.CommandText += "limit 10";
+                }
+
+                query = string.IsNullOrEmpty(query) ? "" : query.ToUpper();
+
+                cmd.Parameters.AddWithValue("query", "%" + query + "%" );
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())
@@ -41,7 +52,7 @@ namespace fastOrderEntry.Models
                         Cliente r = new Cliente();
                         r.id = reader["id_cliente"].ToString();
                         r.name = reader["ragione_sociale"].ToString();
-                        r.id_cliente = reader["id_cliente"].ToString();
+                        r.id_cliente = reader["id_cliente"].ToString().TrimStart('0');
 
                         r.indirizzo = reader["indirizzo"].ToString();
                         r.cap = reader["cap"].ToString();
@@ -72,5 +83,6 @@ namespace fastOrderEntry.Models
         public string id_vettore { get; set; }
         public string note { get; set; }
         public string id_agente { get; set; }
+
     }
 }

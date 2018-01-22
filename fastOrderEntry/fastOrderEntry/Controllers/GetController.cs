@@ -24,7 +24,7 @@ namespace fastOrderEntry.Controllers
         {
             con.Open();
             ClientiStrutturaModel clienti = new ClientiStrutturaModel();
-            clienti.select(con,query);
+            clienti.select(con,query,0,0,true);
 
             var jsonResult = Json(clienti.rs, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;

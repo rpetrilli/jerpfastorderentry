@@ -1,7 +1,230 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Movimenti Clienti";
+    string da_data = "01/" + (DateTime.Now.Year - 1).ToString();
+    string a_data = "12/" + DateTime.Now.Year.ToString();
 }
+@section header {
+<script>
+       function show_message(errore, messaggio) {
+            alert(messaggio);
+        };
 
-<h2>Index</h2>
+        app.controller('ctrl', ['$scope', '$http', 'listiniService', 'tabController', function ($scope, $http, listiniService, tabController) {
+            $scope.filtri = { 'da_data': '@da_data', 'a_data': '@a_data' };
+            $scope.page_status = 'ricerca';
+            $scope.selezionato =  {};
+
+            $scope.refresh = function () {
+                $http({
+                    method: 'GET',
+                    url: '@(Url.Action("getPaginatore"))',
+                    params: { query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel }
+                }).then(function successCallback(response) {
+                    $scope.rec_x_pagina = response.data.rec_x_pagina;
+                    $scope.rec_number = response.data.rec_number;
+                    $scope.pag_number = response.data.pag_number;
+                    $scope.refresh_page(0);
+                }, function errorCallback(response) {
+                    show_message('Errore', error.data);
+                });
+            };
+
+            $scope.refresh_page = function (page_number) {
+                $http({
+                    method: 'GET',
+                    url: '@(Url.Action("getConenutoPagina"))',
+                    params: {
+                        query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, page_number: page_number
+                    }
+                }).then(function (response) {
+                    $scope.records = response.data;
+                    $scope.pag_corrente = page_number;
+                    $scope.rec_pagina = -1;
+                }).catch(function (error, status) {
+                    show_message('Errore', error.data);
+                });
+            };
+            $scope.refresh();
+            $scope.next_record = function () {
+                $scope.rec_pagina++;
+                if ($scope.rec_pagina >= $scope.records.length) {
+                    $scope.rec_pagina = 0;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) + ') input.request-focus').focus();
+            };
+            $scope.previous_record = function () {
+                $scope.rec_pagina--;
+                if ($scope.rec_pagina < 0) {
+                    $scope.rec_pagina = $scope.records.length - 1;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) + ') input.request-focus').focus();
+            };
+            $scope.linefocused = function (line) {
+                $scope.rec_pagina = line;
+            };
+            $scope.selezionaCategoria = function (item_sel) {
+                if ("undefined" === typeof item_sel) {
+                    $scope.filtro = "Tutti gli articoli";
+                    $scope.cod_cat_merc_sel = '';
+                    for (var j = 0; j < $scope.categorie.length; j++) {
+                        item = $scope.categorie[j];
+                        if (item.livello == 2) {
+                            item.visibile = false;
+                        }
+                    }
+                } else {
+                    $scope.filtro = item_sel.descrizione;
+                    $scope.cod_cat_merc_sel = item_sel.id_cat_merc;
+                    if (item_sel.livello == 1) {
+                        for (var j = 0; j < $scope.categorie.length; j++) {
+                            item = $scope.categorie[j];
+                            if (item.livello == 2) {
+                                if (item.id_cat_padre == item_sel.id_cat_merc) {
+                                    //if (item.id_cat_merc.substring(0, item_sel.id_cat_merc.length) == item_sel.id_cat_merc) {
+                                    item.visibile = !item.visibile;
+                                } else {
+                                    item.visibile = false;
+                                }
+                            }
+                            if (item.livello == 3) {
+                                item.visibile = false;
+                            }
+                        }
+                    } else if (item_sel.livello == 2) {
+                        for (var j = 0; j < $scope.categorie.length; j++) {
+                            item = $scope.categorie[j];
+                            if (item.livello == 3) {
+                                if (item.id_cat_padre == item_sel.id_cat_merc) {
+                                    item.visibile = !item.visibile;
+                                } else {
+                                    item.visibile = false;
+                                }
+                            }
+                        }
+                    }
+                };
+                $scope.refresh();
+            };
+            /* Gestione paginatore*/
+            $scope.nr_pagine_display = 4;
+            $scope.nr_pagina_paginatore = function (indice) {
+                if (indice + 1 > $scope.pag_number) {
+                    return -1;
+                } else if ($scope.pag_corrente + 1 < $scope.nr_pagine_display) {
+                    return indice;
+                } else {
+                    return $scope.pag_corrente + indice - $scope.nr_pagine_display;
+                }
+            };
+
+            $scope.leggi = function (item) {
+                $scope.selezionato.cliente = item;
+                data = { id_cliente: item.id, ragione_sociale: item.name, da_data: $scope.filtri.da_data, a_data: $scope.filtri.a_data };
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("leggi_movimenti"))',
+                    data: data
+                }).then(function (response) {
+                    $scope.articolo_corrente = response.data;
+                    $scope.page_status = 'leggi';
+                }).catch(function (error, status) {
+                    show_message('Errore', error.data);
+                });
+            };
+
+            $scope.mostra_dettaglio = function (item) {
+                $scope.selezionato.movimento = item;    
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("dettaglio_movimento"))',
+                    data: item
+                }).then(function (response) {
+                    $scope.dettaglio = response.data;
+                    $scope.page_status = 'dettaglio';
+                }).catch(function (error, status) {
+                    show_message('Errore', error.data);
+                });
+            }
+
+            $scope.annulla = function () {
+                $scope.page_status = 'ricerca';
+            };
+
+            $scope.annulla_dettaglio = function () {
+                $scope.page_status = 'leggi';
+                $scope.leggi($scope.selezionato.cliente);
+            };
+
+            //flitri di ricerca e ordinamento
+            $scope.sortType = 'data_documento';
+            $scope.sortReverse = true;
+            $scope.searchField = '';
+
+
+        }]);
+</script>
+}
+@section scripts{
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.it.min.js")"></script>
+    <script>
+        $('.data-new input').datepicker({ startView: 1, minViewMode: "months", format: "mm/yyyy", language: "it" });
+
+        $('#a-data').change(function () {
+            var current = $('#a-data').val();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.filtri.a_data = current;
+            });
+        });
+
+        $('#da-data').change(function () {
+            var current = $('#da-data').val();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.filtri.da_data = current;
+            });
+        });
+
+        shortcut.add("Home", function () {
+            $('#query').focus();
+        });
+
+        shortcut.add("Up", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.previous_record();
+            });
+        });
+        shortcut.add("Down", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.next_record();
+            });
+        });
+      
+        shortcut.add("pd", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.pag_corrente < scope.pag_number - 1) {
+                    scope.refresh_page(scope.pag_corrente + 1);
+                }
+            });
+        });
+        shortcut.add("pu", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.pag_corrente > 0) {
+                    scope.refresh_page(scope.pag_corrente - 1);
+                }
+            });
+        });
+    </script>
+}
+    <div class="main-content" ng-controller="ctrl" ng-cloak>
+        @Html.Partial("_ElencoClienti")
+        @Html.Partial("_LeggiMovimenti")
+        @Html.Partial("_Dettaglio")
+    </div>
 

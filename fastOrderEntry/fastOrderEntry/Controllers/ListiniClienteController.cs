@@ -78,7 +78,7 @@ namespace fastOrderEntry.Controllers
             con.Close();
             return jsonResult;
         }
-
+        
 
         [HttpGet]
         public JsonResult GetConenutoPagina(string query, string cod_cat_merc, string id_cliente, int page_number)

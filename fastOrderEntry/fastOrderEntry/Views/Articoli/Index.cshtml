@@ -1,4 +1,4 @@
-﻿ 
+﻿
 @{
     ViewBag.Title = " Articoli";
 }
@@ -18,7 +18,7 @@
 
             listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
                 $scope.categorie = result.data;
-                
+
             }, function (error) {
                 show_message(error);
                 });
@@ -175,6 +175,7 @@
     </script>
 }
 @section scripts{
+    
     <script>
         shortcut.add("Home", function () {
             $('#query').focus();
@@ -212,7 +213,7 @@
                     scope.refresh_page(scope.pag_corrente - 1);
                 }
             });
-        });        
+        });
     </script>
 }
 <div class="main-content" ng-controller="ctrl" ng-cloak>

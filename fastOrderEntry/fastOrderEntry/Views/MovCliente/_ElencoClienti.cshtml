@@ -1,21 +1,5 @@
 ﻿<div class="row" ng-show="page_status == 'ricerca'">
-    <div class="col-md-2 col-lg-2">
-        <h4><i class="fa fa-bars"></i> Menu</h4>
-        <ul class="nav nav-stacked nav-pills">
-            <li>
-                <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
-            </li>
-            <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_merc == cod_cat_merc_sel}">
-                <a class="livello{{item.livello}}"
-                   ng-click="selezionaCategoria(item)"
-                   ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">
-                    <span class="fa fa-caret-right"></span>&nbsp;
-                    {{item.descrizione}}
-                </a>
-            </li>
-        </ul>
-    </div>
-    <div class="col-md-10 col-lg-10">
+    <div class="col-md-12 col-lg-12">
         <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
         <div class="row">
             <div class="col-md-8">
@@ -36,7 +20,7 @@
                 <input type="text" class="form-control" id="a-data" placeholder="mm/aaaa" ng-model="filtri.a_data" />
             </div>
         </div>
-
+        <h4><i class="fa fa-list-ul"></i> Elenco</h4>
         <div ng-show="pag_number > 1">
             <ul class="pagination" style="text-align: center;">
                 <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
@@ -70,19 +54,20 @@
                 </li>
             </ul>
         </div>
-        <h4><i class="fa fa-list-ul"></i> Elenco</h4>
         <table class="table table-hover table-striped" id="table">
             <thead>
                 <tr>
-                    <th>Art</th>
-                    <th>Descrizione</th>
+                    <th>Id</th>
+                    <th>Rag. Soc</th>
+                    <th>Indirizzo</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="item in records">
-                    <td>{{item.id_codice_art}}</td>
-                    <td>{{item.descrizione}}</td>
+                    <td>{{item.id_cliente}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.indirizzo}} {{item.cap}} {{item.comune}} {{item.provincia}}</td>
                     <td>
                         <button class="btn  btn-xs"
                                 ng-click="leggi(item);">

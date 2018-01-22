@@ -196,29 +196,42 @@ namespace fastOrderEntry.Controllers
 
                 if (model.Count(x => x.massivo == true) > 0)
                 {
-                    var values = new NameValueCollection();
-                    string ordini = JsonConvert.SerializeObject(model.Where(x => x.massivo == true));
-                    var settings = (from item in db.impostazioni
-                                    select item).First();
+                    // controllo se l'agente è univoco altrimenti mando a cacare
+                    //
 
-                    values["op"] = op;
-                    values["ordini"] = ordini;
-                    values["private_key"] = settings.private_key;
-
-                    try
+                    string id_agente = model.FirstOrDefault(x=> x.massivo == true).id_agente;
+                    string id_cliente = model.FirstOrDefault(x => x.massivo == true).id_cliente;
+                    if (model.Count(x => (x.id_agente != id_agente & x.massivo == true) | (x.id_cliente != id_cliente & x.massivo == true)) == 0)
                     {
-                        var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
-                        var responseString = Encoding.Default.GetString(response);
-                        obj = JObject.Parse(responseString);
-                        obj.Add("ack", "OK");
+                        var values = new NameValueCollection();
+                        string ordini = JsonConvert.SerializeObject(model.Where(x => x.massivo == true));
+                        var settings = (from item in db.impostazioni
+                                        select item).First();
 
+                        values["op"] = op;
+                        values["ordini"] = ordini;
+                        values["private_key"] = settings.private_key;
+
+                        try
+                        {
+                            var response = client.UploadValues(settings.jerp_url + "/zwebServ/sync.jsp", values);
+                            var responseString = Encoding.Default.GetString(response);
+                            obj = JObject.Parse(responseString);
+                            obj.Add("ack", "OK");
+
+                        }
+
+                        catch (WebException e)
+                        {
+                            var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
+                            obj.Add("ack", "KO");
+                            obj.Add("messaggio", messaggio);
+                        }
                     }
-
-                    catch (WebException e)
+                    else
                     {
-                        var messaggio = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
                         obj.Add("ack", "KO");
-                        obj.Add("messaggio", messaggio);
+                        obj.Add("messaggio", "l'agente o il cliente deve essere univoco");
                     }
                 }
 

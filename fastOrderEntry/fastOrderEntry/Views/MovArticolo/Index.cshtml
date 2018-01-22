@@ -1,6 +1,8 @@
 ﻿
 @{
     ViewBag.Title = " Movimenti Articoli";
+    string da_data = "01/" + (DateTime.Now.Year - 1).ToString();
+    string a_data = "12/" + DateTime.Now.Year.ToString();
 }
 @section header {
     <script>
@@ -12,6 +14,7 @@
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
             $scope.categorie = [];
+            $scope.filtri = { 'da_data': '@da_data', 'a_data': '@a_data' };
 
             $scope.page_status = 'ricerca';
 
@@ -21,7 +24,7 @@
 
             }, function (error) {
                 show_message(error);
-                });
+            });
 
             $scope.refresh = function () {
                 $http({
@@ -134,10 +137,12 @@
             };
 
             $scope.leggi = function (item) {
+                $scope.selezionato = item;
+                data = { item: item, da_data: $scope.filtri.da_data, a_data: $scope.filtri.a_data };
                 $http({
                     method: 'POST',
                     url: '@(Url.Action("leggi_movimenti"))',
-                    data: item
+                    data: data
                 }).then(function (response) {
                     $scope.articolo_corrente = response.data;
                     $scope.page_status = 'leggi';
@@ -150,12 +155,37 @@
                 $scope.page_status = 'ricerca';
             };
 
+            //flitri di ricerca e ordinamento
+            $scope.sortType = 'data_documento';
+            $scope.sortReverse = true;
+            $scope.searchField = '';
+
 
         }]);
     </script>
 }
 @section scripts{
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.it.min.js")"></script>
     <script>
+        $('.data-new input').datepicker({ startView: 1, minViewMode: "months", format: "mm/yyyy", language: "it" });
+
+        $('#a-data').change(function () {
+            var current = $('#a-data').val();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.filtri.a_data = current;
+            });
+        });
+
+        $('#da-data').change(function () {
+            var current = $('#da-data').val();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.filtri.da_data = current;
+            });
+        });
+
         shortcut.add("Home", function () {
             $('#query').focus();
         });
@@ -171,12 +201,7 @@
                 scope.next_record();
             });
         });
-        shortcut.add("Ctrl+S", function () {
-            var scope = angular.element($("[ng-controller='ctrl']")).scope();
-            scope.$apply(function () {
-                scope.save_current_record();
-            });
-        });
+       
         shortcut.add("pd", function () {
             var scope = angular.element($("[ng-controller='ctrl']")).scope();
             scope.$apply(function () {
@@ -195,7 +220,7 @@
         });
     </script>
 }
-<div class="main-content" ng-controller="ctrl" ng-cloak>
-    @Html.Partial("_ElencoArticoli") 
-    @Html.Partial("_LeggiMovimenti")
-</div>
+    <div class="main-content" ng-controller="ctrl" ng-cloak>
+        @Html.Partial("_ElencoArticoli")
+        @Html.Partial("_LeggiMovimenti")
+    </div>
