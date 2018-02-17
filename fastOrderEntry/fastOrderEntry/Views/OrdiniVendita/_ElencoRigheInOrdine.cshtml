@@ -85,9 +85,8 @@
                             <td class="text-right">
                                 <span class="badge badge-warning">{{item | imponibile | number:2}}</span>
                             </td>
-                            @*<td class="text-right"><span class="badge badge-danger">{{item | prezzoacq | number:2}}</span></td>*@
-                            <td class="text-right"><span class="badge badge-danger">{{item.prezzo_acquisto| number:2}}</span></td>
-                            <td ng-hide="tc.current.ordine_chiuso">
+                           <td class="text-right"><span class="badge badge-danger">{{item.prezzo_acquisto| number:2}}</span></td>
+						   <td ng-hide="tc.current.ordine_chiuso">
                                 <button class="btn btn-grey btn-xs" ng-click="eminina_riga(item)"><i class="glyphicon glyphicon-trash"></i></button>
                             </td>
                         </tr>

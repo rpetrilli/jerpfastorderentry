@@ -21,6 +21,7 @@ namespace fastOrderEntry.Models
             {
                 cmd.Connection = conn;
                 cmd.CommandText = "SELECT *, \r\n" +
+                    " (select codice_fornitore from aa_source_list where id_cod_articolo = ma_articoli_soc.id_codice_art and preferenziale = true limit 1) as cod_fornitore, \r\n" +
                     "   (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
                     " from ma_articoli_soc \r\n" +                     
                     "where id_societa = '1' \r\n";
@@ -51,6 +52,7 @@ namespace fastOrderEntry.Models
                         r.descrizione = reader.GetString(reader.GetOrdinal("descrizione"));
                         r.giacenza = !string.IsNullOrEmpty(reader["giacenza"].ToString()) ? Convert.ToDecimal(reader["giacenza"]) : 0;
                         r.id_iva = reader["id_iva"].ToString();
+                        r.cod_fornitore = reader["cod_fornitore"].ToString();
                         recordlistino.Add(r);
                     }
                 }

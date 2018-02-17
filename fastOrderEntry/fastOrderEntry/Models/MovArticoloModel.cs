@@ -112,7 +112,7 @@ namespace fastOrderEntry.Models
         {
             try
             {
-                return Convert.ToDateTime(data).ToShortDateString();
+                return Convert.ToDateTime(data).ToString("yyyy-MM-dd");
             }
             catch
             {

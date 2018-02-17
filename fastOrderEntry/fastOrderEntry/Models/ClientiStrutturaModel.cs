@@ -52,7 +52,7 @@ namespace fastOrderEntry.Models
                         Cliente r = new Cliente();
                         r.id = reader["id_cliente"].ToString();
                         r.name = reader["ragione_sociale"].ToString();
-                        r.id_cliente = reader["id_cliente"].ToString().TrimStart('0');
+                        r.id_cliente = reader["id_cliente"].ToString();
 
                         r.indirizzo = reader["indirizzo"].ToString();
                         r.cap = reader["cap"].ToString();

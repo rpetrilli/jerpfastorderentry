@@ -19,11 +19,12 @@ namespace fastOrderEntry.Models
         public decimal sconto_agente { get; set; }
         public decimal giacenza { get; set; }
         public string id_iva { get; set; }
+        public string cod_fornitore { get; set; }
 
         internal void leggiPrezzi(NpgsqlConnection conn)
         {
             prezzo_vendita = leggiListinoArticolo(conn, "VA01");
-            prezzo_acquisto = leggiListinoArticolo(conn, "AC01");
+            prezzo_acquisto = leggiPrezzoAcquisto(conn, "AC01");
 
             sconto_1 = leggiSconto(conn, "SC01");
             sconto_2 = leggiSconto(conn, "SC02");
@@ -96,6 +97,35 @@ namespace fastOrderEntry.Models
                 }
             }
             return sconto;
+        }
+
+        private decimal leggiPrezzoAcquisto(NpgsqlConnection conn, string id_cond_prezzo)
+        {
+            decimal prz = 0;
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = conn;
+                cmd.CommandText = @"select 
+                        case when ao_accettazione_righe.quantita<>0 then 
+                        ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
+                        ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
+                        from ao_accettazione_righe
+                        where ao_accettazione_righe.id_codice_art=(@query)
+                        order by ao_accettazione_righe.esercizio desc,
+                        ao_accettazione_righe.id_accettazione desc limit 1";
+               
+                cmd.Parameters.AddWithValue("query", id_codice_art);
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        prz = reader.GetDecimal(reader.GetOrdinal("ult_prezzo_acq"));
+                    }
+                }
+            }
+            return prz;
         }
 
         private decimal leggiListinoArticolo(NpgsqlConnection conn, string id_cond_prezzo)

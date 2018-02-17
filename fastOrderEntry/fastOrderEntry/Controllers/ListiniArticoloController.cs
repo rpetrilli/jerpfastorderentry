@@ -1,8 +1,10 @@
 ﻿using fastOrderEntry.Helpers;
 using fastOrderEntry.Models;
 using Npgsql;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -30,6 +32,63 @@ namespace fastOrderEntry.Controllers
             return View();
         }
 
+        public ActionResult stampa(string query, string cod_cat_merc_sel)
+        {
+            con.Open();
+
+            ListinoModel listino = new ListinoModel();
+            listino.select(con, query, cod_cat_merc_sel);
+            con.Close();
+
+            var wk = listino.recordlistino
+                .Select(x => 
+                {
+                    return new ReportListinoModel()
+                    { 
+                        articolo = x.id_codice_art,
+                        cod_fornitore = x.cod_fornitore,
+                        descrizione = x.descrizione,
+                        prezzo_di_vendita = x.prezzo_vendita,
+                        giacenza = x.giacenza,
+                        sconto_1 = x.sconto_1,
+                        sconto_2 = x.sconto_2,
+                        sconto_3 = x.sconto_3,
+                        prezzo_netto = x.prezzo_vendita * (100 - x.sconto_1) / 100 * (100 - x.sconto_2) / 100 * (100 - x.sconto_3) / 100 * (100 - x.sconto_agente) / 100,
+                        iva = x.id_iva,
+                        prezzo_di_acquisto = x.prezzo_acquisto
+                    };
+                })
+                .OrderBy(x=> x.descrizione)
+                .ToList();
+
+            ExcelPackage excel = new ExcelPackage();
+            var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+            workSheet.Cells[1, 1].LoadFromCollection(wk, true);
+
+            //for (int c = 3; c <= 8; c++)
+            //{
+            //    workSheet.Column(c).Style.Numberformat.Format = "#,##0";
+            //}
+
+            //workSheet.Column(10).Style.Numberformat.Format = "#,##0";
+
+            workSheet.Cells["A1:J1"].Style.Font.Bold = true;
+            workSheet.Cells.AutoFitColumns();
+
+            using (var memoryStream = new MemoryStream())
+            {
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;  filename=listino_articolo_" + cod_cat_merc_sel +"_" + query + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".xlsx");
+                excel.SaveAs(memoryStream);
+                memoryStream.WriteTo(Response.OutputStream);
+                Response.Flush();
+                Response.End();
+            }
+
+            return View();
+        }
+
+
         [HttpGet]
         public JsonResult GetElenco(string cerca)
         {
@@ -37,8 +96,6 @@ namespace fastOrderEntry.Controllers
 
             ListinoModel listino = new ListinoModel();
             listino.select(con, cerca != null ? cerca.ToUpper() : "");
-
-
 
             var jsonResult = Json(new { data = listino }, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;

@@ -1,0 +1,273 @@
+﻿
+@{
+    ViewBag.Title = "Articoli Agente";
+}
+@section header {
+
+}
+
+@section scripts {
+<script>
+
+
+
+        function show_message(errore, messaggio) {
+            alert(messaggio);
+        };
+
+        app.controller('ctrl', ['$scope', '$http', 'listiniService', 'tabController', function ($scope, $http, listiniService, tabController) {
+            $scope.categorie = [];
+            $scope.filtro = "Tutti gli articoli";
+            $scope.records = [];
+            $scope.cod_cat_merc_sel = '';
+
+            $scope.select_agente_filtri = function (item) {
+                $scope.id_agente = item ? item.id : '';
+                $scope.refresh_page($scope.pag_corrente);
+            };
+
+            listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
+                $scope.categorie = result.data;
+            }, function (error) {
+                show_message(error);
+            });
+
+            $scope.selezionaCategoria = function (item_sel) {
+                if ("undefined" === typeof item_sel) {
+                    $scope.filtro = "Tutti gli articoli";
+                    $scope.cod_cat_merc_sel = '';
+                    for (var j = 0; j < $scope.categorie.length; j++) {
+                        item = $scope.categorie[j];
+                        if (item.livello == 2) {
+                            item.visibile = false;
+                        }
+                    }
+                } else {
+                    $scope.filtro = item_sel.descrizione;
+                    $scope.cod_cat_merc_sel = item_sel.id_cat_merc;
+                    if (item_sel.livello == 1) {
+                        for (var j = 0; j < $scope.categorie.length; j++) {
+                            item = $scope.categorie[j];
+                            if (item.livello == 2) {
+                                if (item.id_cat_padre == item_sel.id_cat_merc) {
+                                    //if (item.id_cat_merc.substring(0, item_sel.id_cat_merc.length) == item_sel.id_cat_merc) {
+                                    item.visibile = !item.visibile;
+                                } else {
+                                    item.visibile = false;
+                                }
+                            }
+                            if (item.livello == 3) {
+                                item.visibile = false;
+                            }
+                        }
+                    } else if (item_sel.livello == 2) {
+                        for (var j = 0; j < $scope.categorie.length; j++) {
+                            item = $scope.categorie[j];
+                            if (item.livello == 3) {
+                                if (item.id_cat_padre == item_sel.id_cat_merc) {
+                                    item.visibile = !item.visibile;
+                                } else {
+                                    item.visibile = false;
+                                }
+                            }
+                        }
+                    }
+                };
+                $scope.refresh();
+            };
+
+
+            $scope.refresh = function () {
+                $http({
+                method: 'GET',
+                url: '@(Url.Action("getPaginatore"))',
+                params: { query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel }
+            }).then(function successCallback(response) {
+                    $scope.rec_x_pagina = response.data.rec_x_pagina;
+                    $scope.rec_number = response.data.rec_number;
+                    $scope.pag_number = response.data.pag_number;
+                    $scope.refresh_page(0);
+                    }, function errorCallback(response) {
+                        show_message('Errore', error.data);
+             });
+            };
+
+            $scope.refresh_page = function (page_number) {
+                $http({
+                    method: 'GET',
+                    url: '@(Url.Action("getConenutoPagina"))',
+                    params: {
+                        query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, id_agente: $scope.id_agente, page_number: page_number
+                    }
+                }).then(function (response) {
+                        $scope.records = response.data;
+                        $scope.pag_corrente = page_number;
+                        $scope.rec_pagina = -1;
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+            };
+            $scope.refresh();
+
+            $scope.save = function (item) {
+                item.id_agente = $scope.id_agente;
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("Save"))',
+                    data: item
+                }).then(function (response) {
+                        //gestire ACK
+                    }).catch(function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+            };
+
+            //$scope.next_record = tabController.next_record;
+            //$scope.previous_record = tabController.previous_record;
+
+            $scope.next_record = function () {
+                $scope.rec_pagina++;
+                if ($scope.rec_pagina >= $scope.records.length ) {
+                    $scope.rec_pagina = 0;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) + ') input.request-focus').focus().select();
+            };
+
+            $scope.previous_record = function () {
+                $scope.rec_pagina--;
+                if ($scope.rec_pagina < 0 ) {
+                    $scope.rec_pagina = $scope.records.length - 1;
+                }
+                $('#table tr:nth-child(' + ($scope.rec_pagina + 1) + ') input.request-focus').focus().select();
+            };
+
+            $scope.linefocused = function (line) {
+                $scope.rec_pagina = line;
+            };
+
+            /* Gestione paginatore*/
+            $scope.nr_pagine_display = 4;
+            $scope.nr_pagina_paginatore = function (indice) {
+                if (indice + 1 > $scope.pag_number) {
+                    return -1;
+                } else if ($scope.pag_corrente + 1 < $scope.nr_pagine_display) {
+                    return indice;
+                } else {
+                    return $scope.pag_corrente + indice - $scope.nr_pagine_display;
+                }
+            };
+
+        }]);
+
+        shortcut.add("Home", function () {
+            $('#query').focus();
+        });
+
+        shortcut.add("Up", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.previous_record();
+            });
+        });
+        shortcut.add("Down", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.next_record();
+            });
+        });
+        shortcut.add("Ctrl+S", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.save_current_record();
+            });
+        });
+        shortcut.add("pd", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.pag_corrente < scope.pag_number - 1) {
+                    scope.refresh_page(scope.pag_corrente + 1);
+                }
+            });
+        });
+        shortcut.add("pu", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.pag_corrente > 0) {
+                    scope.refresh_page(scope.pag_corrente - 1);
+                }
+            });
+        });
+</script>
+}
+
+<div class="main-content" ng-controller="ctrl" ng-cloak>
+    <div class="row">
+        <div class="col-md-2 col-lg-2">
+            <h4><i class="fa fa-bars"></i> Menu</h4>
+            <ul class="nav nav-stacked nav-pills">
+                <li>
+                    <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
+                </li>
+                <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_merc == cod_cat_merc_sel}">
+                    <a class="livello{{item.livello}}"
+                       ng-click="selezionaCategoria(item)"
+                       ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">
+                        <span class="fa fa-caret-right"></span>&nbsp;
+                        {{item.descrizione}}
+                    </a>
+
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 col-lg-10">
+            <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
+            <div class="form-inline">
+                <div class="form-group col-md-4 col-lg-4">
+                    <input id="sel-cliente" type="text" class="form-control" placeholder="seleziona agente.."
+                           typehead="@(Url.Action("GetAgenti", "Get"))" on-select="select_agente_filtri" autofocus />
+                </div>
+                <div class="input-group">
+                    <input id="query" capitalize
+                           type="text"
+                           class="form-control"
+                           placeholder="cerca per codice articolo o descrizione..."
+                           ng-model="query"
+                           ng-on-enter="refresh()" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="refresh()"><i class="fa fa-search"></i>&nbsp;Cerca</button>
+                    </span>
+                </div>
+            </div>
+            @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
+            <h4><i class="fa fa-list-ul"></i> Articoli</h4>
+
+            <table class="table table-hover table-striped" id="table">
+                <thead>
+                    <tr>
+                        <th>Art</th>
+                        <th>Descrizione</th>
+                        <th>Visibile</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in records">
+                        <td>{{item.id_codice_art}}</td>
+                        <td>{{item.descrizione}}</td>
+                        <td>
+                            <input type="checkbox" ng-model="item.visibile" ng-disabled="!id_agente" />
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="save(item);">
+                                <span class="fa fa-save" />
+                            </button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+            @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
+        </div>
+    </div>
+</div>

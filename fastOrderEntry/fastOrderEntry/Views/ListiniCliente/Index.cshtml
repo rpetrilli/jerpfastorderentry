@@ -322,6 +322,13 @@
             </ul>
         </div>
         <div class="col-md-10 col-lg-10">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="pull-right">
+                        <button onclick="javascript:document.getElementById('reportForm').submit()" class="btn btn-primary" ng-disabled="!cod_cat_merc_sel || !id_cliente">STAMPA</button>
+                    </div>
+                </div>
+            </div>
             <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
             <div class="form-inline">
                 <div class="form-group col-md-4 col-lg-4">
@@ -330,10 +337,10 @@
                 </div>
                 <div class="input-group">
                     <input id="query" capitalize
-                           type="text" 
-                           class="form-control" 
-                           placeholder="cerca per codice articolo o descrizione..." 
-                           ng-model="query" 
+                           type="text"
+                           class="form-control"
+                           placeholder="cerca per codice articolo o descrizione..."
+                           ng-model="query"
                            ng-on-enter="refresh()" />
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="refresh()"><i class="fa fa-search"></i>&nbsp;Cerca</button>
@@ -382,15 +389,16 @@
                         <th>Art</th>
                         <th>Descrizione</th>
                         <th>
+
                             Pr Ven
                             @*<br />
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_prezzo()">
-                                <span class="fa fa-clone" />
-                            </button>
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="prezzo_vendita_massivo" style="width:80px;" />*@
+                                <button class="btn btn-primary btn-xs"
+                                        ng-click="copia_prezzo()">
+                                    <span class="fa fa-clone" />
+                                </button>
+                                <br />
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="prezzo_vendita_massivo" style="width:80px;" />*@
                         </th>
                         <th>
                             Sc 1
@@ -496,8 +504,12 @@
                     </li>
                 </ul>
             </div> <!--Fine paginatore -->
-
-
+            @using (Html.BeginForm("stampa", "listinicliente", FormMethod.Get, new { id = "reportForm" }))
+            {
+                <input type="hidden" name="query" value="{{query}}" />
+                <input type="hidden" name="cod_cat_merc_sel" value="{{cod_cat_merc_sel}}" />
+                <input type="hidden" name="id_cliente" value="{{id_cliente}}" />
+            }
         </div>
     </div>
 </div>

@@ -42,7 +42,8 @@
                         query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, page_number: page_number
                     }
                 }).then(function (response) {
-                        $scope.records = response.data;
+                    $scope.records = response.data;
+                    console.log(response.data);
                         $scope.pag_corrente = page_number;
                         $scope.rec_pagina = -1;
                     }).catch(function (error, status) {
@@ -290,8 +291,18 @@
 
                 </li>
             </ul>
+            <div class="margin-b-10"></div>
         </div>
+
         <div class="col-md-10 col-lg-10">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="pull-right">
+                        <button onclick="javascript:document.getElementById('reportForm').submit()" class="btn btn-primary" ng-disabled="!cod_cat_merc_sel">STAMPA</button>
+                    </div>
+                </div>
+            </div>
+
             <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
             <div class="input-group">
                 <input id="query" capitalize
@@ -302,6 +313,8 @@
                     <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;Cerca</button>
                 </span>
             </div>
+
+
             <div ng-show="pag_number > 1">
                 <ul class="pagination" style="text-align: center;">
                     <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
@@ -340,9 +353,10 @@
                 <thead>
                     <tr>
                         <th>Art</th>
-                        <th>Descrizione</th>                        
+                        <th>Cod For</th>
+                        <th>Descrizione</th>
                         <th>
-                            Pr Ven 
+                            Pr Ven
                             <button class="btn btn-primary btn-xs"
                                     ng-click="copia_prezzo()">
                                 <span class="fa fa-clone" />
@@ -350,11 +364,11 @@
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="prezzo_vendita_massivo" style="width:80px;" />
-    
+
                         </th>
                         <th>Giac</th>
                         <th>
-                             Sc 1
+                            Sc 1
                             <button class="btn btn-primary btn-xs"
                                     ng-click="copia_sconto1()">
                                 <span class="fa fa-clone" />
@@ -371,7 +385,8 @@
                             </button>
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_2_massivo" style="width:80px;" /></th>
+                                   ng-model="sconto_2_massivo" style="width:80px;" />
+                        </th>
                         <th>
                             Sc 3
                             <button class="btn btn-primary btn-xs"
@@ -380,7 +395,8 @@
                             </button>
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_3_massivo" style="width:80px;" /></th>
+                                   ng-model="sconto_3_massivo" style="width:80px;" />
+                        </th>
                         <th>Prezzo</th>
                         <th>Iva</th>
                         <th>Pr Acq</th>
@@ -390,7 +406,8 @@
                 <tbody>
                     <tr ng-repeat="item in records">
                         <td>{{item.id_codice_art}}</td>
-                        <td>{{item.descrizione}}</td>                        
+                        <td>{{item.cod_fornitore}}</td>
+                        <td>{{item.descrizione}}</td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right request-focus"
                                    ng-model="item.prezzo_vendita" style="width:80px;"
@@ -415,10 +432,11 @@
                         <td><span class="badge badge-success"> {{ item | prezzo | number:2}}</span></td>
                         <td>{{item.id_iva}}</td>
                         <td>
-                            <span class="badge badge-danger">{{item | prezzoacq | number:2}}</span>
-                            @*<input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.prezzo_acquisto" style="width:80px;"
-                                   ng-focus="linefocused($index);" />*@
+                            <span class="badge badge-danger">{{item.prezzo_acquisto | number:2}}</span>
+                            @*<span class="badge badge-danger">{{item | prezzoacq | number:2}}</span>
+                            <input type="number" class="form-control form-control-custom text-right"
+                            ng-model="item.prezzo_acquisto" style="width:80px;"
+                            ng-focus="linefocused($index);" />*@
                         </td>
                         <td>
                             <button class="btn btn-primary btn-xs"
@@ -464,4 +482,9 @@
             </div> <!--Fine paginatore -->
         </div> <!--Dettaglio-->
     </div>
+    @using (Html.BeginForm("stampa", "listiniarticolo", FormMethod.Get, new { id = "reportForm" }))
+    {
+        <input type="hidden" name="query" value="{{query}}" />
+        <input type="hidden" name="cod_cat_merc_sel" value="{{cod_cat_merc_sel}}" />
+    }
 </div>

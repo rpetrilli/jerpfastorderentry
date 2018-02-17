@@ -46,6 +46,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus, Version=4.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -213,6 +216,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartUp.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ArticoliAgenteController.cs" />
     <Compile Include="Controllers\ArticoliController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\GetController.cs" />
@@ -231,6 +235,7 @@
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Models\AgentiStrutturaModel.cs" />
     <Compile Include="Models\AnaArticoloModel.cs" />
+    <Compile Include="Models\ArticoliAgenteModel.cs" />
     <Compile Include="Models\CategorieStrutturaModel.cs" />
     <Compile Include="Models\ClientiStrutturaModel.cs" />
     <Compile Include="Models\CondizionePag.cs" />
@@ -247,6 +252,7 @@
     <Compile Include="Models\ProvvigioniModel.cs" />
     <Compile Include="Models\RecordListinoModel.cs" />
     <Compile Include="Models\ArticoloStrutturaModel .cs" />
+    <Compile Include="Models\ReportListinoModel.cs" />
     <Compile Include="Models\VettoreStrutturaModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
@@ -367,6 +373,8 @@
     <Content Include="Views\MovCliente\_LeggiMovimenti.cshtml" />
     <Content Include="Views\MovCliente\_ElencoClienti.cshtml" />
     <Content Include="Views\MovCliente\_Dettaglio.cshtml" />
+    <Content Include="Views\ArticoliAgente\Index.cshtml" />
+    <Content Include="Views\Shared\_Paginatore.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

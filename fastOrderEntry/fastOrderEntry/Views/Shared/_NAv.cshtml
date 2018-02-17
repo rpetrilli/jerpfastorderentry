@@ -27,7 +27,7 @@
 </div><!--Head Nav-->
 <div id="nav" class="navbar navbar-default navbar-static-top navbar-top" role="navigation">
     <ul class="nav navbar-nav">
-        <li id="home"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home fa-fw"></i>Home</a></li>        
+        <li id="home"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home fa-fw"></i>Home</a></li>
         <li id="anagrafiche" class="dropdown ">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu><i class="fa fa-archive fa-fw"></i>Anagrafiche<i class="caret"></i></a>
             <ul class="dropdown-menu">
@@ -40,25 +40,31 @@
                         <li class="divider"></li>
                         <li><a href="@Url.Action("Index", "ListiniArticoloAcq")"><i class="fa fa-file-archive-o"></i> Listini Acquisto</a></li>
                         <li class="divider"></li>
-                        
+
                     </ul>
                 </li>
                 <li><a href="@Url.Action("Index", "Provvigioni")"><i class="fa fa-address-book"></i> Provvigioni</a></li>
             </ul>
-        </li>        
+        </li>
         <li id="vendite" class="dropdown ">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-table fa-fw"></i><span>Vendite <i class="caret"></i></span></a>
             <ul class="dropdown-menu">
-                <li><a href="@Url.Action("Index", "OrdiniVendita")"><i class="fa fa-shopping-basket"></i> Ordini</a></li>                
+                <li><a href="@Url.Action("Index", "OrdiniVendita")"><i class="fa fa-shopping-basket"></i> Ordini</a></li>
             </ul>
-        </li>        
+        </li>
         <li id="movimenti" class="dropdown ">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ticket fa-fw"></i><span>Movimenti <i class="caret"></i></span></a>
             <ul class="dropdown-menu">
                 <li><a href="@Url.Action("Index", "MovArticolo")"><i class="fa fa-leaf"></i> Mov x Articolo</a></li>
-                <li><a href="@Url.Action("Index", "MovCliente")"><i class="fa fa-group"></i> Mov x Cliente</a></li>                
+                <li><a href="@Url.Action("Index", "MovCliente")"><i class="fa fa-group"></i> Mov x Cliente</a></li>
             </ul>
-        </li>        
+        </li>
+        <li id="agenti" class="dropdown ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe fa-fw"></i><span>Portale Agenti <i class="caret"></i></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="@Url.Action("Index", "ArticoliAgente")"><i class="fa fa-leaf"></i> Articoli per Agente</a></li>                
+            </ul>
+        </li>
     </ul>
 </div><!--Action Nav-->
 
