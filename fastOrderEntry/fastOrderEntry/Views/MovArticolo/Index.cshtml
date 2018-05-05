@@ -7,7 +7,7 @@
 @section header {
     <script>
         function show_message(errore, messaggio) {
-            alert(messaggio);
+            swal(messaggio);
         };
         app.controller('ctrl', ['$scope', '$http', 'listiniService', function ($scope, $http, listiniService) {
             $scope.cod_cat_merc_sel = '';

@@ -20,11 +20,16 @@ namespace fastOrderEntry.Models
         public decimal giacenza { get; set; }
         public string id_iva { get; set; }
         public string cod_fornitore { get; set; }
+        public string codice_ean { get; set; }
+        public string id_fornitore { get; set; }
+        public bool obosleto { get; set; }
+        public decimal peso_netto { get; set; }
+        public string um_peso { get; set; }
 
-        internal void leggiPrezzi(NpgsqlConnection conn)
+        internal void leggiPrezzi(NpgsqlConnection conn, bool lisAcq = false)
         {
             prezzo_vendita = leggiListinoArticolo(conn, "VA01");
-            prezzo_acquisto = leggiPrezzoAcquisto(conn, "AC01");
+            prezzo_acquisto = leggiPrezzoAcquisto(conn, "AC01", lisAcq);
 
             sconto_1 = leggiSconto(conn, "SC01");
             sconto_2 = leggiSconto(conn, "SC02");
@@ -99,13 +104,51 @@ namespace fastOrderEntry.Models
             return sconto;
         }
 
-        private decimal leggiPrezzoAcquisto(NpgsqlConnection conn, string id_cond_prezzo)
+        private decimal leggiPrezzoAcquisto(NpgsqlConnection conn, string id_cond_prezzo, bool lisAcq)
         {
             decimal prz = 0;
-            using (var cmd = new NpgsqlCommand())
+            if (lisAcq)
             {
-                cmd.Connection = conn;
-                cmd.CommandText = @"select 
+
+                using (var cmd = new NpgsqlCommand())
+                {
+
+                    cmd.Connection = conn;
+                    cmd.CommandText = "select * from da_listini_articolo " +
+                        "where id_cond_prezzo = @id_cond_prezzo " +
+                        "  and id_codice_art = @id_codice_art and id_divisa = 'EUR' ";                  
+                    cmd.Parameters.AddWithValue("id_cond_prezzo", id_cond_prezzo);
+                    cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                    cmd.ExecuteNonQuery();
+
+                    //cmd.Connection = conn;
+                    //cmd.CommandText = @"select 
+                    //    case when ao_accettazione_righe.quantita<>0 then 
+                    //    ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
+                    //    ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
+                    //    from ao_accettazione_righe
+                    //    where ao_accettazione_righe.id_codice_art=(@query)
+                    //    order by ao_accettazione_righe.esercizio desc,
+                    //    ao_accettazione_righe.id_accettazione desc limit 1";
+
+                    //cmd.Parameters.AddWithValue("query", id_codice_art);
+                    //cmd.ExecuteNonQuery();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            prz = reader.GetDecimal(reader.GetOrdinal("val_condizione"));
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = conn;
+                    cmd.CommandText = @"select 
                         case when ao_accettazione_righe.quantita<>0 then 
                         ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
                         ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
@@ -113,19 +156,143 @@ namespace fastOrderEntry.Models
                         where ao_accettazione_righe.id_codice_art=(@query)
                         order by ao_accettazione_righe.esercizio desc,
                         ao_accettazione_righe.id_accettazione desc limit 1";
-               
-                cmd.Parameters.AddWithValue("query", id_codice_art);
-                cmd.ExecuteNonQuery();
 
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
+                    cmd.Parameters.AddWithValue("query", id_codice_art);
+                    cmd.ExecuteNonQuery();
+
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        prz = reader.GetDecimal(reader.GetOrdinal("ult_prezzo_acq"));
+                        while (reader.Read())
+                        {
+                            prz = reader.GetDecimal(reader.GetOrdinal("ult_prezzo_acq"));
+                        }
                     }
                 }
             }
+           
             return prz;
+        }
+
+        internal void AggiornaArticolo(NpgsqlConnection con)
+        {
+            updateDescrizione(con);
+            updateEan(con);
+            updateCodFornitore(con);
+           
+        }
+
+        private void updateObsoleto(NpgsqlConnection con)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void updateCodFornitore(NpgsqlConnection con)
+        {
+            int cnt = 0;
+            if (!string.IsNullOrEmpty(cod_fornitore))
+            {
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "update aa_source_list set codice_fornitore = @cod_fornitore,  preferenziale = true \r\n" +
+                        " where id_divisione ='1' and id_cod_articolo = @id_codice_art and id_societa = '1' and id_fornitore = @id_fornitore";
+                    cmd.Parameters.AddWithValue("id_fornitore", id_fornitore);
+                    cmd.Parameters.AddWithValue("cod_fornitore", cod_fornitore);
+                    cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                    cnt = cmd.ExecuteNonQuery();
+                }
+                if (cnt == 0)
+                {
+                    using (var cmd = new NpgsqlCommand())
+                    {
+
+                        cmd.Connection = con;
+                        cmd.CommandText = "DELETE FROM aa_source_list \r\n" +
+                            " where id_divisione ='1' and id_cod_articolo = @id_codice_art and id_societa = '1'";
+                        cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                        cnt = cmd.ExecuteNonQuery();
+                    }
+
+                    using (var cmd = new NpgsqlCommand())
+                    {
+
+                        cmd.Connection = con;
+                        cmd.CommandText = "INSERT INTO aa_source_list( \r\n" +
+                            "            id_divisione, id_cod_articolo, id_fornitore, id_societa, preferenziale, \r\n" +
+                            "            codice_fornitore) \r\n" +
+                            "    VALUES('1', @id_codice_art, @id_fornitore, '1', true, @codice_fornitore)";
+                        cmd.Parameters.AddWithValue("id_fornitore", id_fornitore);
+                        cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                        cmd.Parameters.AddWithValue("codice_fornitore", cod_fornitore);
+                        cnt = cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        private void updateEan(NpgsqlConnection con)
+        {
+            int cnt = 0;
+            if (!string.IsNullOrEmpty(codice_ean))
+            {
+
+                using (var cmd = new NpgsqlCommand())
+                {
+
+                    cmd.Connection = con;
+                    cmd.CommandText = "update ma_articoli_ean set codice_ean = @codice_ean \r\n" +
+                        " where id_societa = '1'  and id_codice_art = @id_codice_art";
+                    cmd.Parameters.AddWithValue("codice_ean", codice_ean);
+                    cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                    cnt = cmd.ExecuteNonQuery();
+                }
+                if (cnt == 0)
+                {
+                    using (var cmd = new NpgsqlCommand())
+                    {
+
+                        cmd.Connection = con;
+                        cmd.CommandText = "INSERT INTO ma_articoli_ean( \r\n" +
+                            "            id_societa, id_codice_art, codice_ean, id_um) \r\n" +
+                            "    VALUES('1', @id_codice_art, @codice_ean, 'PZ')";
+                        cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                        cmd.Parameters.AddWithValue("codice_ean", codice_ean);
+                        cnt = cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            else
+            {
+                using (var cmd = new NpgsqlCommand())
+                {
+
+                    cmd.Connection = con;
+                    cmd.CommandText = "DELETE FROM ma_articoli_ean \r\n" +
+                        "   where id_societa = '1' and id_codice_art =  @id_codice_art ";
+                    cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                    cnt = cmd.ExecuteNonQuery();
+                }
+            }//Fine vendita
+        }
+
+        private void updateDescrizione(NpgsqlConnection con)
+        {
+            if (!string.IsNullOrEmpty(id_codice_art))
+            {
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "update ma_articoli_soc set descrizione = @descrizione, obsoleto = @obsoleto " +
+                        "where id_codice_art = @id_codice_art ";
+                    cmd.Parameters.AddWithValue("descrizione", descrizione);
+                    cmd.Parameters.AddWithValue("obsoleto", obosleto);
+                    cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                    cmd.ExecuteNonQuery();
+                }
+
+            }
         }
 
         private decimal leggiListinoArticolo(NpgsqlConnection conn, string id_cond_prezzo)
@@ -149,7 +316,6 @@ namespace fastOrderEntry.Models
             }
             return prz;
         }
-
 
         private decimal leggiListinoCliente(NpgsqlConnection conn, string id_cond_prezzo, string id_cliente)
         {

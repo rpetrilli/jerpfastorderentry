@@ -104,7 +104,7 @@ namespace fastOrderEntry.Controllers
             listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA);
 
 
-            var jsonResult = Json(listino.recordlistino, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(listino.recordlistino.OrderBy(x => x.descrizione), JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();

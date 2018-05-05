@@ -71,9 +71,7 @@ namespace fastOrderEntry.Controllers
             ArticoliAgenteModel articoliAgente = new ArticoliAgenteModel();
             articoliAgente.select(con, query, cod_cat_merc, id_agente, page_number, REC_X_PAGINA);
 
-
-
-            var jsonResult = Json(articoliAgente.recordArticoli, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(articoliAgente.recordArticoli.OrderBy(x=> x.descrizione), JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();
@@ -85,6 +83,16 @@ namespace fastOrderEntry.Controllers
         {
             con.Open();
             item.ScriviVisibile(con);
+            con.Close();
+            return Json(new { ack = "Ok" }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Massivo (bool visibile, string id_agente, string query, string cod_cat_merc)
+        {
+            con.Open();
+            ArticoliAgenteModel articoliAgente = new ArticoliAgenteModel();
+            articoliAgente.update_massivo(con, visibile, id_agente, query, cod_cat_merc);
             con.Close();
             return Json(new { ack = "Ok" }, JsonRequestBehavior.AllowGet);
         }

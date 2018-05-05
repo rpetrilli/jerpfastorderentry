@@ -6,10 +6,10 @@
     string oggi = DateTime.Now.AddDays(-7).ToShortDateString();
 }
 @section header {
-    <script>
+<script>
 
         show_message = function (errore, messaggio) {
-            alert(messaggio);
+            swal(messaggio);
         }
 
         var date = new Date();
@@ -127,17 +127,27 @@
                 $scope.tc.saveEdit($scope.tc.current);
             };
 
-             $scope.copia_sconto = function () {
-                var r = confirm("Confermi la copia massiva dello sconto");
-                if (r == true) {
-                    if (typeof ($scope.sconto_cassa) != 'undefined') {
-                        $scope.riga = {};
-                                               
-                        for (var i = 0; i <= $scope.tc.current.righe.length; i++) {
-                            $scope.tc.current.righe[i].sconto_3 = $scope.sconto_cassa;
+            $scope.copia_sconto = function () {
+
+                 swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermi la copia massiva dello sconto degli articoli in elenco?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            if (typeof ($scope.sconto_cassa) != 'undefined') {
+                                $scope.riga = {};
+
+                                for (var i = 0; i <= $scope.tc.current.righe.length; i++) {
+                                    $scope.tc.current.righe[i].sconto_3 = $scope.sconto_cassa;
+                                }
+                            }
                         }
-                    }
-                }
+                    });
+               
             };
 
 
@@ -241,7 +251,13 @@
 
             $scope.print = function () {
                 @*$scope.tc.current.username = '@(username)';
-                $scope.tc.saveEdit( $scope.tc.current, openstampa);*@
+                $scope.tc.saveEdit( $scope.tc.current, openstampa);
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("UpdateStampa", "Get"))',
+                    data: $scope.tc.current
+                });*@
+
                 openstampa($scope.tc.current);
             };
 
@@ -253,7 +269,7 @@
             location.href = url;
             //window.open(url);
         };
-    </script>
+</script>
 }
 @section scripts{
     <script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>

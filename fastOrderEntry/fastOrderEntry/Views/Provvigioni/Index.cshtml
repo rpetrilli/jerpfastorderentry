@@ -7,12 +7,12 @@
 }
 
 @section scripts {
-    <script>
+<script>
 
 
 
         function show_message(errore, messaggio) {
-            alert(messaggio);
+            swal(messaggio);
         };
 
         app.controller('ctrl', ['$scope', '$http', 'listiniService', 'tabController', function ($scope, $http, listiniService, tabController) {
@@ -175,23 +175,31 @@
 
             $scope.copia_provvigione = function () {
 
-                var r = confirm("Confermi la copia massiva prezzo");
-                if (r == true) {
-                    $http({
-                        method: 'POST',
-                        url: '@(Url.Action("copia_provvigione"))',
-                        data: {
-                            valore_massivo: $scope.prezzo_massivo,
-                            query: $scope.query,
-                            cod_cat_merc: $scope.cod_cat_merc_sel,
-                            id_agente: $scope.id_agente
-                        }
-                    }).then(function (response) {
-                        $scope.refresh_page($scope.pag_corrente);
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });
-                }
+                 swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermi la copia massiva provvigione degli articoli in elenco?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                             $http({
+                                 method: 'POST',
+                                 url: '@(Url.Action("copia_provvigione"))',
+                                 data: {
+                                     valore_massivo: $scope.prezzo_massivo,
+                                     query: $scope.query,
+                                     cod_cat_merc: $scope.cod_cat_merc_sel,
+                                     id_agente: $scope.id_agente
+                                 }
+                             }).then(function (response) {
+                                     $scope.refresh_page($scope.pag_corrente);
+                                 }).catch(function (error, status) {
+                                     show_message('Errore', error.data);
+                                });
+                          }
+                      });              
 
             };
 
@@ -235,7 +243,7 @@
                 }
             });
         });
-    </script>
+</script>
 }
 
 <div class="main-content" ng-controller="ctrl" ng-cloak>
@@ -276,41 +284,8 @@
                     </span>
                 </div>
             </div>
-            <div ng-show="pag_number > 1">
-                <ul class="pagination" style="text-align: center;">
-                    <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
-                    <li>
-                        <a ng-click="refresh_page(0)"
-                           ng-class="{disabled: pag_corrente == 0}"
-                           href="#nav">&lt;&lt;</a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_corrente-1)"
-                           ng-class="{disabled: pag_corrente == 0}"
-                           href="#nav">&lt;</a>
-                    </li>
-                    <li ng-repeat="p_nr in [0,1,2,3]">
-                        <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
-                           ng-bind="nr_pagina_paginatore(p_nr) + 1"
-                           ng-hide="nr_pagina_paginatore(p_nr)==-1"
-                           ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
-                           href="#nav">
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_corrente+1)"
-                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                           href="#nav">&gt;</a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_number-1)"
-                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                           href="#nav">&gt;&gt;</a>
-                    </li>
-                </ul>
-            </div>
+            @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
             <h4><i class="fa fa-list-ul"></i> Provvigione</h4>
-
             <table class="table table-hover table-striped" id="table">
                 <thead>
                     <tr>
@@ -324,7 +299,7 @@
                             </button>
                             <br />
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="prezzo_massivo" style="width:80px;"ng-disabled="!id_agente" />
+                                   ng-model="prezzo_massivo" style="width:80px;" ng-disabled="!id_agente" />
                         </th>
                         <th></th>
                     </tr>
@@ -349,41 +324,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div ng-show="pag_number > 1">
-                <ul class="pagination" style="text-align: center;">
-                    <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
-                    <li>
-                        <a ng-click="refresh_page(0)"
-                           ng-class="{disabled: pag_corrente == 0}"
-                           href="#nav">&lt;&lt;</a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_corrente-1)"
-                           ng-class="{disabled: pag_corrente == 0}"
-                           href="#nav">&lt;</a>
-                    </li>
-                    <li ng-repeat="p_nr in [0,1,2,3]">
-                        <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
-                           ng-bind="nr_pagina_paginatore(p_nr) + 1"
-                           ng-hide="nr_pagina_paginatore(p_nr)==-1"
-                           ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
-                           href="#nav">
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_corrente+1)"
-                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                           href="#nav">&gt;</a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_number-1)"
-                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                           href="#nav">&gt;&gt;</a>
-                    </li>
-                </ul>
-            </div> <!--Fine paginatore -->
-
-
+            @Html.Partial("~/Views/Shared/_Paginatore.cshtml") <!--Fine paginatore -->
         </div>
     </div>
 </div>

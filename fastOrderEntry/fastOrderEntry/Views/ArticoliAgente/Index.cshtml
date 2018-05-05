@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Articoli Agente";
+    ViewBag.Title = "Spegni Articoli";
 }
 @section header {
 
@@ -8,11 +8,8 @@
 
 @section scripts {
 <script>
-
-
-
         function show_message(errore, messaggio) {
-            alert(messaggio);
+            swal(messaggio);
         };
 
         app.controller('ctrl', ['$scope', '$http', 'listiniService', 'tabController', function ($scope, $http, listiniService, tabController) {
@@ -20,6 +17,7 @@
             $scope.filtro = "Tutti gli articoli";
             $scope.records = [];
             $scope.cod_cat_merc_sel = '';
+            $scope.isAllSelected = true;
 
             $scope.select_agente_filtri = function (item) {
                 $scope.id_agente = item ? item.id : '';
@@ -157,6 +155,41 @@
                 }
             };
 
+           /* $scope.toggleAll = function () {
+                var toggleStatus = !$scope.isAllSelected;
+                angular.forEach($scope.records, function (itm) { itm.visibile = toggleStatus; });
+            }*/
+
+            $scope.salva_selezione = function () {
+
+                swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermi la spegnimento massivo degli articoli in elenco?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            $http({
+                                method: 'POST',
+                                url: '@(Url.Action("massivo"))',
+                                data: {
+                                    visibile: $scope.isAllSelected,
+                                    id_agente: $scope.id_agente,
+                                    query: $scope.query,
+                                    cod_cat_merc: $scope.cod_cat_merc_sel
+                                }
+                            }).then(function (response) {
+                                    $scope.refresh_page($scope.pag_corrente);
+                                }).catch(function (error, status) {
+                                    show_message('Errore', error.data);
+                                });
+                        }
+                    });
+                
+            };
+
         }]);
 
         shortcut.add("Home", function () {
@@ -246,7 +279,16 @@
                     <tr>
                         <th>Art</th>
                         <th>Descrizione</th>
-                        <th>Visibile</th>
+                        <th>
+                            Visibile <br />
+                            <input type="checkbox"
+                                   ng-model="isAllSelected"
+                                   ng-disabled="!id_agente">
+                            <button class="btn btn-primary btn-xs" ng-click="salva_selezione()">
+                                <span class="fa fa-clone" />
+                            </button>
+
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -255,11 +297,14 @@
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
                         <td>
-                            <input type="checkbox" ng-model="item.visibile" ng-disabled="!id_agente" />
+                            <input type="checkbox"
+                                   ng-model="item.visibile"
+                                   ng-disabled="!id_agente" />
                         </td>
                         <td>
                             <button class="btn btn-primary btn-xs"
-                                    ng-click="save(item);">
+                                    ng-disabled="!id_agente"
+                                    ng-click="save(item)">
                                 <span class="fa fa-save" />
                             </button>
                         </td>

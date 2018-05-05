@@ -112,8 +112,6 @@ namespace fastOrderEntry.Controllers
             ListinoModel listino = new ListinoModel();
             listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA);
 
-
-
             var jsonResult = Json(listino.recordlistino, JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
@@ -127,6 +125,17 @@ namespace fastOrderEntry.Controllers
             con.Open();
 
             item.scriviPrezzi(con);
+
+            con.Close();
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Update(RecordListinoModel item)
+        {
+            con.Open();
+
+            item.AggiornaArticolo(con);
 
             con.Close();
             return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);

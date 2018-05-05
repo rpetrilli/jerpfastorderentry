@@ -74,7 +74,7 @@ namespace fastOrderEntry.Controllers
 
 
 
-            var jsonResult = Json(proviggioni.recordprovvigione, JsonRequestBehavior.AllowGet);
+            var jsonResult = Json(proviggioni.recordprovvigione.OrderBy(x => x.descrizione), JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = int.MaxValue;
 
             con.Close();
@@ -92,7 +92,7 @@ namespace fastOrderEntry.Controllers
         }
 
         [HttpPost]
-        public JsonResult copia_provvigione(decimal valore_massivo, string query, string cod_cat_merc, string id_agente)        {
+        public JsonResult copia_provvigione(string query, string cod_cat_merc, string id_agente, decimal valore_massivo = 0)        {
             
             con.Open();
 

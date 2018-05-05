@@ -15,8 +15,7 @@
     </div> <!-- page-toolbar -->
     <div class="clearfix"></div>
     <div class="margin-b-10"></div>
-    @Html.Partial("_FiltroRicerca")
-
+    @Html.Partial("_FiltroRicerca")     
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <tab-controller-pag table-controller="tc"></tab-controller-pag>
@@ -37,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in tc.records">
+                        <tr ng-repeat="item in tc.records" ng-class="{success: item.stampato}">
                             <td>{{item.esercizio}} - {{item.id_ordine | trimZeros}}</td>
                             <td>{{item.id_gc_cliente_id}}</td>
                             <td>{{item.id_cliente | trimZeros}} {{item.ragione_sociale}}</td>

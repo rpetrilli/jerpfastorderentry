@@ -107,7 +107,7 @@ namespace fastOrderEntry.Controllers
             con.Open();
 
             ListinoModel listino = new ListinoModel();
-            listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA);
+            listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA, true);
 
 
 
@@ -131,7 +131,7 @@ namespace fastOrderEntry.Controllers
 
 
         [HttpPost]
-        public JsonResult copia_prezzo(decimal prezzo_massivo, String query, String cod_cat_merc)
+        public JsonResult copia_prezzo(string query, string cod_cat_merc, decimal prezzo_massivo =0)
         {
             con.Open();
 
@@ -146,7 +146,7 @@ namespace fastOrderEntry.Controllers
 
 
         [HttpPost]
-        public JsonResult copia_sconto1(decimal sconto_massivo, String query, String cod_cat_merc)
+        public JsonResult copia_sconto1(string query, string cod_cat_merc, decimal sconto_massivo =0)
         {
             con.Open();
 
@@ -159,7 +159,7 @@ namespace fastOrderEntry.Controllers
 
 
         [HttpPost]
-        public JsonResult copia_sconto2(decimal sconto_massivo, String query, String cod_cat_merc)
+        public JsonResult copia_sconto2(string query, string cod_cat_merc, decimal sconto_massivo =0)
         {
             con.Open();
 
@@ -171,7 +171,7 @@ namespace fastOrderEntry.Controllers
         }
 
         [HttpPost]
-        public JsonResult copia_sconto3(decimal sconto_massivo, String query, String cod_cat_merc)
+        public JsonResult copia_sconto3(string query, string cod_cat_merc, decimal sconto_massivo = 0)
         {
             con.Open();
 

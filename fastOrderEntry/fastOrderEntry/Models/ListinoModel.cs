@@ -15,14 +15,16 @@ namespace fastOrderEntry.Models
         public virtual IList<RecordListinoModel> recordlistino { get; set; }
 
   
-        public void select(NpgsqlConnection conn, string query, string cod_cat_merc = "",int pagina = 0, int REC_X_PAGINA = 0)
+        public void select(NpgsqlConnection conn, string query, string cod_cat_merc = "",int pagina = 0, int REC_X_PAGINA = 0, bool lisAcq = false)
         {
             using (var cmd = new NpgsqlCommand())
             {
                 cmd.Connection = conn;
                 cmd.CommandText = "SELECT *, \r\n" +
                     " (select codice_fornitore from aa_source_list where id_cod_articolo = ma_articoli_soc.id_codice_art and preferenziale = true limit 1) as cod_fornitore, \r\n" +
-                    "   (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
+                     " (select id_fornitore from aa_source_list where id_cod_articolo = ma_articoli_soc.id_codice_art and preferenziale = true limit 1) as id_fornitore, \r\n" +
+                    " (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza, \r\n" +
+                    " (select codice_ean from ma_articoli_ean where id_societa = '1' and id_codice_art = ma_articoli_soc.id_codice_art limit 1) as codice_ean \r\n" +
                     " from ma_articoli_soc \r\n" +                     
                     "where id_societa = '1' \r\n";
                 if (!string.IsNullOrEmpty(query)) {
@@ -33,7 +35,9 @@ namespace fastOrderEntry.Models
                     cmd.CommandText += " and (id_categoria_merc like ('" + cod_cat_merc + "-%') or id_categoria_merc ='" + cod_cat_merc + "')";
                 }
 
-                    if (REC_X_PAGINA > 0)
+                cmd.CommandText += "  order by descrizione \r\n";
+
+                if (REC_X_PAGINA > 0)
                 {
                     cmd.CommandText += "limit " + REC_X_PAGINA + " offset " + (pagina * REC_X_PAGINA); 
                 }
@@ -41,6 +45,8 @@ namespace fastOrderEntry.Models
                 {
                     cmd.Parameters.AddWithValue("query", query.ToUpper() + "%");
                 }
+
+                
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())
@@ -53,13 +59,18 @@ namespace fastOrderEntry.Models
                         r.giacenza = !string.IsNullOrEmpty(reader["giacenza"].ToString()) ? Convert.ToDecimal(reader["giacenza"]) : 0;
                         r.id_iva = reader["id_iva"].ToString();
                         r.cod_fornitore = reader["cod_fornitore"].ToString();
+                        r.codice_ean = reader["codice_ean"].ToString();
+                        r.id_fornitore = reader["id_fornitore"].ToString();
+                        r.obosleto = reader.GetBoolean(reader.GetOrdinal("obsoleto"));
+                        r.peso_netto = reader.GetDecimal(reader.GetOrdinal("peso_netto"));
+                        r.um_peso = reader["id_um_pesi"].ToString();
                         recordlistino.Add(r);
                     }
                 }
                 
                 foreach (RecordListinoModel r in recordlistino)
                 {
-                    r.leggiPrezzi(conn);
+                    r.leggiPrezzi(conn, lisAcq);
                 }
 
             }

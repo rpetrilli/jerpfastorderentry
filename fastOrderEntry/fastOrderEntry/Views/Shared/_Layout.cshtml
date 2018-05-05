@@ -37,7 +37,7 @@
         @Html.Partial("_Nav")
         <div class="body">
             <section class="content">
-                @RenderBody()                
+                @RenderBody()
             </section>
         </div>
     </div>
@@ -82,10 +82,11 @@
             </div>
 
         </div>
-    </div>	
+    </div>
 
 
-    @RenderSection("scripts", required: false)  
+    @RenderSection("scripts", required: false)
+    <script src="@Url.Content("~/Scripts/sweetalert.min.js")"></script>
     <script>
         $('#nav @(id)').addClass('active');
 
@@ -117,7 +118,7 @@
                     cancelCallBack.call();
                 });
             }
-        };   
+        };
 
     </script>
 </body>

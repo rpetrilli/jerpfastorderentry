@@ -61,10 +61,91 @@ namespace fastOrderEntry.Models
             }
         }
 
+        internal void update_massivo(NpgsqlConnection con, bool visibile, string id_agente, string query, string cod_cat_merc)
+        {
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT * from ma_articoli_soc \r\n" +
+                    "where id_societa = '1' \r\n";
+
+                if (!string.IsNullOrEmpty(query))
+                    cmd.CommandText += "  and (upper(id_codice_art) LIKE( @query) or upper(descrizione) like( @query ) ) \r\n";
+
+                if (!string.IsNullOrEmpty(cod_cat_merc))
+                    cmd.CommandText += " and (id_categoria_merc like ('" + cod_cat_merc + "-%') or id_categoria_merc ='" + cod_cat_merc + "')";
+
+                if (!string.IsNullOrEmpty(query))
+                    cmd.Parameters.AddWithValue("query", query.ToUpper() + "%");
+
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        RecordArticoliAgenteModel r = new RecordArticoliAgenteModel();
+                        r.id_codice_art = reader.GetString(reader.GetOrdinal("id_codice_art"));
+                        recordArticoli.Add(r);
+                    }
+                }
+            }
+
+            foreach(RecordArticoliAgenteModel r in recordArticoli)
+            {
+                int cnt = 0;
+                if (!visibile)
+                {
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = "update zpet_agente_articoli set visibile = @visibile " +
+                            "where id_societa = '1' " +
+                            "  and id_codice_art = @id_codice_art " +
+                            "  and id_agente = @id_agente ";
+                        cmd.Parameters.AddWithValue("visibile", visibile);
+                        cmd.Parameters.AddWithValue("id_codice_art", r.id_codice_art);
+                        cmd.Parameters.AddWithValue("id_agente", id_agente);
+                        cnt = cmd.ExecuteNonQuery();
+                    }
+                    if (cnt == 0)
+                    {
+                        using (var cmd = new NpgsqlCommand())
+                        {
+                            cmd.Connection = con;
+                            cmd.CommandText = "INSERT INTO zpet_agente_articoli( \r\n" +
+                                "            id_societa, visibile, id_codice_art, \r\n" +
+                                "             id_agente) \r\n" +
+                                "    VALUES('1', @visibile, @id_codice_art, \r\n" +
+                                "            @id_agente)";
+                            cmd.Parameters.AddWithValue("visibile", visibile);
+                            cmd.Parameters.AddWithValue("id_codice_art", r.id_codice_art);
+                            cmd.Parameters.AddWithValue("id_agente", id_agente);
+                            cnt = cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+                else
+                {
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = "DELETE FROM zpet_agente_articoli \r\n" +
+                            "   where id_societa = '1'  \r\n" +
+                            "     and id_codice_art =  @id_codice_art  \r\n" +
+                            "     and id_agente =  @id_agente ";
+                        cmd.Parameters.AddWithValue("id_codice_art", r.id_codice_art);
+                        cmd.Parameters.AddWithValue("id_agente", id_agente);
+                        cnt = cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
     }
 
     public class RecordArticoliAgenteModel
-    {
+    {        
         public string id_societa { get; set; }
         public string id_agente { get; set; }
         public string id_codice_art { get; set; }
@@ -103,7 +184,6 @@ namespace fastOrderEntry.Models
                 {
                     using (var cmd = new NpgsqlCommand())
                     {
-
                         cmd.Connection = con;
                         cmd.CommandText = "INSERT INTO zpet_agente_articoli( \r\n" +
                             "            id_societa, visibile, id_codice_art, \r\n" +
@@ -121,7 +201,6 @@ namespace fastOrderEntry.Models
             {
                 using (var cmd = new NpgsqlCommand())
                 {
-
                     cmd.Connection = con;
                     cmd.CommandText = "DELETE FROM zpet_agente_articoli \r\n" +
                         "   where id_societa = '1'  \r\n" +
@@ -132,7 +211,7 @@ namespace fastOrderEntry.Models
                     cnt = cmd.ExecuteNonQuery();
                 }
             }
-        }
+        }        
 
         private bool leggiVisibile(NpgsqlConnection con, string id_agente)
         {

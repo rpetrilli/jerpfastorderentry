@@ -28,7 +28,8 @@ namespace fastOrderEntry.Models
         public string provincia { get; set; }
         public string nazioni { get; set; }
         public string id_vettore { get; set; }
-        public IList<OrdineRiga> righe { get; set; }
+        public IList<OrdineRiga> righe { get; set; }        
+
         public string name { get; set; }
         public string tipo { get; set; }
         public string id_gc_cliente_id { get; set; }
@@ -41,6 +42,18 @@ namespace fastOrderEntry.Models
         public int colli { get; set; }
         public string username { get; set; }
         public decimal sconto_cassa { get; set; }
+
+        public void UpdateStampa(NpgsqlConnection con)
+        {
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = @"update vo_ordini set stampato = true where id_ordine =@id_ordine and esercizio =@esercizio and id_divisione ='1'";
+                cmd.Parameters.AddWithValue("esercizio", esercizio);
+                cmd.Parameters.AddWithValue("id_ordine", id_ordine);
+                cmd.ExecuteNonQuery();
+            }
+        }
 
         public override void delete(NpgsqlConnection con)
         {
@@ -142,7 +155,7 @@ namespace fastOrderEntry.Models
                         note_magazzino = Convert.ToString(reader["zpet_note_magazzino"]);
                         note = Convert.ToString(reader["note_cliente"]);
                         noteordine = Convert.ToString(reader["nota"]);
-                        colli = !string.IsNullOrEmpty(Convert.ToString(reader["zpet_colli"])) ? Convert.ToInt32(reader["zpet_colli"]) : 1;
+                        colli = !string.IsNullOrEmpty(Convert.ToString(reader["zpet_colli"])) ? Convert.ToInt32(reader["zpet_colli"]) : 1;                       
                     }
                 }
             }
@@ -223,8 +236,17 @@ namespace fastOrderEntry.Models
             using (var cmd = new NpgsqlCommand())
             {
                 cmd.Connection = con;
-                cmd.CommandText = "SELECT * from da_listini_articolo where id_cond_prezzo = @id_cond_prezzo and id_codice_art = @id_codice_art limit 1";
-                cmd.Parameters.AddWithValue("id_cond_prezzo", id_cond_prezzo);
+                //cmd.CommandText = "SELECT * from da_listini_articolo where id_cond_prezzo = @id_cond_prezzo and id_codice_art = @id_codice_art limit 1";
+                cmd.CommandText = @"select 
+                        case when ao_accettazione_righe.quantita<>0 then 
+                        ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
+                        ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
+                        from ao_accettazione_righe
+                        where ao_accettazione_righe.id_codice_art=(@id_codice_art)
+                        order by ao_accettazione_righe.esercizio desc,
+                        ao_accettazione_righe.id_accettazione desc limit 1";
+
+                //cmd.Parameters.AddWithValue("id_cond_prezzo", id_cond_prezzo);
                 cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
                 cmd.ExecuteNonQuery();
 

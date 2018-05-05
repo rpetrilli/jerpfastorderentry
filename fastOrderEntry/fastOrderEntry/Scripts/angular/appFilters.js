@@ -26,6 +26,24 @@ app.filter('iva', function ($filter) {
     }
 });
 
+app.filter('margine', function ($filter) {
+    return function (value) {
+        return ($filter('prezzo')(value) - $filter('prezzoacq')(value)) / $filter('prezzo')(value) * 100;
+    }
+});
+
+app.filter('margineordine', function ($filter) {
+    return function (value) {
+        return ($filter('prezzo')(value) - value.prezzo_acquisto) / $filter('prezzo')(value) * 100;
+    }
+});
+
+app.filter('peso', function () {
+    return function (value) {
+        return parseFloat(value.peso_netto) / 1000;
+    }
+});
+
 app.filter('totpz', function ($filter) {
     return function (ordine) {
         var tot = 0;

@@ -3,9 +3,9 @@
     ViewBag.Title = " Articoli";
 }
 @section header {
-    <script>
+<script>
         function show_message(errore, messaggio) {
-            alert(messaggio);
+            swal(messaggio);
         };
         app.controller('ctrl', ['$scope', '$http', 'listiniService', function ($scope, $http, listiniService) {
             $scope.cod_cat_merc_sel = '';
@@ -14,6 +14,8 @@
             $scope.categorie = [];
 
             $scope.page_status = 'ricerca';
+
+            $scope.selFornitori = @{Html.RenderAction("GetFornitori", "Get");};
 
 
             listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
@@ -28,7 +30,7 @@
                 method: 'GET',
                 url: '@(Url.Action("getPaginatore"))',
                 params: { query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel }
-            }).then(function successCallback(response) {
+                }).then(function successCallback(response) {
                     $scope.rec_x_pagina = response.data.rec_x_pagina;
                     $scope.rec_number = response.data.rec_number;
                     $scope.pag_number = response.data.pag_number;
@@ -45,10 +47,10 @@
                         query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, page_number: page_number
                     }
                 }).then(function (response) {
-                        $scope.records = response.data;
-                        $scope.pag_corrente = page_number;
-                        $scope.rec_pagina = -1;
-                    }).catch(function (error, status) {
+                    $scope.records = response.data;
+                    $scope.pag_corrente = page_number;
+                    $scope.rec_pagina = -1;
+                    }, function (error, status) {
                         show_message('Errore', error.data);
                     });
             };
@@ -150,6 +152,37 @@
                 $scope.page_status = 'ricerca';
             };
 
+            $scope.update = function (item) {
+                $http({
+                    method: 'POST',
+                    url: '@(Url.Action("update"))',
+                    data: item
+                }).then(function (response) {
+                        $scope.refresh_page($scope.pag_corrente);
+                    }, function (error, status) {
+                        show_message('Errore', error.data);
+                    });
+                @*swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermi la modifica dell'articolo selezionato?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            $http({
+                                method: 'POST',
+                                url: '@(Url.Action("update"))',
+                                data: item
+                            }).then(function (response) {
+                                    $scope.refresh_page($scope.pag_corrente);
+                                },function (error, status) {
+                                    show_message('Errore', error.data);
+                                });
+                        }
+                    });*@
+            }
 
             $scope.save = function () {
                 $http({
@@ -172,7 +205,7 @@
 
 
         }]);
-    </script>
+</script>
 }
 @section scripts{
     

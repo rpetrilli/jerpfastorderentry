@@ -31,6 +31,7 @@ namespace fastOrderEntry.Models
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT *, \r\n" +
+                        //" (select aa_fornitori.ragione_sociale from aa_fornitori left join aa_source_list ON aa_fornitori.id_fornitore = aa_source_list.id_fornitore where id_cod_articolo = ma_articoli_soc.id_codice_art and preferenziale = true limit 1) as cod_fornitore, \r\n" +
                         " (select sum(stock_libero) from mg_stock_magazzino where id_divisione = '1' and id_codice_art = ma_articoli_soc.id_codice_art) as giacenza \r\n" +
                         "from ma_articoli_soc \r\n" +
                         "where (obsoleto = false or obsoleto is null) and (upper(id_codice_art) like (@query) or upper(descrizione)  like (@query) ) \r\n" +
@@ -52,6 +53,7 @@ namespace fastOrderEntry.Models
                             r.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]);
                             r.peso_netto = Convert.ToDecimal(reader["peso_netto"]);
                             r.giacenza = !string.IsNullOrEmpty(reader["giacenza"].ToString()) ?  Convert.ToDecimal(reader["giacenza"]) : 0;
+                            //r.cod_fornitore = reader["cod_fornitore"].ToString();
 
                             CodiceIva codiceIva = db.codiceIva.FirstOrDefault(x => x.id_iva == r.id_iva);
                             r.aliquota = codiceIva != null ? codiceIva.aliquota : 22; //previene errore codice iva
@@ -159,6 +161,8 @@ namespace fastOrderEntry.Models
         public decimal qta_in_consegna { get; set; } = 0;
         public decimal peso_lordo { get; set; }
         public decimal peso_netto { get; set; }
+
+        public string cod_fornitore { get; set; }
 
 
         public string data_ordine { get; set; }

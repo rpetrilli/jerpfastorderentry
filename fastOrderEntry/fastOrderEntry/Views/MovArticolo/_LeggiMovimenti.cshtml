@@ -10,7 +10,8 @@
                     <h4>Articolo selezionato</h4>
                     <p>
                         Cod <strong>{{selezionato.id_codice_art}}</strong><br />
-                        Articolo <strong>{{selezionato.descrizione}}</strong>
+                        Articolo <strong>{{selezionato.descrizione}}</strong><br />
+                        <h3>Prezzo di Vendita {{selezionato | prezzo | number:2}}</h3>
                     </p>
                 </div>
             </div>
@@ -92,7 +93,7 @@
                                 <th>Nr Doc Mer</th>*@
                             <th class="text-right">Nr Riga</th>
                             <th class="text-right">Qta</th>
-                            <th class="text-right">Pr Unt</th>
+                            <th class="text-right">Pr Ven</th>
                             <th>Sconto</th>
                             <th class="text-right">Imp</th>
                             <th class="text-right">Iva</th>

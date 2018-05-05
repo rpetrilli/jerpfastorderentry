@@ -21,39 +21,7 @@
             </div>
         </div>
         <h4><i class="fa fa-list-ul"></i> Elenco</h4>
-        <div ng-show="pag_number > 1">
-            <ul class="pagination" style="text-align: center;">
-                <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
-                <li>
-                    <a ng-click="refresh_page(0)"
-                       ng-class="{disabled: pag_corrente == 0}"
-                       href="#nav">&lt;&lt;</a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_corrente-1)"
-                       ng-class="{disabled: pag_corrente == 0}"
-                       href="#nav">&lt;</a>
-                </li>
-                <li ng-repeat="p_nr in [0,1,2,3]">
-                    <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
-                       ng-bind="nr_pagina_paginatore(p_nr) + 1"
-                       ng-hide="nr_pagina_paginatore(p_nr)==-1"
-                       ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
-                       href="#nav">
-                    </a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_corrente+1)"
-                       ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                       href="#nav">&gt;</a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_number-1)"
-                       ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                       href="#nav">&gt;&gt;</a>
-                </li>
-            </ul>
-        </div>
+        @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
         <table class="table table-hover table-striped" id="table">
             <thead>
                 <tr>
@@ -77,38 +45,6 @@
                 </tr>
             </tbody>
         </table>
-        <div ng-show="pag_number > 1">
-            <ul class="pagination" style="text-align: center;">
-                <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
-                <li>
-                    <a ng-click="refresh_page(0)"
-                       ng-class="{disabled: pag_corrente == 0}"
-                       href="#nav">&lt;&lt;</a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_corrente-1)"
-                       ng-class="{disabled: pag_corrente == 0}"
-                       href="#nav">&lt;</a>
-                </li>
-                <li ng-repeat="p_nr in [0,1,2,3]">
-                    <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
-                       ng-bind="nr_pagina_paginatore(p_nr) + 1"
-                       ng-hide="nr_pagina_paginatore(p_nr)==-1"
-                       ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
-                       href="#nav">
-                    </a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_corrente+1)"
-                       ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                       href="#nav">&gt;</a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_number-1)"
-                       ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                       href="#nav">&gt;&gt;</a>
-                </li>
-            </ul>
-        </div> <!--Fine paginatore -->
+        @Html.Partial("~/Views/Shared/_Paginatore.cshtml") <!--Fine paginatore -->
     </div> <!--dettaglio-->
 </div> <!-- Fine scheda di ricerca -->

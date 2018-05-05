@@ -26,20 +26,44 @@
                 <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;Cerca</button>
             </span>
         </div>
+        @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
         <h4><i class="fa fa-list-ul"></i> Elenco</h4>
         <table class="table table-hover table-striped" id="table">
             <thead>
                 <tr>
-                    <th>Art</th>
+                    <th style="width:5%">Art</th>
+                    <th style="width:10%">Fornitore</th>
+                    <th style="width:10%">Cod Fornitore</th>
+                    <th style="width:15%">Cod Ean</th>
                     <th>Descrizione</th>
+                    <th>Gia</th>
+                    <th>PrAc</th>
+                    <th>P.Net</th>
+                    <th>Obs</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="item in records">
                     <td>{{item.id_codice_art}}</td>
-                    <td>{{item.descrizione}}</td>
                     <td>
+                        <select id="current-id-fornitpre" ng-model="item.id_fornitore" class="form-control" disabled="disabled">
+                            <option value="">Seleziona...</option>
+                            <option ng-repeat="item in selFornitori" value="{{item.id_fornitore}}">{{item.ragione_sociale}}</option>
+                        </select>
+                    </td>
+                    <td><input type="text" ng-model="item.cod_fornitore" class="form-control" /></td>
+                    <td><input type="text" ng-model="item.codice_ean" class="form-control" /></td>
+                    <td><input type="text" ng-model="item.descrizione" class="form-control" /></td>
+                    <td><span class="badge badge-warning">{{item.giacenza | number:2}}</span></td>
+                    <td><span class="badge badge-danger">{{item.prezzo_acquisto | number:2}}</span></td>
+                    <td>{{item | peso | number:2}} Kg.</td>
+                    <td><input type="checkbox" ng-model="item.obosleto" /></td>
+                    <td>
+                        <button class="btn btn-success btn-xs"
+                                ng-click="update(item);">
+                            <span class="fa fa-save" />
+                        </button>
                         <button class="btn btn-primary btn-xs"
                                 ng-click="copy(item);">
                             <span class="fa fa-copy" />
@@ -48,39 +72,7 @@
                 </tr>
             </tbody>
         </table>
-        <div ng-show="pag_number > 1">
-            <ul class="pagination" style="text-align: center;">
-                <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
-                <li>
-                    <a ng-click="refresh_page(0)"
-                       ng-class="{disabled: pag_corrente == 0}"
-                       href="#nav">&lt;&lt;</a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_corrente-1)"
-                       ng-class="{disabled: pag_corrente == 0}"
-                       href="#nav">&lt;</a>
-                </li>
-                <li ng-repeat="p_nr in [0,1,2,3]">
-                    <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
-                       ng-bind="nr_pagina_paginatore(p_nr) + 1"
-                       ng-hide="nr_pagina_paginatore(p_nr)==-1"
-                       ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
-                       href="#nav">
-                    </a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_corrente+1)"
-                       ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                       href="#nav">&gt;</a>
-                </li>
-                <li>
-                    <a ng-click="refresh_page(pag_number-1)"
-                       ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                       href="#nav">&gt;&gt;</a>
-                </li>
-            </ul>
-        </div> <!--Fine paginatore -->
+        @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
     </div> <!--dettaglio-->
 </div> <!-- Fine scheda di ricerca -->
 

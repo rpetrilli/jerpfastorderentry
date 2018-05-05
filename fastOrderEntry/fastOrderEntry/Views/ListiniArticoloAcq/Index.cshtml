@@ -3,7 +3,7 @@
     ViewBag.Title = "Listini Acquisto";
 }
 @section header {
-    <script>
+<script>
         function show_message(errore, messaggio) {
             alert(messaggio);
         };
@@ -147,89 +147,119 @@
 
 
             $scope.copia_prezzo = function () {
+                 swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermila copia massiva prezzo degli articoli in elenco?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
 
-                var r = confirm("Confermi la copia massiva prezzo");
-                if (r == true) {
-                    $http({
-                        method: 'POST',
-                        url: '@(Url.Action("copia_prezzo"))',
-                        data: {
-                            prezzo_massivo: $scope.prezzo_vendita_massivo,
-                            query: $scope.query,
-                            cod_cat_merc: $scope.cod_cat_merc_sel
+                            $http({
+                                method: 'POST',
+                                url: '@(Url.Action("copia_prezzo"))',
+                                data: {
+                                    prezzo_massivo: $scope.prezzo_acquisto_massivo,
+                                    query: $scope.query,
+                                    cod_cat_merc: $scope.cod_cat_merc_sel
+                                }
+                            }).then(function (response) {
+                                    $scope.refresh_page($scope.pag_corrente);
+                                }).catch(function (error, status) {
+                                    show_message('Errore', error.data);
+                                });
                         }
-                    }).then(function (response) {
-                        $scope.refresh_page($scope.pag_corrente);
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
                     });
-                }
-
             };
 
             $scope.copia_sconto1 = function () {
-                var r = confirm("Confermi la copia massiva dello sconto 1");
-                if (r == true) {
-                    $http({
-                        method: 'POST',
-                        url: '@(Url.Action("copia_sconto1"))',
-                        data: {
-                            sconto_massivo: $scope.sconto_1_massivo,
-                            query: $scope.query,
-                            cod_cat_merc: $scope.cod_cat_merc_sel
-                        }
-                    }).then(function (response) {
-                        $scope.refresh_page($scope.pag_corrente);
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });
-                }
+                 swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermila copia massiva prezzo degli articoli in elenco?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
 
+                            $http({
+                                method: 'POST',
+                                url: '@(Url.Action("copia_sconto1"))',
+                                data: {
+                                    sconto_massivo: $scope.sconto_1_massivo,
+                                    query: $scope.query,
+                                    cod_cat_merc: $scope.cod_cat_merc_sel
+                                }
+                            }).then(function (response) {
+                                    $scope.refresh_page($scope.pag_corrente);
+                                }).catch(function (error, status) {
+                                    show_message('Errore', error.data);
+                                });
+                        }
+                    });
             };
 
             $scope.copia_sconto2 = function () {
-                var r = confirm("Confermi la copia massiva dello sconto 2");
-                if (r == true) {
-                    $http({
-                        method: 'POST',
-                        url: '@(Url.Action("copia_sconto2"))',
-                        data: {
-                            sconto_massivo: $scope.sconto_2_massivo,
-                            query: $scope.query,
-                            cod_cat_merc: $scope.cod_cat_merc_sel
-                        }
-                    }).then(function (response) {
-                        $scope.refresh_page($scope.pag_corrente);
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });
-                }
+                 swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermila copia massiva prezzo degli articoli in elenco?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
 
+                            $http({
+                                method: 'POST',
+                                url: '@(Url.Action("copia_sconto2"))',
+                                data: {
+                                    sconto_massivo: $scope.sconto_2_massivo,
+                                    query: $scope.query,
+                                    cod_cat_merc: $scope.cod_cat_merc_sel
+                                }
+                            }).then(function (response) {
+                                    $scope.refresh_page($scope.pag_corrente);
+                                }).catch(function (error, status) {
+                                    show_message('Errore', error.data);
+                                });
+                        }
+                    });
             };
 
             $scope.copia_sconto3 = function () {
-                var r = confirm("Confermi la copia massiva dello sconto 3");
-                if (r == true) {
-                    $http({
-                        method: 'POST',
-                        url: '@(Url.Action("copia_sconto3"))',
-                        data: {
-                            sconto_massivo: $scope.sconto_3_massivo,
-                            query: $scope.query,
-                            cod_cat_merc: $scope.cod_cat_merc_sel
-                        }
-                    }).then(function (response) {
-                        $scope.refresh_page($scope.pag_corrente);
-                        //gestire ACK
-                    }).catch(function (error, status) {
-                        show_message('Errore', error.data);
-                    });
-                }
+                 swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermila copia massiva prezzo degli articoli in elenco?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
 
+                            $http({
+                                method: 'POST',
+                                url: '@(Url.Action("copia_sconto3"))',
+                                data: {
+                                    sconto_massivo: $scope.sconto_3_massivo,
+                                    query: $scope.query,
+                                    cod_cat_merc: $scope.cod_cat_merc_sel
+                                }
+                            }).then(function (response) {
+                                    $scope.refresh_page($scope.pag_corrente);
+                                }).catch(function (error, status) {
+                                    show_message('Errore', error.data);
+                                });
+                        }
+                    });
             };
 
         }]);
-    </script>
+</script>
 }
 @section scripts{
     <script>
@@ -302,39 +332,7 @@
                     <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;Cerca</button>
                 </span>
             </div>
-            <div ng-show="pag_number > 1">
-                <ul class="pagination" style="text-align: center;">
-                    <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
-                    <li>
-                        <a ng-click="refresh_page(0)"
-                           ng-class="{disabled: pag_corrente == 0}"
-                           href="#nav">&lt;&lt;</a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_corrente-1)"
-                           ng-class="{disabled: pag_corrente == 0}"
-                           href="#nav">&lt;</a>
-                    </li>
-                    <li ng-repeat="p_nr in [0,1,2,3]">
-                        <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
-                           ng-bind="nr_pagina_paginatore(p_nr) + 1"
-                           ng-hide="nr_pagina_paginatore(p_nr)==-1"
-                           ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
-                           href="#nav">
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_corrente+1)"
-                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                           href="#nav">&gt;</a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_number-1)"
-                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                           href="#nav">&gt;&gt;</a>
-                    </li>
-                </ul>
-            </div>
+            @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
             <h4><i class="fa fa-list-ul"></i> Elenco</h4>
             <table class="table table-hover table-striped" id="table">
                 <thead>
@@ -343,9 +341,17 @@
                         <th>Descrizione</th>
                         <th>
                             Pr Lis
+                            <button class="btn btn-primary btn-xs"
+                                    ng-click="copia_prezzo()">
+                                <span class="fa fa-clone" />
+                            </button>
+                            <br />
+                            <input type="number" class="form-control form-control-custom text-right"
+                                   ng-model="prezzo_acquisto_massivo" style="width:80px;" min="0" required />
+
                         </th>
                         <th>
-                            Pr Ven                                                        
+                            Pr Ven
                         </th>
                         <th>
                             Sc 1
@@ -390,12 +396,12 @@
                         <td>
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="item.prezzo_acquisto" style="width:80px;"
-                                   ng-focus="linefocused($index);"  />
+                                   ng-focus="linefocused($index);" />
                         </td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right request-focus"
                                    ng-model="item.prezzo_vendita" style="width:80px;"
-                                   ng-focus="linefocused($index);" disabled="disabled"/>
+                                   ng-focus="linefocused($index);" disabled="disabled" />
                         </td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right"
@@ -424,39 +430,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div ng-show="pag_number > 1">
-                <ul class="pagination" style="text-align: center;">
-                    <li><span class="page_number">Pag. {{pag_corrente + 1}} / {{pag_number}}</span></li>
-                    <li>
-                        <a ng-click="refresh_page(0)"
-                           ng-class="{disabled: pag_corrente == 0}"
-                           href="#nav">&lt;&lt;</a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_corrente-1)"
-                           ng-class="{disabled: pag_corrente == 0}"
-                           href="#nav">&lt;</a>
-                    </li>
-                    <li ng-repeat="p_nr in [0,1,2,3]">
-                        <a ng-click="refresh_page(nr_pagina_paginatore(p_nr))"
-                           ng-bind="nr_pagina_paginatore(p_nr) + 1"
-                           ng-hide="nr_pagina_paginatore(p_nr)==-1"
-                           ng-class="{disabled: pag_corrente == nr_pagina_paginatore(p_nr)}"
-                           href="#nav">
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_corrente+1)"
-                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                           href="#nav">&gt;</a>
-                    </li>
-                    <li>
-                        <a ng-click="refresh_page(pag_number-1)"
-                           ng-class="{disabled: pag_corrente >= pag_number - 1}"
-                           href="#nav">&gt;&gt;</a>
-                    </li>
-                </ul>
-            </div> <!--Fine paginatore -->
+            @Html.Partial("~/Views/Shared/_Paginatore.cshtml") <!--Fine paginatore -->
         </div> <!--Dettaglio-->
     </div>
 </div>

@@ -33,6 +33,13 @@ namespace fastOrderEntry.Controllers
             return jsonResult;
         }
 
+        public void UpdateStampa(OrdineVenditaModel ordini)
+        {
+            con.Open();
+            ordini.UpdateStampa(con);           
+            con.Close();
+        }
+
         public JsonResult GetAgenti(string query)
         {
             con.Open();
@@ -58,6 +65,21 @@ namespace fastOrderEntry.Controllers
             con.Close();
 
             string output = JsonConvert.SerializeObject(vettori.rs);
+            return Content(output);
+        }
+
+        public ContentResult GetFornitori()
+        {
+            con.Open();
+            FonitoriStrutturaModel fornitori = new FonitoriStrutturaModel();
+            fornitori.select(con);
+
+            //var jsonResult = Json(fornitori.rs, JsonRequestBehavior.AllowGet);
+            //jsonResult.MaxJsonLength = int.MaxValue;
+
+            con.Close();
+
+            string output = JsonConvert.SerializeObject(fornitori.rs);
             return Content(output);
         }
 
