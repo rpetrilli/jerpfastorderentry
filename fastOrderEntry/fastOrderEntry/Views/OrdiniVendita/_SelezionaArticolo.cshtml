@@ -15,7 +15,6 @@
                         <th>Art</th>
                         <th>Descrizione</th>
                         <th>Giacenza</th>
-                        @*<th>Fornitore</th*@>
                         <th>Qta Ord</th>
                         <th>Prezzo Acq</th>
                         <th>Prezzo</th>
@@ -29,12 +28,9 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="item in tc.articoliaggiunta">
-
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
                         <td>{{item.giacenza}}</td>
-                        @*<td>{{item.cod_fornitore}}</td>*@
-                        @*<td>{{item.data_ordine}} {{item.prezzo_unitario | number}} {{item.str_sconto}}</td>*@
                         <td>
                             <input type="number"
                                    ng-model="item.qta_ordinata"
@@ -43,14 +39,10 @@
                                    ng-on-enter="select_articolo($index,item)" />
                         </td>
                         <td><span class="badge badge-danger">{{item.prezzo_acquisto | number: 2}}</span></td>
-                        @*<td><span class="badge badge-danger">{{item | prezzoacq | number: 2}}</span></td>*@
-                        @*<td><span class="badge badge-success">{{item.prezzo_vendita | number:2}}</span></td>*@
                         <td><span class="badge badge-success">{{ item | prezzo | number:2}}</span></td>
-
                         <td>{{item.sconto_1 | number}}</td>
                         <td>{{item.sconto_2 | number}}</td>
                         <td>{{item.sconto_3 | number}}</td>
-
                         <td>{{item.id_iva}}</td>
                         <td><button class="btn btn-grey btn-xs" ng-click="select_articolo($index,item)"><i class="glyphicon glyphicon-check"></i></button></td>
                     </tr>

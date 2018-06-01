@@ -31,51 +31,72 @@ namespace fastOrderEntry.Controllers
         {
             query = string.IsNullOrEmpty(query) ? string.Empty : query.ToUpper();
 
-            con.Open();
+            JsonResult json = new JsonResult();
 
-            int cnt = 0;
-
-            using (var cmd = new NpgsqlCommand())
+            try
             {
-                cmd.Connection = con;
-                cmd.CommandText = "SELECT count(*) as cnt from ma_articoli_soc \r\n" +
-                    "where id_societa = '1' \r\n" +
-                    "and (upper(id_codice_art) LIKE( @query) or upper(descrizione) like( @query ) ) \r\n";
-                if (!string.IsNullOrEmpty(cod_cat_merc))
-                {
-                    cmd.CommandText += " and (id_categoria_merc like ('" + cod_cat_merc + "-%') or id_categoria_merc ='" + cod_cat_merc + "')";
-                }
-                cmd.Parameters.AddWithValue("query", query + "%");
-                cmd.ExecuteNonQuery();
+                con.Open();
+                int cnt = 0;
 
-                using (var reader = cmd.ExecuteReader())
+                using (var cmd = new NpgsqlCommand())
                 {
-                    while (reader.Read())
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT count(*) as cnt from ma_articoli_soc \r\n" +
+                        "where id_societa = '1' \r\n" +
+                        "and (upper(id_codice_art) LIKE( @query) or upper(descrizione) like( @query ) ) \r\n";
+                    if (!string.IsNullOrEmpty(cod_cat_merc))
                     {
-                        cnt = Convert.ToInt32(reader["cnt"]);
+                        cmd.CommandText += " and (id_categoria_merc like ('" + cod_cat_merc + "-%') or id_categoria_merc ='" + cod_cat_merc + "')";
+                    }
+                    cmd.Parameters.AddWithValue("query", query + "%");
+                    cmd.ExecuteNonQuery();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            cnt = Convert.ToInt32(reader["cnt"]);
+                        }
                     }
                 }
+
+                json = Json(new { rec_number = cnt, rec_x_pagina = REC_X_PAGINA, pag_number = Math.Ceiling(1.0 * cnt / REC_X_PAGINA) }, JsonRequestBehavior.AllowGet);
+                json.MaxJsonLength = int.MaxValue;
             }
-
-            var jsonResult = Json(new { rec_number = cnt, rec_x_pagina = REC_X_PAGINA, pag_number = Math.Ceiling(1.0 * cnt / REC_X_PAGINA) }, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-
-            con.Close();
-            return jsonResult;
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                con.Close();
+            }            
+            return json;
         }
 
         public JsonResult GetConenutoPagina(string query, string cod_cat_merc, string id_agente, int page_number)
         {
-            con.Open();
+            JsonResult json = new JsonResult();
+            try
+            {
+                con.Open();
 
-            ArticoliAgenteModel articoliAgente = new ArticoliAgenteModel();
-            articoliAgente.select(con, query, cod_cat_merc, id_agente, page_number, REC_X_PAGINA);
+                ArticoliAgenteModel articoliAgente = new ArticoliAgenteModel();
+                articoliAgente.select(con, query, cod_cat_merc, id_agente, page_number, REC_X_PAGINA);
 
-            var jsonResult = Json(articoliAgente.recordArticoli.OrderBy(x=> x.descrizione), JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-
-            con.Close();
-            return jsonResult;
+                json = Json(articoliAgente.recordArticoli.OrderBy(x => x.descrizione), JsonRequestBehavior.AllowGet);
+                json.MaxJsonLength = int.MaxValue;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                con.Close();
+            }
+            
+            return json;
         }
 
         [HttpPost]

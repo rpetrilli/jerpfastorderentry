@@ -214,10 +214,10 @@ namespace fastOrderEntry.Models
                         try { item.peso_lordo = Convert.ToDecimal(reader["peso_lordo"]); } catch { }
                         try { item.peso_netto = Convert.ToDecimal(reader["peso_netto"]); } catch { }
                         try { item.aliquota = Convert.ToDecimal(reader["aliquota"]); } catch { }
-                        try { item.sconto_a_1 = leggiSconto(Convert.ToString(reader["id_codice_art"]), "SA01"); } catch { }
-                        try { item.sconto_a_2 = leggiSconto(Convert.ToString(reader["id_codice_art"]), "SA02"); } catch { }
-                        try { item.sconto_a_3 = leggiSconto(Convert.ToString(reader["id_codice_art"]), "SA03"); } catch { }
-                        try { item.prezzo_acquisto = leggiPrezzoAcquisto(Convert.ToString(reader["id_codice_art"]), "AC01"); } catch { }
+                        try { item.sconto_a_1 = leggiSconto(con,Convert.ToString(reader["id_codice_art"]), "SA01"); } catch { }
+                        try { item.sconto_a_2 = leggiSconto(con,Convert.ToString(reader["id_codice_art"]), "SA02"); } catch { }
+                        try { item.sconto_a_3 = leggiSconto(con,Convert.ToString(reader["id_codice_art"]), "SA03"); } catch { }
+                        try { item.prezzo_acquisto = leggiPrezzoAcquisto(con, Convert.ToString(reader["id_codice_art"]), "AC01"); } catch { }
 
                         righe.Add(item);
 
@@ -228,10 +228,10 @@ namespace fastOrderEntry.Models
 
         }
 
-        private decimal leggiPrezzoAcquisto(string id_codice_art, string id_cond_prezzo)
+        private decimal leggiPrezzoAcquisto(NpgsqlConnection con, string id_codice_art, string id_cond_prezzo)
         {
-            NpgsqlConnection con = DbUtils.GetDefaultConnection();
-            con.Open();
+            //NpgsqlConnection con = DbUtils.GetDefaultConnection();
+            //con.Open();
             decimal prz = 0;
             using (var cmd = new NpgsqlCommand())
             {
@@ -258,14 +258,14 @@ namespace fastOrderEntry.Models
                     }
                 }
             }
-            con.Close();
+            //con.Close();
             return prz;
         }
 
-        private decimal leggiSconto(string id_codice_art, string id_cond_prezzo)
+        private decimal leggiSconto(NpgsqlConnection con, string id_codice_art, string id_cond_prezzo)
         {
-            NpgsqlConnection con = DbUtils.GetDefaultConnection();
-            con.Open();
+            //NpgsqlConnection con = DbUtils.GetDefaultConnection();
+            //con.Open();
             decimal sconto = 0;
             using (var cmd = new NpgsqlCommand())
             {
@@ -283,7 +283,7 @@ namespace fastOrderEntry.Models
                     }
                 }
             }
-            con.Close();
+            //con.Close();
             return sconto;
         }
 

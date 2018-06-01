@@ -18,6 +18,8 @@ namespace fastOrderEntry.Controllers
 {
     public class OrdiniVenditaController : TabCotroller<OrdiniFilters, OrdineVenditaModel, RigaElenco>
     {
+        private PetLineContext db = new PetLineContext();
+
         // GET: OrdiniVendita
         public ActionResult Index()
         {
@@ -27,19 +29,21 @@ namespace fastOrderEntry.Controllers
             string first_name;
             string last_name;
 
-            using (PetLineContext db = new PetLineContext())
+            //using (PetLineContext db = new PetLineContext())
+            //{
+
+            //}
+
+            var array = User.Identity.Name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            first_name = array[0];
+            if (array.Count() > 1)
             {
-                var array = User.Identity.Name.Split(new[] { ' '}, StringSplitOptions.RemoveEmptyEntries);
-                first_name = array[0];
-                if (array.Count() > 1)
-                {
-                    last_name = array.Count() > 1 ? array[1] : null;
-                    username = db.utenti.FirstOrDefault(x => x.first_name == first_name & x.last_name == last_name).user_name;
-                }
-                else
-                {
-                    username = db.utenti.FirstOrDefault(x => x.first_name == first_name).user_name;
-                }
+                last_name = array.Count() > 1 ? array[1] : null;
+                username = db.utenti.FirstOrDefault(x => x.first_name == first_name & x.last_name == last_name).user_name;
+            }
+            else
+            {
+                username = db.utenti.FirstOrDefault(x => x.first_name == first_name).user_name;
             }
 
             ViewBag.username = username;
@@ -128,7 +132,10 @@ namespace fastOrderEntry.Controllers
         [HttpPost]
         public ContentResult DdtFattura(OrdineVenditaModel model)
         {
-            using (PetLineContext db = new PetLineContext())
+            //using (PetLineContext db = new PetLineContext())
+            //{
+
+            //}
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection();
@@ -167,9 +174,10 @@ namespace fastOrderEntry.Controllers
                     JObject obj = new JObject();
                     obj.Add("ack", "KO");
                     obj.Add("messaggio", messaggio);
-                    return Content(obj.ToString(), "application/json");                   
+                    return Content(obj.ToString(), "application/json");
                 }
             }
+
         }
 
         [HttpPost]
@@ -190,16 +198,20 @@ namespace fastOrderEntry.Controllers
         {            
             JObject obj = new JObject();
 
-            using (PetLineContext db = new PetLineContext())
+            //using ()
+            //{
+
+            //}
+
             using (var client = new WebClient())
-            {   
+            {
 
                 if (model.Count(x => x.massivo == true) > 0)
                 {
                     // controllo se l'agente è univoco altrimenti mando a cacare
                     //
 
-                    string id_agente = model.FirstOrDefault(x=> x.massivo == true).id_agente;
+                    string id_agente = model.FirstOrDefault(x => x.massivo == true).id_agente;
                     string id_cliente = model.FirstOrDefault(x => x.massivo == true).id_cliente;
                     if (model.Count(x => (x.id_agente != id_agente & x.massivo == true) | (x.id_cliente != id_cliente & x.massivo == true)) == 0)
                     {
@@ -242,9 +254,15 @@ namespace fastOrderEntry.Controllers
                 }
             }
 
-            return obj;
-        }        
 
+            return obj;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            db.Dispose();
+            base.Dispose(disposing);
+        }
 
         protected override NpgsqlConnection getConnection()
         {

@@ -44,7 +44,14 @@ namespace WebCore.fw
             O dbObject = new O();
             int cnt = 0;
             con.Open();
-            cnt = getCount(con, filters);
+            try
+            {
+                cnt = getCount(con, filters);
+            }
+            catch
+            {
+            }
+            
             con.Close();
 
             var jsonResult = Json(new { rec_number = cnt, rec_x_pagina = REC_X_PAGINA, pag_number = Math.Ceiling(1.0 * cnt / REC_X_PAGINA) }, JsonRequestBehavior.AllowGet);
@@ -61,7 +68,7 @@ namespace WebCore.fw
         [HttpGet]
         public JsonResult GetConenutoPagina(F filters)
         {
-            con.Open();
+            con.Open();           
             List<R> page = loadPage(con, filters.page_number, REC_X_PAGINA, filters);
             con.Close();
             
@@ -156,7 +163,15 @@ namespace WebCore.fw
         public JsonResult select(O obj)
         {
             con.Open();
-            obj.select(con);
+            try
+            {
+                obj.select(con);
+            }
+            catch (Exception ex)
+            {
+                obj.db_obj_ack = "KO";
+                obj.db_obj_message = ex.Message;
+            }
             con.Close();
 
             var jsonResult
