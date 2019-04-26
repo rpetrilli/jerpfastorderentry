@@ -47,7 +47,7 @@ app.filter('peso', function () {
 app.filter('totpz', function ($filter) {
     return function (ordine) {
         var tot = 0;
-        if (!ordine.righe) {
+        if (!ordine) {
             return 0;
         }
         for (var i = 0; i < ordine.righe.length; i++) {
@@ -60,8 +60,8 @@ app.filter('totpz', function ($filter) {
 
 app.filter('totpeso', function ($filter) {
     return function (ordine) {
-        var tot = 0;
-        if (!ordine.righe) {
+        var tot = 0;           
+        if (!ordine) {
             return 0;
         }
         for (var i = 0; i < ordine.righe.length; i++) {
@@ -73,7 +73,7 @@ app.filter('totpeso', function ($filter) {
 
 app.filter('totimponibile', function ($filter) {
     return function (ordine) {
-        if (!ordine.righe) {
+        if (!ordine) {
             return 0;
         }
         var tot = 0;
@@ -86,7 +86,7 @@ app.filter('totimponibile', function ($filter) {
 
 app.filter('totiva', function ($filter) {
     return function (ordine) {
-        if (!ordine.righe) {
+        if (!ordine) {
             return 0;
         }
         var tot = 0;

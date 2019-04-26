@@ -33,6 +33,8 @@ namespace fastOrderEntry.Models
                     cmd.CommandText += " and (id_categoria_merc like ('" + cod_cat_merc + "-%') or id_categoria_merc ='" + cod_cat_merc + "')";
                 }
 
+                cmd.CommandText += "  order by descrizione \r\n";
+
                 if (REC_X_PAGINA > 0)
                 {
                     cmd.CommandText += "limit " + REC_X_PAGINA + " offset " + (pagina * REC_X_PAGINA);

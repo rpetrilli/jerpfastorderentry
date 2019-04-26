@@ -13,7 +13,13 @@
         app.controller('ctrl', ['$scope', '$http', 'listiniService', 'tabController', function ($scope, $http, listiniService, tabController) {
             $scope.filtri = { 'da_data': '@da_data', 'a_data': '@a_data' };
             $scope.page_status = 'ricerca';
-            $scope.selezionato =  {};
+            $scope.selezionato = {};
+
+            $scope.scrollTop = function () {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'fast');
+            }
 
             $scope.refresh = function () {
                 $http({
@@ -41,6 +47,7 @@
                     $scope.records = response.data;
                     $scope.pag_corrente = page_number;
                     $scope.rec_pagina = -1;
+                    $scope.scrollTop();
                 }).catch(function (error, status) {
                     show_message('Errore', error.data);
                 });

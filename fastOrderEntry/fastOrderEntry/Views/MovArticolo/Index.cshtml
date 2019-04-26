@@ -18,6 +18,12 @@
 
             $scope.page_status = 'ricerca';
 
+            $scope.scrollTop = function () {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'fast');
+            }
+
 
             listiniService.getCategorie('@(Url.Action("getCategorie", "ListiniArticolo"))').then(function (result) {
                 $scope.categorie = result.data;
@@ -50,7 +56,8 @@
                 }).then(function (response) {
                         $scope.records = response.data;
                         $scope.pag_corrente = page_number;
-                        $scope.rec_pagina = -1;
+                    $scope.rec_pagina = -1;
+                    $scope.scrollTop();
                     }).catch(function (error, status) {
                         show_message('Errore', error.data);
                     });

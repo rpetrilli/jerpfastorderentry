@@ -38,7 +38,16 @@
                     <th>Descrizione</th>
                     <th>Gia</th>
                     <th>PrAc</th>
-                    <th>P.Net</th>
+                    <th style="width:5%">
+                        P.Net GR
+                        <button class="btn btn-primary btn-xs"
+                                ng-click="copia_peso()">
+                            <span class="fa fa-clone" />
+                        </button>
+                        <br />
+                        <input type="number" class="form-control form-control-custom text-right"
+                               ng-model="peso_netto_massivo" style="width:80px;" min="0" required />
+                    </th>
                     <th>Obs</th>
                     <th></th>
                 </tr>
@@ -57,7 +66,7 @@
                     <td><input type="text" ng-model="item.descrizione" class="form-control" /></td>
                     <td><span class="badge badge-warning">{{item.giacenza | number:2}}</span></td>
                     <td><span class="badge badge-danger">{{item.prezzo_acquisto | number:2}}</span></td>
-                    <td>{{item | peso | number:2}} Kg.</td>
+                    <td><input type="number" ng-model="item.peso_netto" class="form-control text-right" /></td>
                     <td><input type="checkbox" ng-model="item.obosleto" /></td>
                     <td>
                         <button class="btn btn-success btn-xs"

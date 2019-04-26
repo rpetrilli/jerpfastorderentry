@@ -1,0 +1,165 @@
+﻿<div ng-show="tc.displayMode == 'edit'">
+    <!--Bottoni-->
+    <div class="page-toolbar">
+        <div class="pull-left">
+            <button class="btn btn-success"
+                    ng-click="saveEdit()">
+                <i class="fa fa-floppy-o">&nbsp;</i>Salva
+            </button>
+            <button class="btn btn-grey"
+                    ng-click="tc.cancelEdit()">
+                <i class="fa fa-times">&nbsp;</i>Annulla
+            </button>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="margin-b-10"></div>
+    <!--Testa-->
+    @Html.Partial("_HeaderAccettazione")
+    <div class="row margin-b-10">
+        <div class="col-md-12 col-lg-12">
+            <dir-pagination-controls pagination-id="cust"></dir-pagination-controls>
+            <div class="form-inline pull-right" style="margin-top:20px">
+                <div class="form-group">
+                    <input ng-model="searchText" type="text" placeholder="filtra ..." class="form-control">
+                </div>                
+            </div>
+            <div class="clearfix"></div>
+            <div class="margin-b-10"></div>
+            <div class="panel panel-primary" style="margin-bottom: 0px;padding: 10px 5px 5px 10px;">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Riga</th>
+                            <th>Tipo Riga</th>
+                            <th>Cod. Art. Forn.</th>
+                            <th>Articolo</th>
+                            <th>Descrizione</th>
+                            <th>Q.tà</th>
+                            <th>Um</th>
+                            <th>P. Unit.</th>
+                            <th>Cod. Iva</th>
+                            <th>Sconto</th>
+                            <th>Om</th>
+                            <th>Imp.</th>
+                            <th>Tax</th>
+                            <th>Tot</th>
+                            <th>Ch</th>
+                            <th>Sel</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="item in tc.current.righe | orderBy:'nr_riga' | filter:searchText | itemsPerPage: 10" pagination-id="cust"
+                            ng-class="{strike: item.zpet_controllato}">
+                            <td width="10%">
+                                <div ng-if="!item.onEdit">
+                                    {{item.nr_riga}}
+                                </div>
+                                <div ng-if="item.onEdit">
+                                    <input type="number" ng-model="item.nr_riga" class="full" />
+                                </div>
+                            </td>
+                            <td width="10%">
+                                <div ng-if="!item.onEdit">
+                                    {{item.id_accettazione_riga}}
+                                </div>
+                                <div ng-if="item.onEdit">
+                                    <select ng-model="item.id_accettazione_riga" class="full">
+                                        <option value="N">N-Riga normale</option>
+                                        <option value="NC">NC-Non codificato</option>
+                                        <option value="TX">Testo</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td> {{item.cod_art_fornitore}}</td>
+                            <td width="12%">
+                                <div ng-if="!item.onEdit">
+                                    {{item.id_codice_art}}
+                                </div>
+                                <div ng-if="item.onEdit">
+                                    <input type="text" ng-model="item.id_codice_art" style="width:80%;  padding: 2px;  border-radius: 2px;  border: solid 1px #EEE;" readonly />
+                                    <a href="javascript:void(0)" class="btn btn-xs btn-primary"><i class="fa fa-search"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-if="!item.onEdit">
+                                    {{item.descrizione}}
+                                </div>
+                                <div ng-if="item.onEdit">
+                                    <input type="text" ng-model="item.descrizione" class="full" />
+                                </div>
+                            </td>
+                            <td width="5%">
+                                <div ng-if="!item.onEdit">
+                                    {{item.quantita}}
+                                </div>
+                                <div ng-if="item.onEdit">
+                                    <input type="number" ng-model="item.quantita" class="full" ng-change="calcola(item)" />
+                                </div>
+                            </td>
+                            <td>{{item.id_um}}</td>
+                            <td width="5%">
+                                <div ng-if="!item.onEdit">
+                                    {{item.prezzo_unitario}}
+                                </div>
+                                <div ng-if="item.onEdit">
+                                    <input type="number" ng-model="item.prezzo_unitario" class="full" ng-change="calcola(item)" />
+                                </div>
+                            </td>
+                            <td width="6%">
+                                <div ng-if="!item.onEdit">
+                                    {{item.id_iva}}
+                                </div>
+                                <div ng-if="item.onEdit">
+                                    <select ng-model="item.id_iva" class="full" ng-change="calcola(item)">
+                                        <option value="4">IVA al 4%</option>
+                                        <option value="10">IVA al 10%</option>
+                                        <option value="22">IVA al 22%</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-if="!item.onEdit">
+                                    {{item.str_sconto}}
+                                </div>
+                                <div ng-if="item.onEdit">
+                                    <input type="text" ng-model="item.str_sconto" class="full" ng-change="calcola(item)" />
+                                </div>                                
+                            </td>
+                            <td>                                
+                                <input type="checkbox" ng-model="item.omaggio" ng-readonly="!item.onEdit" />                                
+                            </td>
+                            <td>{{item.imponibile | number:2}}</td>
+                            <td>{{item.imposta | number:2}}</td>
+                            <td>{{item.totale_riga | number:2}}</td>
+                            <td><input type="checkbox" ng-model="item.chiudi_riga" ng-readonly="!item.onEdit" /></td>
+                            <td><input type="checkbox" ng-model="item.zpet_controllato" /></td>
+                            <td>
+                                <button class="btn btn-grey btn-xs" ng-click="item.onEdit = true" ng-hide="item.zpet_controllato || item.onEdit"><i class="fa fa-pencil-square-o"></i></button>
+                                <button class="btn btn-success btn-xs" ng-click="item.onEdit = false" ng-hide="item.zpet_controllato || !item.onEdit"><i class="fa fa-close"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <!--Bottoni-->
+    <div class="page-toolbar">
+        <div class="pull-right">
+            <button class="btn btn-primary"
+                    ng-click="Add()">
+                <i class="fa fa-plus">&nbsp;</i>Aggiungi
+            </button>
+            <button class="btn btn-success"
+                    ng-click="saveEdit()">
+                <i class="fa fa-floppy-o">&nbsp;</i>Salva
+            </button>            
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="margin-b-10"></div>
+</div>
+

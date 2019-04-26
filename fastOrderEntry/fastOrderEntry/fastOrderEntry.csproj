@@ -213,6 +213,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartUp.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccettazioneController.cs" />
     <Compile Include="Controllers\ArticoliAgenteController.cs" />
     <Compile Include="Controllers\ArticoliController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
@@ -376,6 +377,11 @@
     <Content Include="Views\MovCliente\_Dettaglio.cshtml" />
     <Content Include="Views\ArticoliAgente\Index.cshtml" />
     <Content Include="Views\Shared\_Paginatore.cshtml" />
+    <Content Include="Views\Accettazione\Index.cshtml" />
+    <Content Include="Views\Accettazione\_ElencoAccettazioni.cshtml" />
+    <Content Include="Views\Accettazione\_NuovoModificaAccettazione.cshtml" />
+    <Content Include="Views\Accettazione\_FiltroRicerca.cshtml" />
+    <Content Include="Views\Accettazione\_HeaderAccettazione.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

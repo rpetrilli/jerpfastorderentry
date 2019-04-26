@@ -6,8 +6,7 @@
     string oggi = DateTime.Now.AddDays(-7).ToShortDateString();
 }
 @section header {
-<script>
-
+    <script>
         show_message = function (errore, messaggio) {
             swal(messaggio);
         }
@@ -147,7 +146,7 @@
                             }
                         }
                     });
-               
+
             };
 
 
@@ -251,13 +250,13 @@
 
             $scope.print = function () {
                 @*$scope.tc.current.username = '@(username)';
-                $scope.tc.saveEdit( $scope.tc.current, openstampa);
+                $scope.tc.saveEdit( $scope.tc.current, openstampa);*@
+
                 $http({
                     method: 'POST',
                     url: '@(Url.Action("UpdateStampa", "Get"))',
                     data: $scope.tc.current
-                });*@
-
+                });
                 openstampa($scope.tc.current);
             };
 
@@ -265,13 +264,13 @@
 
 
         function openstampa(item) {
-            var url = 'http://80.211.233.101:8080/petline' + '/vendite/ordiniVendita_download.jsp?formato=vendite_StPickingList&esercizio=' + item.esercizio + '&id_ordine=' + item.id_ordine;
+            var url = 'http://51.68.45.37:8080/petline' + '/vendite/ordiniVendita_download.jsp?formato=vendite_StPickingList&esercizio=' + item.esercizio + '&id_ordine=' + item.id_ordine;
             location.href = url;
             //window.open(url);
         };
-</script>
+    </script>
 }
-@section scripts{
+@section scripts{    
     <script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
     <script src="@Url.Content("~/Scripts/bootstrap-datepicker.it.min.js")"></script>
     <script>
@@ -296,7 +295,7 @@
         });
 
         if (!$('#da-data').val().length > 0) {
-            $('#da-data').val('@oggi');            
+            $('#da-data').val('@oggi');
         }
 
         shortcut.add("Home", function () {
@@ -405,7 +404,7 @@
         });
     </script>
 }
-<div class="main-content" ng-controller="ctrl" ng-cloak>    
+<div class="main-content" ng-controller="ctrl" ng-cloak>
     @Html.Partial("_ElencoOrdini")
     @Html.Partial("_NuovoModificaOrdine")
     @Html.Partial("_ModalCercaCliente")

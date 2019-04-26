@@ -31,7 +31,9 @@ namespace fastOrderEntry.Controllers
 
             con.Close();
             return jsonResult;
-        }
+        }       
+
+
 
         public void UpdateStampa(OrdineVenditaModel ordini)
         {

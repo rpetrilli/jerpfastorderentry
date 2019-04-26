@@ -46,6 +46,7 @@ namespace fastOrderEntry.Controllers
                     return new ReportListinoModel()
                     { 
                         articolo = x.id_codice_art,
+                        ean = x.codice_ean,
                         cod_fornitore = x.cod_fornitore,
                         descrizione = x.descrizione,
                         prezzo_di_vendita = x.prezzo_vendita,

@@ -30,7 +30,9 @@ namespace fastOrderEntry.Models
                     cmd.CommandText += " and ( id_categoria_merc like ('" + cod_cat_merc + "-%') or id_categoria_merc = '" + cod_cat_merc + "')";
                 }
 
-                    if (REC_X_PAGINA > 0)
+                cmd.CommandText += "  order by descrizione \r\n";
+
+                if (REC_X_PAGINA > 0)
                 {
                     cmd.CommandText += "limit " + REC_X_PAGINA + " offset " + (pagina * REC_X_PAGINA); 
                 }
@@ -47,6 +49,7 @@ namespace fastOrderEntry.Models
                         RecordListinoModel r = new RecordListinoModel();
                         r.id_codice_art = reader.GetString(reader.GetOrdinal("id_codice_art"));
                         r.descrizione = reader.GetString(reader.GetOrdinal("descrizione"));
+                        r.id_iva = reader["id_iva"].ToString();
                         recordlistino.Add(r);
                     }
                 }

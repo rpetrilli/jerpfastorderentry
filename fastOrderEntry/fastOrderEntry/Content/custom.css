@@ -9,6 +9,19 @@
     padding-right: 15px;
 }*/
 
+.strike {
+   background-color:forestgreen;
+   color: #fff;
+}
+
+.full {
+    display: block;
+    width:100%;
+    padding: 2px;
+    border-radius: 2px;
+    border: solid 1px #EEE;
+}
+
 .form-control-custom {
     height:28px;
 }

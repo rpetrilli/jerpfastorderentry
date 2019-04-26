@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "Accettazione";
+    string currentUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/" + ViewContext.RouteData.GetRequiredString("controller");
+}
+@section header {
+    <script>
+        show_message = function (errore, messaggio) {
+            swal(messaggio);
+        }
+
+        app.controller('ctrl', ['$scope', '$http', 'tabController', function ($scope, $http, tabController) {
+
+            $scope.tc = tabController.createController({
+                api_root: '@currentUrl',
+                select_row_call_back: $scope.select_row,
+                message_function: show_message,
+                exit_edit: exit_edit,
+                exit_new: exit_new
+            });
+
+            var exit_edit = function () {};
+            var exit_new = function () {};
+
+            $scope.init = function () {
+                $scope.tc.filtri.esercizio = '2018'
+                $scope.tc.refresh();
+            };
+
+            $scope.calcola = function (item) {
+
+            };
+
+        }])
+    </script>
+}
+@section scripts {
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.it.min.js")"></script>
+    <script>
+        $('.data-new input').datepicker({ format: "dd/mm/yyyy", weekStart: 1, language: "it", calendarWeeks: true });
+        $('#data-acc').change(function () {
+            var current = $('#a-data').val();
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.tc.filtri.data_accettazione  = current.substring(6, 10) + '-' + current.substring(3, 5) + '-' + current.substring(0, 2);               
+            });
+        });
+
+        shortcut.add("Up", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.tc.previous_record();
+            });
+        });
+
+        shortcut.add("Down", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                scope.tc.next_record();
+            });
+        });
+
+        shortcut.add("pd", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.tc.pag_corrente < scope.tc.pag_number - 1) {
+                    scope.tc.refresh_page(scope.tc.pag_corrente + 1);
+                }
+            });
+        });
+
+        shortcut.add("pu", function () {
+            var scope = angular.element($("[ng-controller='ctrl']")).scope();
+            scope.$apply(function () {
+                if (scope.tc.pag_corrente > 0) {
+                    scope.tc.refresh_page(scope.tc.pag_corrente - 1);
+                }
+            });
+        });
+    </script>
+}
+<div class="main-content" ng-controller="ctrl" ng-init="init()" ng-cloak>
+    @Html.Partial("_ElencoAccettazioni")
+    @Html.Partial("_NuovoModificaAccettazione")
+    <pre>{{tc.current | json}}</pre>
+</div>
+

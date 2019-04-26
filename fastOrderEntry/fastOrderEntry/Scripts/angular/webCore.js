@@ -1,7 +1,19 @@
 ﻿var myModule = angular.module('webCore', []);
 
 
-
+myModule.directive('selectOnClick', ['$window', function ($window) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.on('click', function () {
+                if ($window.getSelection().anchorNode.children[0]) {
+                    var inp = $window.getSelection().anchorNode.children[0];
+                    inp.setSelectionRange(0, inp.value.length);
+                }
+            });
+        }
+    };
+}]);
 
 myModule.directive('leadZeros', function () {
     return {
@@ -300,11 +312,32 @@ myModule.directive('tabControllerPag', function () {
 
 myModule.filter('trimZeros', function () {
     return function (x) {
-        return x.replace(/^0+/, '');
+        if (x != undefined) {
+            return x.replace(/^0+/, '');
+        }
     };
 });
 
+myModule.directive('format', ['$filter', function ($filter) {
+    return {
+        require: '?ngModel',
+        link: function (scope, elem, attrs, ctrl) {
+            if (!ctrl) return;
 
+
+            ctrl.$formatters.unshift(function (a) {
+                return $filter(attrs.format)(ctrl.$modelValue,2)
+            });
+
+
+            ctrl.$parsers.unshift(function (viewValue) {
+                var plainNumber = viewValue.replace(/[^\d|\-+|\.+]/g, '');
+                elem.val($filter(attrs.format)(plainNumber,2));
+                return plainNumber;
+            });
+        }
+    };
+}]);
 
 myModule.directive('typehead', function () {
     return {

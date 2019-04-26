@@ -120,7 +120,7 @@ namespace fastOrderEntry.Controllers
                         item.id_gc_cliente_id = Convert.ToString(reader["id_gc_cliente_id"]);
                         item.link_consegna = Convert.ToString(reader["link_consegna"]);
                         item.link_fattura = Convert.ToString(reader["link_fattura"]);
-                       // item.stampato = string.IsNullOrEmpty(reader["stampato"].ToString()) ? false : Convert.ToBoolean(reader["stampato"]);
+                        item.stampato = string.IsNullOrEmpty(reader["stampato"].ToString()) ? false : Convert.ToBoolean(reader["stampato"]);
                         list.Add(item);
                     }
                 }
@@ -309,7 +309,7 @@ namespace fastOrderEntry.Controllers
         public string id_gc_cliente_id { get; set; }
         public string link_consegna { get; set; }
         public string link_fattura { get; set; }
-       // public bool stampato { get; set; }
+        public bool stampato { get; set; }
 
     }
 }

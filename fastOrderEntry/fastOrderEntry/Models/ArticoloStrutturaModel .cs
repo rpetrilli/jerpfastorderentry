@@ -115,12 +115,26 @@ namespace fastOrderEntry.Models
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = con;
+                    //cmd.CommandText = @"select 
+                    //    case when ao_accettazione_righe.quantita<>0 then 
+                    //    ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
+                    //    ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
+                    //    from ao_accettazione_righe
+                    //    where ao_accettazione_righe.id_codice_art=(@query)
+                    //    order by ao_accettazione_righe.esercizio desc,
+                    //    ao_accettazione_righe.id_accettazione desc limit 1";
+
                     cmd.CommandText = @"select 
                         case when ao_accettazione_righe.quantita<>0 then 
                         ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
                         ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
                         from ao_accettazione_righe
-                        where ao_accettazione_righe.id_codice_art=(@query)
+                        left join ao_accettazione on
+                        ao_accettazione.id_divisione = ao_accettazione_righe.id_divisione and
+                        ao_accettazione.esercizio = ao_accettazione_righe.esercizio and
+                        ao_accettazione.id_accettazione = ao_accettazione_righe.id_accettazione
+                        where ao_accettazione.id_tipo_accettazione <> 'RC' and
+                        ao_accettazione_righe.id_codice_art=(@query)
                         order by ao_accettazione_righe.esercizio desc,
                         ao_accettazione_righe.id_accettazione desc limit 1";
 

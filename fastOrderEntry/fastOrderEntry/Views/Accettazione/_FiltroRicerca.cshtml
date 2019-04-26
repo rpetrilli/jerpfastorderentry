@@ -1,0 +1,34 @@
+﻿<div class="panel panel-primary" style="margin-bottom: 0px;">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-2">
+                <p><strong>Tipo Acc</strong></p>
+                <select class="form-control" ng-model="tc.filtri.id_tipo_accettazione">
+                    <option selected="selected" value="">Non Impostato</option>
+                    <option value="DAF">DAF-DDT acquisto da fornitore</option>
+                    <option value="FAF">FAF-Fattura accompagnatoria fornitore</option>
+                    <option value="MPR">MPR-Maturazione prestazioni</option>
+                    <option value="RC">RC-Reso da Cliente</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <p><strong>Fornitore</strong></p>
+                <input id="f-cliente" type="text" class="form-control" placeholder="seleziona il fornitore.."
+                       typehead="@(Url.Action("GetFornitori", "Get"))" on-select="select_fornitore_filtri" />
+            </div>
+            <div class="col-md-2">
+                <p><strong>Esercizio</strong></p>
+                <input type="text" class="form-control" ng-model="tc.filtri.esercizio" />
+            </div>
+            <div class="col-md-2">
+                <p><strong>Nr Accettazione</strong></p>
+                <input type="text" class="form-control" ng-model="tc.filtri.id_accettazione " />
+            </div>
+            <div class="col-md-2 data-new">
+                <p><strong>Data Accettazione</strong></p>
+                <input type="text" class="form-control" id="data-acc" />
+            </div>            
+        </div>
+    </div>
+</div>
+

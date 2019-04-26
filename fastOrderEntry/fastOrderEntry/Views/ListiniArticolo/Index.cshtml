@@ -3,7 +3,7 @@
     ViewBag.Title = "Listini Articolo";
 }
 @section header {
-<script>
+    <script>
         function show_message(errore, messaggio) {
             swal(messaggio);
         };
@@ -19,6 +19,12 @@
             }, function (error) {
                 show_message(error);
                 });
+
+              $scope.scrollTop = function () {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'fast');
+            }
 
             $scope.refresh = function () {
                 $http({
@@ -44,6 +50,7 @@
                 }).then(function (response) {
                     $scope.records = response.data;
                     console.log(response.data);
+                    $scope.scrollTop();
                         $scope.pag_corrente = page_number;
                         $scope.rec_pagina = -1;
                     }).catch(function (error, status) {
@@ -257,7 +264,7 @@
             };
 
         }]);
-</script>
+    </script>
 }
 @section scripts{
     <script>
@@ -300,154 +307,159 @@
         });
     </script>
 }
-<div class="main-content" ng-controller="ctrl" ng-cloak>
-    <div class="row">
-        <div class="col-md-2 col-lg-2">
-            <h4><i class="fa fa-bars"></i> Menu</h4>
-            <ul class="nav nav-stacked nav-pills">
-                <li>
-                    <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
-                </li>
-                <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_merc == cod_cat_merc_sel}">
-                    <a class="livello{{item.livello}}"
-                       ng-click="selezionaCategoria(item)"
-                       ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">
-                        <span class="fa fa-caret-right"></span>&nbsp;
-                        {{item.descrizione}}
-                    </a>
+    <div class="main-content" ng-controller="ctrl" ng-cloak>        
+        <div class="row">
+            <div class="col-md-2 col-lg-2">
+                <h4><i class="fa fa-bars"></i> Menu</h4>
+                <ul class="nav nav-stacked nav-pills">
+                    <li>
+                        <a class="livello0" ng-click="selezionaCategoria()">Tutti gli articoli</a>
+                    </li>
+                    <li class="nav-livello" ng-repeat="item in categorie" ng-class="{'active': item.id_cat_merc == cod_cat_merc_sel}">
+                        <a class="livello{{item.livello}}"
+                           ng-click="selezionaCategoria(item)"
+                           ng-class="{ visibile: item.visibile, selezionato: item.id_cat_merc == cod_cat_merc_sel }">
+                            <span class="fa fa-caret-right"></span>&nbsp;
+                            {{item.descrizione}}
+                        </a>
 
-                </li>
-            </ul>
-            <div class="margin-b-10"></div>
-        </div>
+                    </li>
+                </ul>
+                <div class="margin-b-10"></div>
+            </div>
 
-        <div class="col-md-10 col-lg-10">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="pull-right">
-                        <button onclick="javascript:document.getElementById('reportForm').submit()" class="btn btn-primary" ng-disabled="!cod_cat_merc_sel">STAMPA</button>
+            <div class="col-md-10 col-lg-10">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            <!-- ng-disabled="!cod_cat_merc_sel"-->
+                            <button onclick="javascript:document.getElementById('reportForm').submit()" class="btn btn-primary">STAMPA</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
-            <div class="input-group">
-                <input id="query" capitalize
-                       type="text" class="form-control"
-                       ng-model="query" placeholder="cerca per codice articolo o descrizione..."
-                       ng-on-enter="refresh()" autofocus />
-                <span class="input-group-btn">
-                    <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;Cerca</button>
-                </span>
-            </div>
-            @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
-            <h4><i class="fa fa-list-ul"></i> Elenco</h4>
-            <table class="table table-hover table-striped" id="table">
-                <thead>
-                    <tr>
-                        <th>Art</th>
-                        <th>Cod For</th>
-                        <th>Descrizione</th>
-                        <th>
-                            Pr Ven
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_prezzo()">
-                                <span class="fa fa-clone" />
-                            </button>
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="prezzo_vendita_massivo" style="width:80px;" min="0" required />
+                <h4><i class="fa fa-filter"></i> Filtro - {{filtro}}</h4>
+                <div class="input-group">
+                    <input id="query" capitalize
+                           type="text" class="form-control"
+                           ng-model="query" placeholder="cerca per codice articolo o descrizione..."
+                           ng-on-enter="refresh()" autofocus />
+                    <span class="input-group-btn">
+                        <button ng-click="refresh()" type="button" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;Cerca</button>
+                    </span>
+                </div>
+                @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
+                <h4><i class="fa fa-list-ul"></i> Elenco</h4>
+                <table class="table table-hover table-striped" id="table">
+                    <thead>
+                        <tr>
+                            <th>Art</th>
+                            <th>Ean</th>
+                            <th>Cod For</th>
+                            <th>Descrizione</th>
+                            <th>
+                                Pr Ven
+                                <button class="btn btn-primary btn-xs"
+                                        ng-click="copia_prezzo()">
+                                    <span class="fa fa-clone" />
+                                </button>
+                                <br />
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="prezzo_vendita_massivo" style="width:80px;" min="0" required />
 
-                        </th>
-                        <th>Giac</th>
-                        <th>
-                            Sc 1
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto1()">
-                                <span class="fa fa-clone" />
-                            </button>
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_1_massivo" style="width:80px;" />
-                        </th>
-                        <th>
-                            Sc 2
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto2()">
-                                <span class="fa fa-clone" />
-                            </button>
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_2_massivo" style="width:80px;" />
-                        </th>
-                        <th>
-                            Sc 3
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="copia_sconto3()">
-                                <span class="fa fa-clone" />
-                            </button>
-                            <br />
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="sconto_3_massivo" style="width:80px;" />
-                        </th>
-                        <th>Prezzo</th>
-                        <th>Iva</th>
-                        <th>Pr Acq</th>
-                        <th>Mar%</th>
-                        <th>Obs</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="item in records">
-                        <td>{{item.id_codice_art}}</td>
-                        <td>{{item.cod_fornitore}}</td>
-                        <td>{{item.descrizione}}</td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right request-focus"
-                                   ng-model="item.prezzo_vendita" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>{{item.giacenza}}</td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_1" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_2" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td>
-                            <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.sconto_3" style="width:80px;"
-                                   ng-focus="linefocused($index);" />
-                        </td>
-                        <td><span class="badge badge-success"> {{ item | prezzo | number:2}}</span></td>
-                        <td>{{item.id_iva}}</td>
-                        <td>
-                            <span class="badge badge-danger">{{item.prezzo_acquisto | number:2}}</span>                          
-                        </td>
-                        <td>
-                            {{item | margineordine | number:2}}
-                        </td>
-                        <td><input type="checkbox" ng-model="item.obosleto" /></td>
-                        <td>
-                            <button class="btn btn-primary btn-xs"
-                                    ng-click="save(item);">
-                                <span class="fa fa-save" />
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
-        </div> <!--Dettaglio-->
+                            </th>
+                            <th>Giac</th>
+                            <th>
+                                Sc 1
+                                <button class="btn btn-primary btn-xs"
+                                        ng-click="copia_sconto1()">
+                                    <span class="fa fa-clone" />
+                                </button>
+                                <br />
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="sconto_1_massivo" style="width:80px;" />
+                            </th>
+                            <th>
+                                Sc 2
+                                <button class="btn btn-primary btn-xs"
+                                        ng-click="copia_sconto2()">
+                                    <span class="fa fa-clone" />
+                                </button>
+                                <br />
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="sconto_2_massivo" style="width:80px;" />
+                            </th>
+                            <th>
+                                Sc 3
+                                <button class="btn btn-primary btn-xs"
+                                        ng-click="copia_sconto3()">
+                                    <span class="fa fa-clone" />
+                                </button>
+                                <br />
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="sconto_3_massivo" style="width:80px;" />
+                            </th>
+                            <th>PrLis</th>
+                            <th>PrCalc</th>
+                            <th>Iva</th>
+                            <th>Pr Acc</th>
+                            <th>Mar%</th>
+                            <th>Obs</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in records">
+                            <td>{{item.id_codice_art}}</td>
+                            <td>{{item.codice_ean}}</td>
+                            <td>{{item.cod_fornitore}}</td>
+                            <td>{{item.descrizione}}</td>
+                            <td>
+                                <input type="number" class="form-control form-control-custom text-right request-focus"
+                                       ng-model="item.prezzo_vendita" style="width:80px;"
+                                       ng-focus="linefocused($index);" />
+                            </td>
+                            <td>{{item.giacenza}}</td>
+                            <td>
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="item.sconto_1" style="width:80px;"
+                                       ng-focus="linefocused($index);" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="item.sconto_2" style="width:80px;"
+                                       ng-focus="linefocused($index);" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control form-control-custom text-right"
+                                       ng-model="item.sconto_3" style="width:80px;"
+                                       ng-focus="linefocused($index);" />
+                            </td>
+                            <td> <span class="badge badge-warning">{{item.prezzo_listino | number:2}}</span></td>
+                            <td><span class="badge badge-success"> {{ item | prezzo | number:2}}</span></td>
+                            <td>{{item.id_iva}}</td>
+                            <td>
+                                <span class="badge badge-danger">{{item.prezzo_acquisto | number:2}}</span>
+                            </td>
+                            <td>
+                                {{item | margineordine | number:2}}
+                            </td>
+                            <td><input type="checkbox" ng-model="item.obosleto" /></td>
+                            <td>
+                                <button class="btn btn-primary btn-xs"
+                                        ng-click="save(item);">
+                                    <span class="fa fa-save" />
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                @Html.Partial("~/Views/Shared/_Paginatore.cshtml")
+            </div> <!--Dettaglio-->
+        </div>
+        @using (Html.BeginForm("stampa", "listiniarticolo", FormMethod.Get, new { id = "reportForm" }))
+        {
+            <input type="hidden" name="query" value="{{query}}" />
+            <input type="hidden" name="cod_cat_merc_sel" value="{{cod_cat_merc_sel}}" />
+        }
     </div>
-    @using (Html.BeginForm("stampa", "listiniarticolo", FormMethod.Get, new { id = "reportForm" }))
-    {
-        <input type="hidden" name="query" value="{{query}}" />
-        <input type="hidden" name="cod_cat_merc_sel" value="{{cod_cat_merc_sel}}" />
-    }
-</div>

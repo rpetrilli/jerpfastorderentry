@@ -141,6 +141,19 @@ namespace fastOrderEntry.Controllers
             return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult copia_peso(string query, string cod_cat_merc, decimal? peso_netto_massivo)
+        {
+            if (peso_netto_massivo.HasValue)
+            {
+                con.Open();
+                RecordListinoModel listino = new RecordListinoModel();
+                listino.updatePesoNetto(con, peso_netto_massivo, query, cod_cat_merc);
+                con.Close();
+            }
+            return Json(new { ack = "OK" }, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpPost]
         public JsonResult leggi_articolo(RecordListinoModel item)

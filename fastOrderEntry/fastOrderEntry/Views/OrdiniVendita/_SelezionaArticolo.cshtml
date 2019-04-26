@@ -17,11 +17,11 @@
                         <th>Giacenza</th>
                         <th>Qta Ord</th>
                         <th>Prezzo Acq</th>
+                        <th>Prezzo Lis</th>
                         <th>Prezzo</th>
                         <th>Sc 1</th>
                         <th>Sc 2</th>
                         <th>Sc 3</th>
-
                         <th>Cod.IVA</th>
                         <th></th>
                     </tr>
@@ -39,6 +39,7 @@
                                    ng-on-enter="select_articolo($index,item)" />
                         </td>
                         <td><span class="badge badge-danger">{{item.prezzo_acquisto | number: 2}}</span></td>
+                        <td><span class="badge badge-success">{{item.prezzo_vendita | number:2}}</span></td>
                         <td><span class="badge badge-success">{{ item | prezzo | number:2}}</span></td>
                         <td>{{item.sconto_1 | number}}</td>
                         <td>{{item.sconto_2 | number}}</td>

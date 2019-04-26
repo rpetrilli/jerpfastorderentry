@@ -1,4 +1,4 @@
-﻿<div ng-show="page_status == 'leggi'">
+﻿<div ng-show="page_status == 'leggi'">    
     <div class="page-toolbar">
         <button class="btn btn-default" ng-click="annulla()"><i class="fa fa-arrow-left"></i> Indietro</button>
     </div>
@@ -11,8 +11,27 @@
                     <p>
                         Cod <strong>{{selezionato.id_codice_art}}</strong><br />
                         Articolo <strong>{{selezionato.descrizione}}</strong><br />
-                        <h3>Prezzo di Vendita {{selezionato | prezzo | number:2}}</h3>
                     </p>
+                    @*<div style="font-size:120%; font-weight:700;">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-3 text-right">
+                                        <label>Prezzo di Listino</label><br />
+                                        {{selezionato.prezzo_vendita | number:2}}
+                                    </div>
+                                    <div class="col-lg-3 text-right">
+                                        <label>Prezzo di Vendita</label><br />
+                                        {{selezionato | prezzo | number:2}}
+                                    </div>
+                                    <div class="col-lg-3 text-right">
+                                        <label>Prezzo di Acquisto</label><br />
+                                        {{selezionato.prezzo_acquisto | number:2}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                       
+                    </div>*@                    
                 </div>
             </div>
         </div>
@@ -88,11 +107,13 @@
                                 </a>
                             </th>
                             @*<th>Tot Doc</th>
-                                <th>Imp Doc</th>
-                                <th>Iva Doc</th>
-                                <th>Nr Doc Mer</th>*@
+        <th>Imp Doc</th>
+        <th>Iva Doc</th>
+        <th>Nr Doc Mer</th>*@
                             <th class="text-right">Nr Riga</th>
                             <th class="text-right">Qta</th>
+                            <th class="text-right">Pr Acq</th>
+                            <th class="text-right">Pr Lis</th>
                             <th class="text-right">Pr Ven</th>
                             <th>Sconto</th>
                             <th class="text-right">Imp</th>
@@ -118,7 +139,10 @@
                             <td>{{item.protocollo_iva}}</td>
                             <td class="text-right">{{item.nr_riga}}</td>
                             <td class="text-right">{{item.quantita}}</td>
-                            <td class="text-right">{{item.imponibile / item.quantita | number:2}}</td>
+                            <td class="text-right"><span ng-show="item.tipo_documento === 'FAF'">{{item.imponibile / item.quantita | number:2}}</span></td>
+
+                            <td class="text-right">{{item.prezzo_unitario | number:2}}</td>
+                            <td class="text-right"><span ng-show="item.tipo_documento === 'FVA' || item.tipo_documento === 'DDT'">{{item.imponibile / item.quantita | number:2}}</span></td>
                             <td>{{item.str_sconto}}</td>
                             <td class="text-right">{{item.imponibile | number:2}}</td>
                             <td class="text-right">{{item.imposta | number:2}}</td>

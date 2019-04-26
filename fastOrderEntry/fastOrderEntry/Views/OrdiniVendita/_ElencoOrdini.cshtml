@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     string urljerp = "http://80.211.233.101:8080/petline/";
 }
 <div ng-show="tc.displayMode == 'list'">
@@ -15,7 +15,7 @@
     </div> <!-- page-toolbar -->
     <div class="clearfix"></div>
     <div class="margin-b-10"></div>
-    @Html.Partial("_FiltroRicerca")     
+    @Html.Partial("_FiltroRicerca")
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <tab-controller-pag table-controller="tc"></tab-controller-pag>
@@ -43,19 +43,19 @@
                             <td>{{item.id_agente | trimZeros}} {{item.ragione_sociale_agente}}</td>
                             <td>{{item.data_ordine | date: short}}</td>
                             <td>{{item.totale_doc | number:2}}</td>
-                            <td class="text-center"><i class="fa {{item.ordine_chiuso?'fa-lock text-danger':'fa-unlock text-success'}}"></i></td>                            
-                           
+                            <td class="text-center"><i class="fa {{item.ordine_chiuso?'fa-lock text-danger':'fa-unlock text-success'}}"></i></td>
+
                             <td>
-                                <input type="checkbox" ng-model="item.massivo" ng-hide="item.ordine_chiuso">    
+                                <input type="checkbox" ng-model="item.massivo" ng-hide="item.ordine_chiuso">
                             </td>
                             <td>
 
                                 <a class="badge badge-success" ng-show="item.ordine_chiuso && item.link_fattura" target="_blank"
-                                   ng-href="http://80.211.233.101:8080/petline/vendite/fattura_stampa_download.jsp?formato=vendite_StFatturaAcc&{{item.link_fattura}}">
+                                   ng-href="http://51.68.45.37:8080/petline/vendite/fattura_stampa_download.jsp?formato=vendite_StFatturaAcc&{{item.link_fattura}}">
                                     St.Fattura
                                 </a>
                                 <a class="badge" ng-show="item.ordine_chiuso && item.link_consegna" target="_blank"
-                                   ng-href="http://80.211.233.101:8080/petline/vendite/consegna_stampa_download.jsp?formato=vendite_StConsegna&{{item.link_consegna}}">
+                                   ng-href="http://51.68.45.37:8080/petline/vendite/consegna_stampa_download.jsp?formato=vendite_StConsegna&{{item.link_consegna}}">
                                     St.Consegna
                                 </a>
                                 <button ng-hide="item.ordine_chiuso"

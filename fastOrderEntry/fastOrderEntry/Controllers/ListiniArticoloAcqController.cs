@@ -107,7 +107,7 @@ namespace fastOrderEntry.Controllers
             con.Open();
 
             ListinoModel listino = new ListinoModel();
-            listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA, true);
+            listino.select(con, query, cod_cat_merc, page_number, REC_X_PAGINA, false);
 
 
 

@@ -3,6 +3,7 @@
     public class ReportListinoModel
     {
         public string articolo { get; set; }
+        public string ean { get; set; }
         public string cod_fornitore { get; set; }
         public string descrizione { get; set; }
         public decimal prezzo_di_vendita { get; set; }

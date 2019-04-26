@@ -62,6 +62,8 @@ namespace fastOrderEntry.Models
                         r.id_cond_pag = reader["id_cond_pag"].ToString();
                         r.id_vettore = reader["id_vettore"].ToString();
                         r.id_agente = reader["id_agente"].ToString();
+                        r.telefono = reader["telefono"].ToString();
+                        r.email = reader["email"].ToString();
                         rs.Add(r);
                     }
                 }
@@ -83,6 +85,8 @@ namespace fastOrderEntry.Models
         public string id_vettore { get; set; }
         public string note { get; set; }
         public string id_agente { get; set; }
+        public string telefono { get; set; }
+        public string email { get; set; }
 
     }
 }

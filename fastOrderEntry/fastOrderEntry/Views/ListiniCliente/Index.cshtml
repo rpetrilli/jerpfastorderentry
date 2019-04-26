@@ -31,7 +31,13 @@
                 $scope.categorie = result.data;
             }, function (error) {
                 show_message(error);
-            });
+                });
+
+            $scope.scrollTop = function () {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'fast');
+            }
 
             $scope.selezionaCategoria = function (item_sel) {
                 if ("undefined" === typeof item_sel) {
@@ -103,7 +109,8 @@
                 }).then(function (response) {
                         $scope.records = response.data;
                         $scope.pag_corrente = page_number;
-                        $scope.rec_pagina = -1;
+                    $scope.rec_pagina = -1;
+                    $scope.scrollTop();
                     }).catch(function (error, status) {
                         show_message('Errore', error.data);
                     });
@@ -321,7 +328,7 @@
 </script>
 }
 
-<div class="main-content" ng-controller="ctrl" ng-cloak>
+<div class="main-content" ng-controller="ctrl" ng-cloak>    
     <div class="row">
         <div class="col-md-2 col-lg-2">
             <h4><i class="fa fa-bars"></i> Menu</h4>
@@ -375,17 +382,18 @@
                     <tr>
                         <th>Art</th>
                         <th>Descrizione</th>
+                        <th>Pr Lis</th>
                         <th>
 
                             Pr Ven
                             @*<br />
-                        <button class="btn btn-primary btn-xs"
-                                ng-click="copia_prezzo()">
-                            <span class="fa fa-clone" />
-                        </button>
-                        <br />
-                        <input type="number" class="form-control form-control-custom text-right"
-                               ng-model="prezzo_vendita_massivo" style="width:80px;" />*@
+            <button class="btn btn-primary btn-xs"
+                    ng-click="copia_prezzo()">
+                <span class="fa fa-clone" />
+            </button>
+            <br />
+            <input type="number" class="form-control form-control-custom text-right"
+                   ng-model="prezzo_vendita_massivo" style="width:80px;" />*@
                         </th>
                         <th>
                             Sc 1
@@ -417,6 +425,10 @@
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="sconto_3_massivo" style="width:80px;" ng-disabled="!id_cliente" />
                         </th>
+                        <th>Prezzo</th>
+                        <th>Iva</th>
+                        <th>Pr Acq</th>
+                        <th>Mar%</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -424,6 +436,9 @@
                     <tr ng-repeat="item in records">
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
+                        <td class="text-right">
+                            <span class="badge badge-info">{{item.prezzo_listino | number:2}}</span>
+                        </td>
                         <td>
                             <input type="number" class="form-control form-control-custom text-right request-focus"
                                    ng-model="item.prezzo_vendita" style="width:80px;"
@@ -448,6 +463,14 @@
                                    ng-disabled="!id_cliente"
                                    ng-focus="linefocused($index);" />
                         </td>
+                        <td><span class="badge badge-success"> {{ item | prezzo | number:2}}</span></td>
+                        <td>{{item.id_iva}}</td>
+                        <td>
+                            <span class="badge badge-danger">{{item.prezzo_acquisto | number:2}}</span>
+                        </td>
+                        <td>
+                            {{item | margineordine | number:2}}
+                        </td>
                         <td>
                             <button class="btn btn-primary btn-xs"
                                     ng-click="save(item);">
@@ -460,11 +483,11 @@
             </table>
             @Html.Partial("~/Views/Shared/_Paginatore.cshtml") <!--Fine paginatore -->
             @using (Html.BeginForm("stampa", "listinicliente", FormMethod.Get, new { id = "reportForm" }))
-    {
-        <input type="hidden" name="query" value="{{query}}" />
-        <input type="hidden" name="cod_cat_merc_sel" value="{{cod_cat_merc_sel}}" />
-        <input type="hidden" name="id_cliente" value="{{id_cliente}}" />
-}
+            {
+                <input type="hidden" name="query" value="{{query}}" />
+                <input type="hidden" name="cod_cat_merc_sel" value="{{cod_cat_merc_sel}}" />
+                <input type="hidden" name="id_cliente" value="{{id_cliente}}" />
+            }
         </div>
     </div>
 </div>

@@ -25,6 +25,13 @@
                 show_message(error);
                 });
 
+
+            $scope.scrollTop = function () {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'fast');
+            }
+
             $scope.refresh = function () {
                 $http({
                 method: 'GET',
@@ -47,6 +54,7 @@
                         query: $scope.query, cod_cat_merc: $scope.cod_cat_merc_sel, page_number: page_number
                     }
                 }).then(function (response) {
+                    $scope.scrollTop();
                     $scope.records = response.data;
                     $scope.pag_corrente = page_number;
                     $scope.rec_pagina = -1;
@@ -183,6 +191,35 @@
                         }
                     });*@
             }
+
+            $scope.copia_peso = function ()
+            {
+                 swal({
+                    title: "Attenzione, sei sicuro?",
+                    text: "Confermi la copia massiva peso netto degli articoli in elenco?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+
+                            $http({
+                                method: 'POST',
+                                url: '@(Url.Action("copia_peso"))',
+                                data: {
+                                    peso_netto_massivo: $scope.peso_netto_massivo,
+                                    query: $scope.query,
+                                    cod_cat_merc: $scope.cod_cat_merc_sel
+                                }
+                            }).then(function (response) {
+                                    $scope.refresh_page($scope.pag_corrente);
+                                }).catch(function (error, status) {
+                                    show_message('Errore', error.data);
+                                });
+                        }
+                    });
+            };
 
             $scope.save = function () {
                 $http({

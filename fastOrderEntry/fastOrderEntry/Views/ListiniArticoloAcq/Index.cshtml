@@ -20,6 +20,12 @@
                 show_message(error);
                 });
 
+            $scope.scrollTop = function () {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 'fast');
+            }
+
             $scope.refresh = function () {
                 $http({
                 method: 'GET',
@@ -44,7 +50,8 @@
                 }).then(function (response) {
                         $scope.records = response.data;
                         $scope.pag_corrente = page_number;
-                        $scope.rec_pagina = -1;
+                    $scope.rec_pagina = -1;
+                    $scope.scrollTop();
                     }).catch(function (error, status) {
                         show_message('Errore', error.data);
                     });
@@ -339,6 +346,9 @@
                     <tr>
                         <th>Art</th>
                         <th>Descrizione</th>
+                        @*<th>
+                            Prz Acq
+                        </th>*@
                         <th>
                             Pr Lis
                             <button class="btn btn-primary btn-xs"
@@ -383,9 +393,10 @@
                             <input type="number" class="form-control form-control-custom text-right"
                                    ng-model="sconto_3_massivo" style="width:80px;" />
                         </th>
-                        <th>
-                            Prz Acq
-                        </th>
+                        @*<th>
+                            Calc
+                        </th>*@
+
                         <th></th>
                     </tr>
                 </thead>
@@ -393,9 +404,12 @@
                     <tr ng-repeat="item in records">
                         <td>{{item.id_codice_art}}</td>
                         <td>{{item.descrizione}}</td>
+                        @*<td>
+                            <span class="badge badge-danger">{{item.prezzo_acquisto | number:2}}</span>
+                        </td>*@
                         <td>
                             <input type="number" class="form-control form-control-custom text-right"
-                                   ng-model="item.prezzo_acquisto" style="width:80px;"
+                                   ng-model="item.prezzo_listino" style="width:80px;"
                                    ng-focus="linefocused($index);" />
                         </td>
                         <td>
@@ -418,9 +432,7 @@
                                    ng-model="item.sconto_a_3" style="width:80px;"
                                    ng-focus="linefocused($index);" />
                         </td>
-                        <td>
-                            <span class="badge badge-success">{{item | prezzoacq | number:2}}</span>
-                        </td>
+                        @*<td> <span class="badge badge-success">{{item | prezzoacq | number:2}}</span></td>*@
                         <td>
                             <button class="btn btn-primary btn-xs"
                                     ng-click="save(item);">

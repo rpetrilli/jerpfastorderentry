@@ -7,7 +7,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label><strong>Note cliente</strong></label>
-                                <textarea rows="2" class="form-control" disabled="disabled">{{tc.current.note}}</textarea>
+                                <textarea rows="2" class="form-control">{{tc.current.note}}</textarea>
                             </div>                            
                         </div>
                         <div class="row">
@@ -92,6 +92,16 @@
                             <div class="col-sm-2">
                                 <label><strong>Pr</strong></label>
                                 <input id="current-pr" type="text" class="form-control" ng-model="tc.current.provincia" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label><strong>Telefono</strong></label>
+                                <input id="current-tl" type="text" class="form-control" ng-model="tc.current.telefono" disabled="disabled" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label><strong>Email</strong></label>
+                                <input id="current-em" type="text" class="form-control" ng-model="tc.current.email" disabled="disabled" />
                             </div>
                         </div>
 

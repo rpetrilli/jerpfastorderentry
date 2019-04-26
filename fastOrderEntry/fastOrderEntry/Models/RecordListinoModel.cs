@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Npgsql;
 
 namespace fastOrderEntry.Models
@@ -10,6 +11,7 @@ namespace fastOrderEntry.Models
         public string descrizione { get; set; }
         public decimal prezzo_acquisto { get; set; }
         public decimal prezzo_vendita { get; set; }
+        public decimal prezzo_listino { get; set; }
         public decimal sconto_1 { get; set; }
         public decimal sconto_2 { get; set; }
         public decimal sconto_3 { get; set; }
@@ -29,7 +31,9 @@ namespace fastOrderEntry.Models
         internal void leggiPrezzi(NpgsqlConnection conn, bool lisAcq = false)
         {
             prezzo_vendita = leggiListinoArticolo(conn, "VA01");
-            prezzo_acquisto = leggiPrezzoAcquisto(conn, "AC01", lisAcq);
+            prezzo_acquisto = leggiPrezzoAcquisto(conn, "AC01", false);
+            prezzo_listino = leggiPrezzoAcquisto(conn, "AC01", true);
+            //prezzo_acquisto = leggiListinoArticolo(conn, "VA01");
 
             sconto_1 = leggiSconto(conn, "SC01");
             sconto_2 = leggiSconto(conn, "SC02");
@@ -41,10 +45,12 @@ namespace fastOrderEntry.Models
         }
 
 
-        public void leggiPrezziCliente(NpgsqlConnection conn, string id_cliente)
+        public void leggiPrezziCliente(NpgsqlConnection conn, string id_cliente, bool lisAcq = false)
         {
             this.id_cliente = id_cliente;
             prezzo_vendita = leggiListinoCliente(conn, "VA01", id_cliente);
+            prezzo_acquisto = leggiPrezzoAcquisto(conn, "AC01", lisAcq);
+            prezzo_listino = leggiListinoArticolo(conn, "VA01");
 
             sconto_1 = leggiScontoCliente(conn, "SC01", id_cliente);
             sconto_2 = leggiScontoCliente(conn, "SC02", id_cliente);
@@ -107,70 +113,117 @@ namespace fastOrderEntry.Models
         private decimal leggiPrezzoAcquisto(NpgsqlConnection conn, string id_cond_prezzo, bool lisAcq)
         {
             decimal prz = 0;
+            //prz = GetFromListino(conn, id_cond_prezzo);
+            //prz = GetFromAccettazione(conn, id_cond_prezzo);
+
             if (lisAcq)
-            {
-
-                using (var cmd = new NpgsqlCommand())
-                {
-
-                    cmd.Connection = conn;
-                    cmd.CommandText = "select * from da_listini_articolo " +
-                        "where id_cond_prezzo = @id_cond_prezzo " +
-                        "  and id_codice_art = @id_codice_art and id_divisa = 'EUR' ";                  
-                    cmd.Parameters.AddWithValue("id_cond_prezzo", id_cond_prezzo);
-                    cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
-                    cmd.ExecuteNonQuery();
-
-                    //cmd.Connection = conn;
-                    //cmd.CommandText = @"select 
-                    //    case when ao_accettazione_righe.quantita<>0 then 
-                    //    ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
-                    //    ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
-                    //    from ao_accettazione_righe
-                    //    where ao_accettazione_righe.id_codice_art=(@query)
-                    //    order by ao_accettazione_righe.esercizio desc,
-                    //    ao_accettazione_righe.id_accettazione desc limit 1";
-
-                    //cmd.Parameters.AddWithValue("query", id_codice_art);
-                    //cmd.ExecuteNonQuery();
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            prz = reader.GetDecimal(reader.GetOrdinal("val_condizione"));
-                        }
-                    }
-                }
-            }
+                prz = GetFromListino(conn, id_cond_prezzo);
             else
+                prz = GetFromAccettazione(conn, id_cond_prezzo);          
+
+            return prz;
+        }
+
+        private decimal GetFromAccettazione(NpgsqlConnection conn, string id_cond_prezzo)
+        {
+            decimal prz = 0;
+            using (var cmd = new NpgsqlCommand())
             {
-                using (var cmd = new NpgsqlCommand())
-                {
-                    cmd.Connection = conn;
-                    cmd.CommandText = @"select 
+                cmd.Connection = conn;
+                cmd.CommandText = @"select 
                         case when ao_accettazione_righe.quantita<>0 then 
                         ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
                         ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
                         from ao_accettazione_righe
-                        where ao_accettazione_righe.id_codice_art=(@query)
+                        left join ao_accettazione on
+                        ao_accettazione.id_divisione = ao_accettazione_righe.id_divisione and
+                        ao_accettazione.esercizio = ao_accettazione_righe.esercizio and
+                        ao_accettazione.id_accettazione = ao_accettazione_righe.id_accettazione
+                        where ao_accettazione.id_tipo_accettazione <> 'RC' and
+                        ao_accettazione_righe.id_codice_art=(@query)
                         order by ao_accettazione_righe.esercizio desc,
                         ao_accettazione_righe.id_accettazione desc limit 1";
 
-                    cmd.Parameters.AddWithValue("query", id_codice_art);
-                    cmd.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("query", id_codice_art);
+                cmd.ExecuteNonQuery();
 
-                    using (var reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            prz = reader.GetDecimal(reader.GetOrdinal("ult_prezzo_acq"));
-                        }
+                        prz = reader.GetDecimal(reader.GetOrdinal("ult_prezzo_acq"));
                     }
                 }
             }
-           
             return prz;
+        }
+
+        private decimal GetFromListino(NpgsqlConnection conn, string id_cond_prezzo)
+        {
+            decimal prz = 0;
+            using (var cmd = new NpgsqlCommand())
+            {
+
+
+                cmd.Connection = conn;
+                cmd.CommandText = "select * from da_listini_articolo " +
+                    "where id_cond_prezzo = @id_cond_prezzo " +
+                    "  and id_codice_art = @id_codice_art and id_divisa = 'EUR' ";
+                cmd.Parameters.AddWithValue("id_cond_prezzo", id_cond_prezzo);
+                cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                cmd.ExecuteNonQuery();               
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        prz = reader.GetDecimal(reader.GetOrdinal("val_condizione"));
+                    }
+                }
+            }
+            return prz;
+        }
+
+        internal void updatePesoNetto(NpgsqlConnection con, decimal? peso_netto_massivo, string query, string cod_cat_merc)
+        {
+            List<RecordListinoModel> recordlistino = new List<RecordListinoModel>();
+
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = con;
+                cmd.CommandText = "SELECT * from ma_articoli_soc \r\n" +
+                    "where id_societa = '1' \r\n";
+                if (!string.IsNullOrEmpty(query))
+                {
+                    cmd.CommandText += "  and (upper(id_codice_art) LIKE( @query) or upper(descrizione) like( @query ) ) \r\n";
+                }
+                if (!string.IsNullOrEmpty(cod_cat_merc))
+                {
+                    cmd.CommandText += " and (id_categoria_merc like ('" + cod_cat_merc + "-%') or id_categoria_merc ='" + cod_cat_merc + "')";
+                }
+
+                if (!string.IsNullOrEmpty(query))
+                {
+                    cmd.Parameters.AddWithValue("query", query.ToUpper() + "%");
+                }
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        RecordListinoModel r = new RecordListinoModel();
+                        r.id_codice_art = reader.GetString(reader.GetOrdinal("id_codice_art"));
+                        r.descrizione = reader.GetString(reader.GetOrdinal("descrizione"));
+                        recordlistino.Add(r);
+                    }
+                }
+
+                foreach (RecordListinoModel r in recordlistino)
+                {
+                    r.updateDescrizioneMassivo(con, Convert.ToDecimal(peso_netto_massivo));
+                }
+            }
         }
 
         internal void AggiornaArticolo(NpgsqlConnection con)
@@ -284,10 +337,30 @@ namespace fastOrderEntry.Models
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "update ma_articoli_soc set descrizione = @descrizione, obsoleto = @obsoleto " +
+                    cmd.CommandText = "update ma_articoli_soc set descrizione = @descrizione, obsoleto = @obsoleto, peso_netto = @peso_netto " +
                         "where id_codice_art = @id_codice_art ";
                     cmd.Parameters.AddWithValue("descrizione", descrizione);
                     cmd.Parameters.AddWithValue("obsoleto", obosleto);
+                    cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
+                    cmd.Parameters.AddWithValue("peso_netto", peso_netto);
+                    cmd.ExecuteNonQuery();
+                }
+
+            }
+        }
+
+
+        private void updateDescrizioneMassivo(NpgsqlConnection con, decimal peso_netto_massivo)
+        {
+            if (!string.IsNullOrEmpty(id_codice_art))
+            {
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "update ma_articoli_soc set peso_netto = @peso_netto " +
+                        "where id_codice_art = @id_codice_art ";
+                    cmd.Parameters.AddWithValue("peso_netto", peso_netto_massivo);
                     cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
                     cmd.ExecuteNonQuery();
                 }
@@ -354,7 +427,8 @@ namespace fastOrderEntry.Models
         {
 
             updatePrezzo(conn, prezzo_vendita, "VA01");
-            updatePrezzo(conn, prezzo_acquisto, "AC01");
+            //updatePrezzo(conn, prezzo_acquisto, "AC01");
+            //commentato per errore su aggiornamento
 
             updateSconto(conn, sconto_1, "SC01");
             updateSconto(conn, sconto_2, "SC02");
@@ -364,7 +438,8 @@ namespace fastOrderEntry.Models
 
         internal void scriviPrezziAcq(NpgsqlConnection conn)
         {
-            updatePrezzo(conn, prezzo_acquisto, "AC01");
+            //updatePrezzo(conn, prezzo_acquisto, "AC01");
+            updatePrezzo(conn, prezzo_listino, "AC01");
 
             updateSconto(conn, sconto_a_1, "SA01");
             updateSconto(conn, sconto_a_2, "SA02");

@@ -32,7 +32,9 @@ namespace fastOrderEntry.Models
         public decimal imposta { get; set; }
         public decimal totale_riga { get; set; }
         public string id_magazzino { get; set; }
-        public string segno { get; set; }        
+        public string segno { get; set; }
+        public decimal prezzo_acquisto { get; set; }
+        public decimal prezzo_listino { get; set; }
     }
 
     public class ListaMovArticoloModel
@@ -60,8 +62,26 @@ namespace fastOrderEntry.Models
                 left join va_clienti on
                 va_clienti.id_cliente = mov_articolo.id_cliente
                 where id_codice_art = @id_codice_art and (data_documento >= @da_data and data_documento <= @a_data)";
+                //      cmd.CommandText = @"select mov_articolo.*,
+                //      aa_fornitori.ragione_sociale as rag_soc_fornitore,
+                //      va_clienti.ragione_sociale as rag_soc_cliente,
+                //      (select 
+                //              case when ao_accettazione_righe.quantita<>0 then 
+                //              ao_accettazione_righe.imponibile/ao_accettazione_righe.quantita else 
+                //              ao_accettazione_righe.prezzo_unitario end as ult_prezzo_acq
+                //              from ao_accettazione_righe
+                //              where ao_accettazione_righe.id_codice_art=@id_codice_art
+                //              order by ao_accettazione_righe.esercizio desc,
+                //              ao_accettazione_righe.id_accettazione desc limit 1)as prezzo_acquisto,
+                //(select val_condizione from da_listini_articolo where id_cond_prezzo = 'VA01' and id_codice_art = @id_codice_art limit 1) as prez_listino
+                //      from mov_articolo
+                //      left join aa_fornitori on
+                //      aa_fornitori.id_fornitore = mov_articolo.id_fornitore
+                //      left join va_clienti on
+                //      va_clienti.id_cliente = mov_articolo.id_cliente
+                //      where id_codice_art = @id_codice_art and (data_documento >= @da_data and data_documento <= @a_data)";
 
-                
+
 
                 cmd.Parameters.AddWithValue("id_codice_art", id_codice_art);
                 cmd.Parameters.AddWithValue("da_data", da_data);
@@ -99,6 +119,8 @@ namespace fastOrderEntry.Models
                         mov.segno = reader["segno"].ToString();
                         mov.rag_soc_fornitore = reader["rag_soc_fornitore"].ToString();
                         mov.rag_soc_cliente = reader["rag_soc_cliente"].ToString();
+                        //mov.prezzo_acquisto = setDecimal(reader["prezzo_acquisto"].ToString());
+                        //mov.prezzo_listino = setDecimal(reader["prez_listino"].ToString());
 
                         lista.Add(mov);
                     }

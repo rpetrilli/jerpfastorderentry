@@ -33,12 +33,16 @@ namespace fastOrderEntry.Models
         public bool login(NpgsqlConnection conn, string user_name, string user_pass)
         {
             bool logged = false;
+
+            string crypto = GetCrypto(conn, user_pass);
+            
+
             using (var cmd = new NpgsqlCommand())
             {
                 cmd.Connection = conn;
-                cmd.CommandText = "SELECT * from sy_users where user_name = @user_name and user_pass = @user_pass";
+                cmd.CommandText = "SELECT * from sy_users where user_name = @user_name and user_pass = @user_pass";                
                 cmd.Parameters.AddWithValue("user_name", user_name);
-                cmd.Parameters.AddWithValue("user_pass", user_pass);
+                cmd.Parameters.AddWithValue("user_pass", crypto);
                 cmd.ExecuteNonQuery();
 
                 using (var reader = cmd.ExecuteReader())
@@ -56,6 +60,27 @@ namespace fastOrderEntry.Models
             return logged;
 
 
+        }
+
+        private string GetCrypto(NpgsqlConnection conn, string user_pass)
+        {
+            string crypto = user_pass;
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = conn;
+                cmd.CommandText = "select ENCODE(HMAC(@password,'impl18CBmePDrda','md5'),'hex') as crypto;";
+                cmd.Parameters.AddWithValue("password", user_pass);
+                cmd.ExecuteNonQuery();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        crypto = Convert.ToString(reader["crypto"]);
+                    }
+                }
+            }
+            return crypto;
         }
     }
 }
